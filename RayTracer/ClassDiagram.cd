@@ -6,14 +6,14 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAgAAAAIAAAAAAAAAACABoAAgAaAAI=</HashCode>
+      <HashCode>AAAAAgAAAAAAAAAgAAAAMAAAAAAAAAACABoAAgAaAAI=</HashCode>
       <FileName>Camera.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Vector3">
     <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAACAAAgAAYAUAAAAAAAICAABgAACAAAEAAAA=</HashCode>
+      <HashCode>AAIAAAAAACAAAgAAYAUAEAAAAAICAABgAACAAAEAAAA=</HashCode>
       <FileName>Type\Vector3.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -23,21 +23,21 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAQAEAAAAAAAAAAAAAAABgAQAAYQE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAYAEAEAAAAAAAAAAAAABgAQAAYQE=</HashCode>
       <FileName>Type\Point3.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.ViewPlane">
     <Position X="4.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAFABAABEgAAAEoAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>BAAHABAABggAAAEoAAAAEAAIBgAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewPlane.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Ray">
     <Position X="12.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAACAAAQBAAAEAABAAAAAAgAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAACAAEABAAAAAABAAAAAAgAAAAAA=</HashCode>
       <FileName>Ray.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -54,7 +54,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AMYCgAACAoAAgAAAAIAAAiAAAgIgAAIAAAAAAAAEAAA=</HashCode>
+      <HashCode>AMYCgAACAoAAgAAAAIAAAiAAAgIwAAIAAAAAAAAEAAA=</HashCode>
       <FileName>Scene.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -62,28 +62,28 @@
     <Position X="0.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAAAAAAAAgAAAAAAAAAAAAACAAAAAgAAAAAA=</HashCode>
-      <FileName>Geometry.cs</FileName>
+      <FileName>Shape\Geometry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Sphere">
     <Position X="0.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAgIEAAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
-      <FileName>Sphere.cs</FileName>
+      <FileName>Shape\Sphere.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Triangle">
     <Position X="3" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAoAEAAAA=</HashCode>
-      <FileName>Triangle.cs</FileName>
+      <FileName>Shape\Triangle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.TringleNorm">
     <Position X="3" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABEAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>TringleNorm.cs</FileName>
+      <HashCode>AAABEAAAAgAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shape\TringleNorm.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Transform">
@@ -91,23 +91,16 @@
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
-    <NestedTypes>
-      <Enum Name="RayTracer.Transform.TYPE">
-        <TypeIdentifier>
-          <NewMemberFileName>Transform.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAIAACAAEAAgAAAAAQAEAAAAAAA=</HashCode>
-      <FileName>Transform.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Transform.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.PointLight">
     <Position X="8.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>PointLight.cs</FileName>
+      <FileName>Light\PointLight.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.DirectionalLight">
@@ -117,7 +110,7 @@
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAIAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DirectionalLight.cs</FileName>
+      <FileName>Light\DirectionalLight.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Material">
@@ -138,13 +131,13 @@
           <Compartment Name="Fields" Collapsed="true" />
         </Compartments>
         <TypeIdentifier>
-          <NewMemberFileName>Light.cs</NewMemberFileName>
+          <NewMemberFileName>Light\Light.cs</NewMemberFileName>
         </TypeIdentifier>
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgEAAAAA=</HashCode>
-      <FileName>Light.cs</FileName>
+      <FileName>Light\Light.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Matrix">
@@ -152,6 +145,27 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAIAgAAYAEAACAAMAAAACAAAAAAACAAAAA=</HashCode>
       <FileName>Type\Matrix.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Translation">
+    <Position X="5.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Translation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Rotation">
+    <Position X="5.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Rotation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Scaling">
+    <Position X="7.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Scaling.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

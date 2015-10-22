@@ -9,13 +9,18 @@ namespace RayTracer
     {
 
         public Camera()
-            : this(Point3.ZERO, Point3.ZERO, Vector3.UP, 0f)
+            : this(Point3.ZERO, Point3.ZERO, Vector3.UP, 30f)
         {
 
         }
 
         public Camera(float[] parameter)
-            : this(new Point3(parameter[0], parameter[1], parameter[2]), new Point3(parameter[3], parameter[4], parameter[5]), new Vector3(parameter[6], parameter[7], parameter[8]), parameter[9])
+            : this(
+            new Point3(parameter[0], parameter[1], parameter[2]),
+            new Point3(parameter[3], parameter[4], parameter[5]),
+            new Vector3(parameter[6], parameter[7], parameter[8]),
+            parameter[9]
+            )
         {
 
         }
@@ -30,27 +35,30 @@ namespace RayTracer
 
             W = (new Vector3(LookAt - Position)) / new Vector3(LookAt - Position).Magnitude;
             U = Vector3.Cross(Up, W) / Vector3.Cross(Up, W).Magnitude;
-            V = Vector3.Cross( W, U);
+            V = Vector3.Cross(W, U);
 
-//            ShowInformation();
+            //ShowInformation();
         }
 
 
         public void ShowInformation()
         {
-            Console.WriteLine("Pos");
+
+            Console.WriteLine("Camera Information ================================");
+            Console.Write("Pos    : ");
             Position.ShowInformation();
-            Console.WriteLine("LookAt");
+            Console.Write("LookAt : ");
             LookAt.ShowInformation();
             Console.WriteLine("Up");
             Up.ShowInformation();
 
-            Console.WriteLine("W");
+            Console.Write("W : ");
             W.ShowInformation();
-            Console.WriteLine("U");
+            Console.Write("U : ");
             U.ShowInformation();
-            Console.WriteLine("V");
+            Console.Write("V : ");
             V.ShowInformation();
+            Console.WriteLine("====================================================");
         }
 
 

@@ -23,12 +23,12 @@ namespace RayTracer
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
         private LinkedList<Light> lights = new LinkedList<Light>();
         private String outputFilename;
-//        private LinkedList<Point3> vertices
-         
+        private List<Point3> vertices = new List<Point3>();
+
         public Scene()
         {
             camera = new Camera();
-            viewPlane = new ViewPlane(1, 1, 30);
+            viewPlane = new ViewPlane(1, 1, camera);
         }
 
         public Scene(String scenefile)
@@ -66,34 +66,40 @@ namespace RayTracer
                     Size = new Size((int)parameter[0], (int)parameter[1]);
                     break;
                 case "camera":
-
-                    Point3 lookFrom = new Point3(parameter[0],parameter[1],parameter[2]);
-                    Point3 lookAt = new Point3(parameter[3],parameter[4],parameter[5]);
-                    Vector3 up = new Vector3(parameter[6],parameter[7],parameter[8]);
-                    float fov = parameter[9]; 
-                    Camera = new Camera(lookFrom,lookAt,up,fov);
+                    Camera = new Camera(parameter);
                     break;
                 case "maxdepth":
-                    MaxDepth = (int) parameter[0];
+                    MaxDepth = (int)parameter[0];
                     break;
                 case "sphere":
                     Point3 center = new Point3(parameter[0], parameter[1], parameter[2]);
                     float radius = parameter[3];
-                    Sphere sphere = new Sphere(center,radius);
+                    Sphere sphere = new Sphere(center, radius);
                     ApplyTransform(sphere);
                     Geometries.AddFirst(sphere);
                     break;
-                //case "tri":
-                //    Point3 a = new Point3(parameter[0]);
-                //    Point3 b = new Point3(parameter[1]);
-                //    Point3 c = new Point3(parameter[2]);
-                //    Triangle tri = new Triangle(a, b, c);
-                //    Geometries.AddFirst(tri);
-                //    break;
-                //case "maxverts":
-
-//                    break;
-
+                case "tri":
+                    Point3 a = vertices[(int)parameter[0]];
+                    Point3 b = vertices[(int)parameter[1]];
+                    Point3 c = vertices[(int)parameter[2]];
+                    Triangle tri = new Triangle(a, b, c);
+                    Geometries.AddFirst(tri);
+                    break;
+                case "maxverts":
+                    vertices = new List<Point3>((int)parameter[0]);
+                    break;
+                case "vertex":
+                    Point3 newPoint = new Point3(parameter);
+                    vertices.Add(newPoint);
+                    break;
+                case "translate":
+  //                  Transform transform = new Transform(Transform.TYPE.TRANSLATION,new Point3(parameter));
+//                    vertices.Add(newPoint);
+                    break;
+                
+                
+                
+                
                 default:
                     break;
             }
@@ -152,8 +158,11 @@ namespace RayTracer
         }
 
         private void ApplyTransform(Geometry shape)
-        { 
-            
+        {
+            foreach (var item in Transforms)
+            {
+                   
+            }
         }
 
     }

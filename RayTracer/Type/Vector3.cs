@@ -29,11 +29,10 @@ namespace RayTracer
 
         public void ShowInformation()
         {
-
-            Console.WriteLine("vector:");
-            Console.WriteLine("Start     = " + Start.X + " " + Start.Y + " " + Start.Z);
-            Console.WriteLine("End       = " + End.X + " " + End.Y + " " + End.Z);
-            Console.WriteLine("Magnitude = " + Magnitude);
+            Console.WriteLine(" vector:");
+            Console.WriteLine(" Start     = " + Start.X.ToString("#.0000") + " " + Start.Y.ToString("#.0000") + " " + Start.Z.ToString("#.0000"));
+            Console.WriteLine(" End       = " + End.X.ToString("#.0000") + " " + End.Y.ToString("#.0000") + " " + End.Z.ToString("#.0000"));
+            Console.WriteLine(" Magnitude = " + Magnitude.ToString("#.0000"));
         }
         public Point3 Start
         { get; set; }
@@ -58,12 +57,12 @@ namespace RayTracer
             Point3 newB = a.End - a.Start;
             float result = (newA.X * newB.X + newA.Y * newB.Y + newA.Z * newB.Z);
 
-            return result;//to be implemented
+            return result;
         }
 
         public static Vector3 operator *(Vector3 vector, float scalar)
         {
-            Vector3 result = (Vector3)vector.MemberwiseClone();
+            Vector3 result = new Vector3(vector.End - vector.Start);
             result.End.X *= scalar;
             result.End.Y *= scalar;
             result.End.Z *= scalar;

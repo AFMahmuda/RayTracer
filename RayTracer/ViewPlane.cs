@@ -8,7 +8,13 @@ namespace RayTracer
 {
     public class ViewPlane
     {
+        Camera camera;
 
+        public Camera Camera
+        {
+            get { return camera; }
+            set { camera = value; }
+        }
 
         float worldWidth;
         float worldHeight;
@@ -33,15 +39,15 @@ namespace RayTracer
 
         private Color[,] pixels;
 
-        public ViewPlane(int width, int height, float fieldOfView)
+        public ViewPlane(int width, int height, Camera camera)
         {
             this.pixelWidth = width;
             this.pixelHeight = height;
             pixels = new Color[width, height];
 
-            worldHeight = 2 * (float)Math.Tan(fieldOfView / 2f);
-            worldWidth = worldHeight * 1;
-
+            Camera = camera;
+            worldHeight = 2 * (float)Math.Tan(camera.FieldOfView / 2f);
+            worldWidth = worldHeight * (float)(pixelWidth / PixelHeight);
 
         }
 
@@ -59,26 +65,35 @@ namespace RayTracer
 
 
 
-        public Point3 GetLeftButtom(Camera camera)
+        public Point3 GetUpperLeft()
         {
 
-            Point3 result;
-            Vector3 Center = new Vector3(Position) - camera. W;
-            Vector3 BottomLeft = Center - camera.U * PixelWidth / 2 - camera.V * PixelHeight / 2;
-            result = BottomLeft.End;
+            Point3 center = camera.Position + camera.W.End;
+            Position = center;
+            Point3 upperLeft = center - camera.U.End * (worldWidth / 2f) - camera.V.End * (worldHeight / 2f);
 
-            return result;
+            return upperLeft;
         }
 
-        public Point3 GetNewLocation(Camera camera, int row, int col)
+        public Point3 GetNewLocation(int row, int col)
         {
+            Point3 upperLeft = GetUpperLeft();
+            Point3 newLocation = upperLeft + (camera.U.End * (row + .5f) * (worldWidth / (float)PixelWidth)) + (camera.V.End * (col + .5f) * (worldHeight / (float)PixelHeight));
 
-            Point3 result;
-            Vector3 leftBottom = new Vector3(GetLeftButtom(camera));
-            Vector3 newLocatin =  leftBottom + camera.U * row * worldWidth / PixelWidth + camera.V * col * worldHeight / PixelHeight;
-            result = newLocatin.End;
+            return newLocation;
+        }
 
-            return result;
+
+        public void ShowInformation()
+        {
+            Console.WriteLine("View Plane Information =============================");
+            Console.WriteLine("Upper Left");
+            GetUpperLeft().ShowInformation();
+            Console.WriteLine("Center");
+            Position.ShowInformation();
+            Console.WriteLine("H / W pixel : " + PixelHeight + " / " + PixelWidth);
+            Console.WriteLine("H / W world : " + worldHeight + " / " + worldWidth);
+            Console.WriteLine("====================================================");
         }
 
     }

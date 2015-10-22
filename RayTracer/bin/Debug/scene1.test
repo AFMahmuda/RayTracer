@@ -2,10 +2,10 @@
 # A simple quad viewed from different camera positions
 
 #size 1366 768
-#size 640 480
+size 640 480
 #size 160 120
 
-size 3 3 
+#size 3 3 
 
 # Now specify the camera.  This is what you should implement.
 # This file has 4 camera positions.  Render your scene for all 4.
@@ -13,11 +13,11 @@ size 3 3
 #camera0
 #camera 0 0 5 0 0 0 0 1 0 30
 #camera1
-camera 0 0 1 0 0 0 0 1 0 30
+#camera 0 0 1 0 0 0 0 1 0 30
 #camera2
 #camera 0 -3 3 0 0 0 0 1 0 30
 #camera3
-#camera -4 0 1 0 0 1 0 0 1 45
+camera -4 0 1 0 0 1 0 0 1 45
 #camera4
 #camera -4 -4 4 1 0 0 0 1 0 30
 

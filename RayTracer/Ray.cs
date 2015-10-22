@@ -8,15 +8,6 @@ namespace RayTracer
 {
     public class Ray
     {
-        private float limit;
-
-
-        public float Limit
-        {
-            get { return limit; }
-            set { limit = value; }
-        }
-
         public Point3 Start
         { get; set; }
 
@@ -49,11 +40,19 @@ namespace RayTracer
 
             }
 
-
-
             Color = Color.FromArgb(bounce, bounce, bounce);
             return Color;
         }
 
+
+        internal void ShowInformation()
+        {
+            Console.WriteLine("Ray Information======================================");
+            Console.Write("Start : ");
+            Start.ShowInformation();
+            Console.WriteLine("Direction");
+            Direction.ShowInformation();
+            Console.WriteLine("=====================================================");
+        }
     }
 }
