@@ -35,7 +35,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Ray">
-    <Position X="12.5" Y="0.5" Width="1.5" />
+    <Position X="12.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAACAAAQBAAAEAABAAAAAAgAAAAAA=</HashCode>
       <FileName>Ray.cs</FileName>
@@ -50,27 +50,30 @@
   </Class>
   <Class Name="RayTracer.Scene">
     <Position X="0.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AMQCgAAAAoAAgAAAAIAAAiAAAgIgAAIAAAAAAAAEAAA=</HashCode>
+      <HashCode>AMYCgAACAoAAgAAAAIAAAiAAAgIgAAIAAAAAAAAEAAA=</HashCode>
       <FileName>Scene.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Geometry">
-    <Position X="0.75" Y="5.75" Width="1.5" />
+    <Position X="0.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAAAAAAAAgAAAAAAAAAAAAACAAAAAgAAAAAA=</HashCode>
       <FileName>Geometry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Sphere">
-    <Position X="0.75" Y="8.25" Width="1.5" />
+    <Position X="0.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAEAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <HashCode>AAgIEAAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Sphere.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Triangle">
-    <Position X="3" Y="5.75" Width="1.5" />
+    <Position X="3" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAoAEAAAA=</HashCode>
       <FileName>Triangle.cs</FileName>

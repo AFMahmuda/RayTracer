@@ -54,5 +54,9 @@ namespace RayTracer
             return new Point3(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
         }
 
+        public void ShowInformation()
+        {
+            Console.WriteLine("Point:" + X + " " + Y + " " + Z);
+        }
     }
 }

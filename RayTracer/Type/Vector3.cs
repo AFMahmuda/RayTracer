@@ -27,18 +27,19 @@ namespace RayTracer
         public static Vector3 DOWN { get { return UP * -1; } }
         public static Vector3 LEFT { get { return RIGHT * -1; } }
 
-
-        public Point3 Start
+        public void ShowInformation()
         {
-            get;
-            set;
+
+            Console.WriteLine("vector:");
+            Console.WriteLine("Start     = " + Start.X + " " + Start.Y + " " + Start.Z);
+            Console.WriteLine("End       = " + End.X + " " + End.Y + " " + End.Z);
+            Console.WriteLine("Magnitude = " + Magnitude);
         }
+        public Point3 Start
+        { get; set; }
 
         public Point3 End
-        {
-            get;
-            set;
-        }
+        { get; set; }
 
         public float Magnitude
         {
@@ -48,12 +49,25 @@ namespace RayTracer
         public static float Distance(Point3 start, Point3 end)
         {
             Point3 temp = end - start;
-            return (float)Math.Sqrt(temp.X * temp.X + temp.Y * temp.Y + temp.Z * temp.Z);
+            return (float)Math.Sqrt((temp.X * temp.X) + (temp.Y * temp.Y) + (temp.Z * temp.Z));
         }
 
-        public static Vector3 operator *(Vector3 a, Vector3 b)
+        public static float operator *(Vector3 a, Vector3 b)
         {
-            return Vector3.UP;//to be implemented
+            Point3 newA = a.End - a.Start;
+            Point3 newB = a.End - a.Start;
+            float result = (newA.X * newB.X + newA.Y * newB.Y + newA.Z * newB.Z);
+
+            return result;//to be implemented
+        }
+
+        public static Vector3 operator *(Vector3 vector, float scalar)
+        {
+            Vector3 result = (Vector3)vector.MemberwiseClone();
+            result.End.X *= scalar;
+            result.End.Y *= scalar;
+            result.End.Z *= scalar;
+            return result;
         }
 
         public static Vector3 operator +(Vector3 a, Vector3 b)
@@ -66,26 +80,20 @@ namespace RayTracer
             return a + (b * -1);
         }
 
-        public static Vector3 operator *(Vector3 vector, float scalar)
-        {
-            return Vector3.UP;//to be implemented
-        }
         public static Vector3 operator /(Vector3 vector, float scalar)
         {
-            return vector * (1 / scalar);
+            return vector * (1f / scalar);
         }
 
         public static Vector3 Cross(Vector3 a, Vector3 b)
         {
             Point3 A = a.End - a.Start;
             Point3 B = b.End - b.Start;
-
-
             return new Vector3(
                 A.Y * B.Z - A.Z * B.Y,
-                A.X * B.Z - A.Z * B.X,
+                (A.X * B.Z - A.Z * B.X) * -1,
                 A.X * B.Y - A.Y * B.X
-                );
+            );
 
 
         }

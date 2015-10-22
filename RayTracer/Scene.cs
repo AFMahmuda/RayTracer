@@ -23,11 +23,12 @@ namespace RayTracer
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
         private LinkedList<Light> lights = new LinkedList<Light>();
         private String outputFilename;
+//        private LinkedList<Point3> vertices
          
         public Scene()
         {
             camera = new Camera();
-            viewPlane = new ViewPlane(1, 1);
+            viewPlane = new ViewPlane(1, 1, 30);
         }
 
         public Scene(String scenefile)
@@ -82,6 +83,17 @@ namespace RayTracer
                     ApplyTransform(sphere);
                     Geometries.AddFirst(sphere);
                     break;
+                //case "tri":
+                //    Point3 a = new Point3(parameter[0]);
+                //    Point3 b = new Point3(parameter[1]);
+                //    Point3 c = new Point3(parameter[2]);
+                //    Triangle tri = new Triangle(a, b, c);
+                //    Geometries.AddFirst(tri);
+                //    break;
+                //case "maxverts":
+
+//                    break;
+
                 default:
                     break;
             }

@@ -9,6 +9,10 @@ namespace RayTracer
     public class ViewPlane
     {
 
+
+        float worldWidth;
+        float worldHeight;
+
         int pixelHeight;
         int pixelWidth;
 
@@ -29,11 +33,16 @@ namespace RayTracer
 
         private Color[,] pixels;
 
-        public ViewPlane(int width, int height)
+        public ViewPlane(int width, int height, float fieldOfView)
         {
             this.pixelWidth = width;
             this.pixelHeight = height;
             pixels = new Color[width, height];
+
+            worldHeight = 2 * (float)Math.Tan(fieldOfView / 2f);
+            worldWidth = worldHeight * 1;
+
+
         }
 
         public void SetPixel(int row, int col, Color color)
@@ -50,12 +59,12 @@ namespace RayTracer
 
 
 
-        public Point3 GetLeftButtom(Vector3 W, Vector3 U, Vector3 V)
+        public Point3 GetLeftButtom(Camera camera)
         {
 
             Point3 result;
-            Vector3 Center = new Vector3(Position) - W;
-            Vector3 BottomLeft = Center - U * PixelWidth / 2 - V * PixelHeight / 2;
+            Vector3 Center = new Vector3(Position) - camera. W;
+            Vector3 BottomLeft = Center - camera.U * PixelWidth / 2 - camera.V * PixelHeight / 2;
             result = BottomLeft.End;
 
             return result;
@@ -65,9 +74,9 @@ namespace RayTracer
         {
 
             Point3 result;
-            Vector3 Center = new Vector3(Position) - camera.W;
-            Vector3 BottomLeft = Center - camera.U * row * PixelWidth / 2 - camera.V * col * PixelHeight / 2;
-            result = BottomLeft.End;
+            Vector3 leftBottom = new Vector3(GetLeftButtom(camera));
+            Vector3 newLocatin =  leftBottom + camera.U * row * worldWidth / PixelWidth + camera.V * col * worldHeight / PixelHeight;
+            result = newLocatin.End;
 
             return result;
         }

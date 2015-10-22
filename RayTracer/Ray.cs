@@ -48,6 +48,9 @@ namespace RayTracer
                 }
 
             }
+
+
+
             Color = Color.FromArgb(bounce, bounce, bounce);
             return Color;
         }

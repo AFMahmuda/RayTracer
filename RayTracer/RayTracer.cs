@@ -13,8 +13,7 @@ namespace RayTracer
     {
         public Bitmap TraceScene(Scene scene)
         {
-            scene.ViewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height);
-
+            scene.ViewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera.FieldOfView);
             Bitmap result = new Bitmap(scene.ViewPlane.PixelWidth, scene.ViewPlane.PixelHeight);
             for (int row = 0; row < scene.ViewPlane.PixelWidth; row++)
             {
@@ -22,10 +21,11 @@ namespace RayTracer
                 {
                     Ray ray = new Ray();
                     ray.Start = scene.Camera.Position;
-                    Point3 newPosition = scene.ViewPlane.GetNewLocation(scene.Camera,row, col);
+                    Point3 newPosition = scene.ViewPlane.GetNewLocation(scene.Camera, row, col);
                     ray.Direction = new Vector3(scene.Camera.Position, newPosition);
-
                     Color newColor = ray.Trace(scene,0);
+                    newPosition.ShowInformation();
+
                     scene.ViewPlane.SetPixel(row, col, newColor);//not needed
                     result.SetPixel(row, col, newColor);
                 }

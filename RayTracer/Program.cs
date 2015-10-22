@@ -19,11 +19,12 @@ namespace RayTracer
                 String scenefile = "scene1.test";
                 String outputFile = "tralala.bmp";
 
+
                 if (File.Exists(scenefile))
                 {
                     Scene scene = new Scene(scenefile);
                     RayTracer rayTracer = new RayTracer();
-                    Bitmap result = rayTracer.TraceScene(scene); 
+                    Bitmap result = rayTracer.TraceScene(scene);
                     result.Save(outputFile);
 
                     Console.WriteLine("Success!");
@@ -33,9 +34,10 @@ namespace RayTracer
                     Console.WriteLine("File not found!");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("plese insert a valid argument");
+
+                Console.WriteLine("plese insert a valid argument"           +      e.Message);
             }
             finally
             {

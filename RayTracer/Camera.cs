@@ -14,24 +14,52 @@ namespace RayTracer
 
         }
 
+        public Camera(float[] parameter)
+            : this(new Point3(parameter[0], parameter[1], parameter[2]), new Point3(parameter[3], parameter[4], parameter[5]), new Vector3(parameter[6], parameter[7], parameter[8]), parameter[9])
+        {
+
+        }
+
+
         public Camera(Point3 position, Point3 lookAt, Vector3 up, float fov)
         {
             this.Position = position;
             this.LookAt = lookAt;
             this.Up = up;
+            FieldOfView = fov;
 
-            W = (new Vector3(Position,LookAt)) / new Vector3(Position,LookAt).Magnitude;
-            U = Up * W / (Up * W).Magnitude;
-            V = W * U;
+            W = (new Vector3(LookAt - Position)) / new Vector3(LookAt - Position).Magnitude;
+            U = Vector3.Cross(Up, W) / Vector3.Cross(Up, W).Magnitude;
+            V = Vector3.Cross( W, U);
 
+//            ShowInformation();
         }
+
+
+        public void ShowInformation()
+        {
+            Console.WriteLine("Pos");
+            Position.ShowInformation();
+            Console.WriteLine("LookAt");
+            LookAt.ShowInformation();
+            Console.WriteLine("Up");
+            Up.ShowInformation();
+
+            Console.WriteLine("W");
+            W.ShowInformation();
+            Console.WriteLine("U");
+            U.ShowInformation();
+            Console.WriteLine("V");
+            V.ShowInformation();
+        }
+
 
         Vector3 w;
         Vector3 u;
         Vector3 v;
-        
-        
-        
+
+
+
         public Vector3 W
         {
             get { return w; }
