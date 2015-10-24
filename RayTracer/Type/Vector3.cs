@@ -18,8 +18,7 @@ namespace RayTracer
 
         public Vector3(Point3 start, Point3 end)
         {
-            this.Start = start;
-            this.End = end;
+            this.Value = end - start;
         }
 
         public static Vector3 UP { get { return new Vector3(0, 1, 0); } }
@@ -30,48 +29,46 @@ namespace RayTracer
         public void ShowInformation()
         {
             Console.WriteLine(" vector:");
-            Console.WriteLine(" Start     = " + Start.X.ToString("#.0000") + " " + Start.Y.ToString("#.0000") + " " + Start.Z.ToString("#.0000"));
-            Console.WriteLine(" End       = " + End.X.ToString("#.0000") + " " + End.Y.ToString("#.0000") + " " + End.Z.ToString("#.0000"));
+            Console.WriteLine(" Value     = " + Value.X.ToString("#.0000") + " " + Value.Y.ToString("#.0000") + " " + Value.Z.ToString("#.0000"));
             Console.WriteLine(" Magnitude = " + Magnitude.ToString("#.0000"));
         }
-        public Point3 Start
-        { get; set; }
 
-        public Point3 End
+        public Point3 Value
         { get; set; }
 
         public float Magnitude
         {
-            get { return Distance(Start, End); }
+            get { return (float)Math.Sqrt((Value.X * Value.X) + (Value.Y * Value.Y) + (Value.Z * Value.Z)); }
         }
 
-        public static float Distance(Point3 start, Point3 end)
-        {
-            Point3 temp = end - start;
-            return (float)Math.Sqrt((temp.X * temp.X) + (temp.Y * temp.Y) + (temp.Z * temp.Z));
-        }
 
         public static float operator *(Vector3 a, Vector3 b)
         {
-            Point3 newA = a.End - a.Start;
-            Point3 newB = a.End - a.Start;
-            float result = (newA.X * newB.X + newA.Y * newB.Y + newA.Z * newB.Z);
+            Point3 newA = a.Value;
+            Point3 newB = b.Value;
+            float result = ((newA.X * newB.X) + (newA.Y * newB.Y) + (newA.Z * newB.Z));
 
             return result;
         }
 
         public static Vector3 operator *(Vector3 vector, float scalar)
         {
-            Vector3 result = new Vector3(vector.End - vector.Start);
-            result.End.X *= scalar;
-            result.End.Y *= scalar;
-            result.End.Z *= scalar;
+            Vector3 result = new Vector3(vector.Value);
+            result.Value.X *= scalar;
+            result.Value.Y *= scalar;
+            result.Value.Z *= scalar;
             return result;
         }
 
         public static Vector3 operator +(Vector3 a, Vector3 b)
         {
-            return Vector3.UP;//to be implemented
+
+
+            Vector3 newA = a * 1;
+            Vector3 newB = b * 1;
+            Vector3 result = new Vector3(newA.Value + newB.Value);
+            return result;
+
         }
 
         public static Vector3 operator -(Vector3 a, Vector3 b)
@@ -86,8 +83,8 @@ namespace RayTracer
 
         public static Vector3 Cross(Vector3 a, Vector3 b)
         {
-            Point3 A = a.End - a.Start;
-            Point3 B = b.End - b.Start;
+            Point3 A = a.Value;
+            Point3 B = b.Value;
             return new Vector3(
                 A.Y * B.Z - A.Z * B.Y,
                 (A.X * B.Z - A.Z * B.X) * -1,

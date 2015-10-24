@@ -15,9 +15,9 @@ namespace RayTracer
         {
             scene.ViewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera);
             Bitmap result = new Bitmap(scene.ViewPlane.PixelWidth, scene.ViewPlane.PixelHeight);
+            scene.Camera.ShowInformation();
+            scene.ViewPlane.ShowInformation();
 
-
-            //scene.ViewPlane.ShowInformation();
             for (int row = 0; row < scene.ViewPlane.PixelWidth; row++)
             {
                 for (int col = 0; col < scene.ViewPlane.PixelHeight; col++)
@@ -29,15 +29,19 @@ namespace RayTracer
                     ray.Direction /= ray.Direction.Magnitude;
                     //ray.ShowInformation();
 
-                    //Color newColor = ray.Trace(scene, 0);
-
-                    int R = 255 * row / scene.ViewPlane.PixelWidth;
-                    int G = 255 * col / scene.ViewPlane.PixelHeight;
-                    int B = 255 - R;
-                    Color newColor = Color.FromArgb(R, G, B);
+                    Color newColor = ray.Trace(scene, 0);
+                    if (!newColor.Equals(Color.CadetBlue))
+                    {
+                        int R = 135 * row / scene.ViewPlane.PixelWidth + 50 ;
+                        int G = 135 * col / scene.ViewPlane.PixelHeight + 50;
+                        int B = 135 - R + 50;
+                        newColor = Color.FromArgb(R, G, B);
+                    
+                    }
 
                     scene.ViewPlane.SetPixel(row, col, newColor);//not needed 
                     result.SetPixel(row, col, newColor);
+
                 }
             }
 

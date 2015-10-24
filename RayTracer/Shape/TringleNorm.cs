@@ -8,7 +8,7 @@ namespace RayTracer
     public class TringleNorm : Geometry
     {
 
-        public TringleNorm(Point3 a, Point3  b, Point3 c)
+        public TringleNorm(Point3 a, Point3 b, Point3 c)
         {
             A_norm = a;
             B_norm = b;
@@ -25,14 +25,19 @@ namespace RayTracer
         public Point3 C_norm
         { get; set; }
 
-        public override bool IsIntersecting(Ray ray)
+        public override bool CheckIntersection(Ray ray)
         {
             throw new NotImplementedException();
         }
 
         public override Vector3 CalculateReflection(Ray ray)
         {
-            return new Vector3(ray.Intersection, ray.Intersection);
+            throw new NotImplementedException();
+        }
+
+        public override void transformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
+        {
+            throw new NotImplementedException();
         }
 
     }

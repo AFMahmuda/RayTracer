@@ -8,13 +8,18 @@ namespace RayTracer
 {
     public class Ray
     {
+        public Ray()
+        {
+            Color = Color.FromArgb(0, 0, 0);
+            Intersection = float.MaxValue;
+        }
         public Point3 Start
         { get; set; }
 
         public Vector3 Direction
         { get; set; }
 
-        public Point3 Intersection
+        public float Intersection
         { get; set; }
 
         public Color Color
@@ -24,23 +29,20 @@ namespace RayTracer
         {
             if (bounce > scene.MaxDepth)
                 return Color;
-            Intersection = (Direction * float.MaxValue).End;
 
-            
-            Color = Color.FromArgb(bounce,bounce,bounce);
+
             foreach (var item in scene.Geometries)
             {
 
-                if (item.IsIntersecting(this))
+                if (item.CheckIntersection(this))
                 {
-                    Direction = item.CalculateReflection(this);
-                    Start = Intersection;
-                    Trace(scene, bounce++);
+                    Color = Color.CadetBlue;
+                    //Direction = item.CalculateReflection(this);
+                    //Start = Start + Direction.End * Intersection;
+                    //Trace(scene, bounce++);
                 }
-
             }
 
-            Color = Color.FromArgb(bounce, bounce, bounce);
             return Color;
         }
 
@@ -54,5 +56,6 @@ namespace RayTracer
             Direction.ShowInformation();
             Console.WriteLine("=====================================================");
         }
+
     }
 }

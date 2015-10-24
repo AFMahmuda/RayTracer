@@ -21,7 +21,8 @@ namespace RayTracer
             }
         }
 
-        public abstract bool IsIntersecting(Ray ray);
-        public abstract Vector3 CalculateReflection(Ray ray);        
+        public abstract bool CheckIntersection(Ray ray);
+        public abstract Vector3 CalculateReflection(Ray ray);
+        public abstract void transformToCameraSpace(Vector3 U, Vector3 V, Vector3 W);
     }
 }

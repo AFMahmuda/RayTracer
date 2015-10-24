@@ -5,19 +5,19 @@
 size 640 480
 #size 160 120
 
-#size 3 3 
+#size 10 10
 
 # Now specify the camera.  This is what you should implement.
 # This file has 4 camera positions.  Render your scene for all 4.
 
 #camera0
-#camera 0 0 5 0 0 0 0 1 0 30
+camera 0 0 7 0 0 0 0 1 0 30
 #camera1
-#camera 0 0 1 0 0 0 0 1 0 30
+#camera 0 0 3 0 0 0 0 1 0 30
 #camera2
-#camera 0 -3 3 0 0 0 0 1 0 30
+#camera 0 0 1 0 0 0 0 1 0 45
 #camera3
-camera -4 0 1 0 0 1 0 0 1 45
+#camera -4 0 1 0 0 1 0 0 1 45
 #camera4
 #camera -4 -4 4 1 0 0 0 1 0 30
 
@@ -47,12 +47,10 @@ maxdepth 3
 
 maxverts 4
 
-vertex -1 -1 0 
-vertex +1 -1 0
-vertex +1 +1 0
-vertex -1 +1 0
-
-
+vertex -1 -1 -1 
+vertex +1 -1 -1
+vertex +1 +1 -1
+vertex -1 +1 -2
 
 #rotate 0 0 1 10
 #scale 0.5 0.75 0.5
@@ -77,11 +75,12 @@ vertex -1 +1 0
 #diffuse 1 0 0
 #specular .5 .5 .5
 #shininess 128.0
-#sphere 0 -2 3 .6
-#sphere 0 0 0 1
+#sphere 1 1 -1 1.5
+sphere -1 -1 0 .25
+#sphere 2 1 0 1
 #sphere 1.6 1.6 1.6 .5
 #scale 0.5 0.5 0.5
 #rotate 1 0 0 10
 tri 0 1 2
-tri 0 2 3
+#tri 0 2 3
 

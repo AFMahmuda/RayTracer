@@ -55,51 +55,57 @@ namespace RayTracer
                 return;
             }
 
-            float[] parameter = new float[words.Length - 1];
+            float[] param = new float[words.Length - 1];
 
-            for (int i = 0; i < parameter.Length; i++)
-                parameter[i] = float.Parse(words[i + 1]);
+            for (int i = 0; i < param.Length; i++)
+                param[i] = float.Parse(words[i + 1]);
 
             switch (command)
             {
                 case "size":
-                    Size = new Size((int)parameter[0], (int)parameter[1]);
+                    Size = new Size((int)param[0], (int)param[1]);
                     break;
                 case "camera":
-                    Camera = new Camera(parameter);
+                    Camera = new Camera(param);
                     break;
                 case "maxdepth":
-                    MaxDepth = (int)parameter[0];
+                    MaxDepth = (int)param[0];
                     break;
                 case "sphere":
-                    Point3 center = new Point3(parameter[0], parameter[1], parameter[2]);
-                    float radius = parameter[3];
-                    Sphere sphere = new Sphere(center, radius);
+                    Sphere sphere = new Sphere(param);
                     ApplyTransform(sphere);
-                    Geometries.AddFirst(sphere);
+                    sphere.transformToCameraSpace(Camera.U, Camera.V, Camera.W);
+                    Geometries.AddLast(sphere);
                     break;
                 case "tri":
-                    Point3 a = vertices[(int)parameter[0]];
-                    Point3 b = vertices[(int)parameter[1]];
-                    Point3 c = vertices[(int)parameter[2]];
+                    Point3 a = vertices[(int)param[0]];
+                    Point3 b = vertices[(int)param[1]];
+                    Point3 c = vertices[(int)param[2]];
+
                     Triangle tri = new Triangle(a, b, c);
-                    Geometries.AddFirst(tri);
+                    ApplyTransform(tri);
+                    tri.transformToCameraSpace(Camera.U, Camera.V, Camera.W);
+                    Geometries.AddLast(tri);
                     break;
                 case "maxverts":
-                    vertices = new List<Point3>((int)parameter[0]);
+                    vertices = new List<Point3>((int)param[0]);
                     break;
                 case "vertex":
-                    Point3 newPoint = new Point3(parameter);
-                    vertices.Add(newPoint);
+                    vertices.Add(new Point3(param));
                     break;
                 case "translate":
-  //                  Transform transform = new Transform(Transform.TYPE.TRANSLATION,new Point3(parameter));
-//                    vertices.Add(newPoint);
+                    transforms.AddFirst(new Translation(param));
                     break;
-                
-                
-                
-                
+                case "scale":
+                    transforms.AddFirst(new Scaling(param));
+                    break;
+                case "rotate":
+                    transforms.AddFirst(new Rotation(param));
+                    break;
+
+
+
+
                 default:
                     break;
             }
@@ -161,7 +167,7 @@ namespace RayTracer
         {
             foreach (var item in Transforms)
             {
-                   
+                //TO DO : Add imploementation
             }
         }
 

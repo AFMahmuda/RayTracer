@@ -25,7 +25,7 @@ namespace RayTracer
 
         }
 
-
+        
         public Camera(Point3 position, Point3 lookAt, Vector3 up, float fov)
         {
             this.Position = position;
@@ -121,5 +121,6 @@ namespace RayTracer
             get { return lookAt; }
             set { lookAt = value; }
         }
+
     }
 }
