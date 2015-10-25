@@ -21,8 +21,26 @@ namespace RayTracer
             }
         }
 
+        public Transform Transform
+        {
+            get;
+            set;
+        }
+
+
+        public Material Material
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
         public abstract bool CheckIntersection(Ray ray);
         public abstract Vector3 CalculateReflection(Ray ray);
-        public abstract void transformToCameraSpace(Vector3 U, Vector3 V, Vector3 W);
+        public abstract void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W);
     }
 }

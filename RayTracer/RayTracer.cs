@@ -18,33 +18,51 @@ namespace RayTracer
             scene.Camera.ShowInformation();
             scene.ViewPlane.ShowInformation();
 
-            for (int row = 0; row < scene.ViewPlane.PixelWidth; row++)
+            int total = scene.ViewPlane.PixelWidth * scene.ViewPlane.PixelHeight;
+            int count = 0;
+            Console.WriteLine("----------");
+            for (int row = 0; row < scene.ViewPlane.PixelHeight; row++)
             {
-                for (int col = 0; col < scene.ViewPlane.PixelHeight; col++)
+                for (int col = 0; col < scene.ViewPlane.PixelWidth; col++)
                 {
+
                     Ray ray = new Ray();
                     ray.Start = scene.Camera.Position;
-                    Point3 newPosition = scene.ViewPlane.GetNewLocation(row, col);
-                    ray.Direction = new Vector3(scene.Camera.Position, newPosition);
+                    //                    ray.Start = scene.Camera.CameraViewPosition();
+
+                    Point3 newPosition = scene.ViewPlane.GetNewLocation(col, row);
+                    ray.Direction = new Vector3(ray.Start, newPosition);
                     ray.Direction /= ray.Direction.Magnitude;
-                    //ray.ShowInformation();
+
+                    //if (row % (scene.ViewPlane.PixelHeight - 1) == 0 && col % (scene.ViewPlane.PixelWidth - 1) == 0)
+                    //{
+                    //    Console.WriteLine("row , col = " + row + " , " + col);
+                    //    ray.ShowInformation();
+                    //}
 
                     Color newColor = ray.Trace(scene, 0);
                     if (!newColor.Equals(Color.CadetBlue))
                     {
-                        int R = 135 * row / scene.ViewPlane.PixelWidth + 50 ;
-                        int G = 135 * col / scene.ViewPlane.PixelHeight + 50;
+                        int R = 135 * col / scene.ViewPlane.PixelWidth + 50;
+                        int G = 135 * row / scene.ViewPlane.PixelHeight + 50;
                         int B = 135 - R + 50;
                         newColor = Color.FromArgb(R, G, B);
-                    
+
                     }
 
-                    scene.ViewPlane.SetPixel(row, col, newColor);//not needed 
-                    result.SetPixel(row, col, newColor);
+                    scene.ViewPlane.SetPixel(col, row, newColor);//not needed 
+                    result.SetPixel(col, row, newColor);
 
+                    count++;
+                    if(count == total / 10 )
+                    {
+                        Console.Write("*");
+                        count = 0;
+                    }
                 }
-            }
 
+            }
+            Console.WriteLine();
             return result;
         }
 

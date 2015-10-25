@@ -35,7 +35,7 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
-        public override void transformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
+        public override void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
         {
             throw new NotImplementedException();
         }

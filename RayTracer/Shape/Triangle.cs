@@ -27,28 +27,33 @@ namespace RayTracer
 
         public override bool CheckIntersection(Ray ray)
         {
+
+
+
             Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A));
             norm /= norm.Magnitude;
             if (ray.Direction * norm == 0)
                 return false;
 
             float t = (new Vector3(A) * norm - new Vector3(ray.Start) * norm) / (ray.Direction * norm);
-            if (t > 0 && t < ray.Intersection)
+            if (t > 0 && t < ray.IntersectDistance)
             {
-                ray.Intersection = t;
-                return IsInsideTriangle((ray.Direction*t).Value);
+
+                if (IsInsideTriangle(ray.Start + (ray.Direction * t).Value))
+                {
+                    ray.IntersectDistance = t;
+                    return true;
+                }
+
             }
-
-            Console.WriteLine(t);
-
             return false;
         }
 
         public bool IsInsideTriangle(Point3 point)
         {
-            Vector3 ab = new Vector3(B - A); 
-            Vector3 ac = new Vector3(C - A); 
-            Vector3 ap = new Vector3(point - A); 
+            Vector3 ab = new Vector3(B - A);
+            Vector3 ac = new Vector3(C - A);
+            Vector3 ap = new Vector3(point - A);
 
             float dot00 = ab * ab;
             float dot01 = ab * ac;
@@ -56,12 +61,11 @@ namespace RayTracer
             float dot11 = ac * ac;
             float dot12 = ac * ap;
 
-            // Compute barycentric coordinates
+
             float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
             float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
             float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-            // Check if point is in triangle
             return (u >= 0) && (v >= 0) && (u + v <= 1);
 
         }
@@ -72,7 +76,7 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
-        public override void transformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
+        public override void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
         {
             A = ((U * A.X) + (V * A.Y) + (W * A.Z)).Value;
             B = ((U * B.X) + (V * B.Y) + (W * B.Z)).Value;

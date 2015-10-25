@@ -29,9 +29,14 @@ namespace RayTracer
         {
             camera = new Camera();
             viewPlane = new ViewPlane(1, 1, camera);
+            //Transforms.AddFirst(new Translation(new Point3(-.3f, -.2f, .3f)));
+
+            //Transforms.AddFirst(new Rotation());
+            //Transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
         }
 
         public Scene(String scenefile)
+            : this()
         {
             StreamReader filereader = new StreamReader(scenefile);
             String command;
@@ -74,7 +79,7 @@ namespace RayTracer
                 case "sphere":
                     Sphere sphere = new Sphere(param);
                     ApplyTransform(sphere);
-                    sphere.transformToCameraSpace(Camera.U, Camera.V, Camera.W);
+
                     Geometries.AddLast(sphere);
                     break;
                 case "tri":
@@ -84,7 +89,7 @@ namespace RayTracer
 
                     Triangle tri = new Triangle(a, b, c);
                     ApplyTransform(tri);
-                    tri.transformToCameraSpace(Camera.U, Camera.V, Camera.W);
+
                     Geometries.AddLast(tri);
                     break;
                 case "maxverts":
@@ -144,12 +149,6 @@ namespace RayTracer
             set { lights = value; }
         }
 
-        public Material Material
-        {
-            get;
-            set;
-        }
-
         public int MaxDepth
         {
             get { return maxDepth; }
@@ -167,8 +166,14 @@ namespace RayTracer
         {
             foreach (var item in Transforms)
             {
-                //TO DO : Add imploementation
+                shape.Transform = item;
             }
+        }
+
+        public Material Material
+        {
+            get;
+            set;
         }
 
     }

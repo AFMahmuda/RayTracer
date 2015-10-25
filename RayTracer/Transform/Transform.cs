@@ -17,7 +17,26 @@ namespace RayTracer
         }
 
 
+        internal void ShowInformation()
+        {
+            Console.WriteLine("Scaling Information======================================");
+            Console.WriteLine("value");
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                    Console.Write(Matrix.GetValue(row, col) + "\t");
+                Console.WriteLine();
+            }
+            Console.WriteLine("inverse");
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 4; col++) 
+                    Console.Write(Matrix.Inverse4X4().GetValue(row, col) + "\t");
+                Console.WriteLine();
+            }
 
+            Console.WriteLine("=====================================================");
+        }
 
     }
 }

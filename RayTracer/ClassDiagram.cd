@@ -13,12 +13,12 @@
   <Class Name="RayTracer.Vector3">
     <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAACAAAgAAYAUAEAAAAAICAABgAACAAAEAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAgAAYAUAEAAAAAICAAAgAACgAAEAAAA=</HashCode>
       <FileName>Type\Vector3.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Point3">
-    <Position X="4.75" Y="4.25" Width="1.5" />
+    <Position X="4.75" Y="0.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -28,16 +28,16 @@
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.ViewPlane">
-    <Position X="4.75" Y="0.5" Width="1.5" />
+    <Position X="4.75" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAHABAABggAAAEoAAAAEAAIBgAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>BAAHABAABggAAAEoAAAGEAAIBgAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ViewPlane.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Ray">
     <Position X="12.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAACAAEABAAAAAABAAAAAAgAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACBAAAAAACAAEABAAAAAABAAAAAAgAAAAAA=</HashCode>
       <FileName>Ray.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -59,30 +59,30 @@
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Geometry">
-    <Position X="0.75" Y="6" Width="1.5" />
+    <Position X="0.75" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAgAAAAAAAAAAAAACAAAAAgAAAAAA=</HashCode>
+      <HashCode>AEAAEAAAAABAAAAAEAAAAAAAAAAAAACAAAAAgAAAAAA=</HashCode>
       <FileName>Shape\Geometry.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Sphere">
     <Position X="0.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgIEAAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <HashCode>AAgIEAAACABAAAAAEAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Shape\Sphere.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Triangle">
     <Position X="3" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAoAEAAAA=</HashCode>
+      <HashCode>AAAAEAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAqAEAAAA=</HashCode>
       <FileName>Shape\Triangle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.TringleNorm">
     <Position X="3" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABEAAAAgAAAAAAgAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAABEAAAAgBAAAAAEAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Shape\TringleNorm.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -114,7 +114,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Material">
-    <Position X="3" Y="3.75" Width="1.5" />
+    <Position X="3" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAAAAAAIAAAAAAIAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Material.cs</FileName>

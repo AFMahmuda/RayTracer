@@ -25,7 +25,12 @@ namespace RayTracer
 
         }
 
-        
+        public Point3 CameraViewPosition()
+        {
+            return (U * Position.X + V * Position.Y + W * Position.Z).Value;
+        }
+
+
         public Camera(Point3 position, Point3 lookAt, Vector3 up, float fov)
         {
             this.Position = position;

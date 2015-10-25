@@ -59,7 +59,7 @@ namespace RayTracer
 
             Camera = camera;
             WorldHeight = 2 * (float)Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180);
-            WorldWidth = WorldHeight * (float)((float) pixelWidth / (float)PixelHeight);
+            WorldWidth = WorldHeight * (float)((float)pixelWidth / (float)PixelHeight);
 
         }
 
@@ -80,17 +80,23 @@ namespace RayTracer
         public Point3 GetUpperLeft()
         {
 
-            Point3 center = camera.Position + camera.W.Value;
+            Point3 center = camera.Position;
+            center += camera.W.Value;
             Position = center;
-            Point3 upperLeft = center - camera.U.Value * (WorldWidth / 2f) + camera.V.Value * (WorldHeight / 2f);
+            Point3 upperLeft = center + camera.U.Value * (WorldWidth / 2f) + camera.V.Value * (WorldHeight / 2f);
+
 
             return upperLeft;
         }
 
-        public Point3 GetNewLocation(int row, int col)
+        public Point3 GetNewLocation(int col, int row)
         {
-            Point3 upperLeft = GetUpperLeft();
-            Point3 newLocation = upperLeft + (camera.U.Value * (row + .5f) * (WorldWidth / (float)PixelWidth)) - (camera.V.Value * (col + .5f) * (WorldHeight / (float)PixelHeight));
+            Point3 upperLeft = GetUpperLeft(); 
+            Point3 newLocation =
+                upperLeft
+                - (camera.U.Value * (col + .5f) * (WorldWidth / (float)PixelWidth))
+                - (camera.V.Value * (row + .5f) * (WorldHeight / (float)PixelHeight));
+
 
             return newLocation;
         }

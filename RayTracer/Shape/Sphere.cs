@@ -39,7 +39,6 @@ namespace RayTracer
 
         public override bool CheckIntersection(Ray ray)
         {
-
             Vector3 camToSphere = new Vector3(ray.Start,Center);
 
             float a = ray.Direction * ray.Direction;
@@ -66,18 +65,18 @@ namespace RayTracer
                     return false;
                 else if (t1 < 0)
                 {
-                    if (t2 < ray.Intersection)
+                    if (t2 < ray.IntersectDistance)
                     {
-                        ray.Intersection = t2;
+                        ray.IntersectDistance = t2;
                         return true;
                     }
                     else return false;
                 }
                 else if (t2 < 0)
                 {
-                    if (t1 < ray.Intersection)
+                    if (t1 < ray.IntersectDistance)
                     {
-                        ray.Intersection = t1;
+                        ray.IntersectDistance = t1;
                         return true;
                     }
                     else return false;
@@ -85,9 +84,9 @@ namespace RayTracer
 
                 else
                 {
-                    if (Math.Min(t1, t2) < ray.Intersection)
+                    if (Math.Min(t1, t2) < ray.IntersectDistance)
                     {
-                        ray.Intersection = Math.Min(t1, t2);
+                        ray.IntersectDistance = Math.Min(t1, t2);
                         return true;
                     }
                     else return false;
@@ -101,9 +100,13 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
-        public override void transformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
+        public override void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
         {
             Center = ((U * Center.X) + (V * Center.Y) + (W * Center.Z)).Value;
+            Console.WriteLine("Sphere");
+            Center.ShowInformation();
+            Console.WriteLine("rad = " + Radius);
+
         }
 
 
