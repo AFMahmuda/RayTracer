@@ -7,11 +7,25 @@ namespace RayTracer
 {
     public class DirectionalLight : Light
     {
-        Point3 direction;
-        public Point3 Direction
+
+
+        public DirectionalLight(Vector3 from, MyColor color)
         {
-            get { return direction; }
-            set { direction = value; }
+            Direction = from;
+            Color = color;
+
+        }
+        public DirectionalLight(float[] param)
+            : this(new Vector3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
+        {
+        }
+
+
+
+        public Vector3 Direction
+        {
+            get;
+            set;
         }
     }
 }

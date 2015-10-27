@@ -6,7 +6,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAgAAAAMAAAAAAAAAACABoAAgAaAAI=</HashCode>
+      <HashCode>AAAAAgAAAAAAAAAgIAAAMAAAAAAAAAACABoAAgAaAAI=</HashCode>
       <FileName>Camera.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -37,7 +37,7 @@
   <Class Name="RayTracer.Ray">
     <Position X="12.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACBAAAAAACAAEABAAAAAABAAAAAAgAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAAQAAAACAAEABAAAAAABAAAAAAgAAAAAA=</HashCode>
       <FileName>Ray.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -48,20 +48,10 @@
       <FileName>RayTracer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RayTracer.Scene">
-    <Position X="0.75" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AMYCgAACAoAAgAAAAIAAAiAAAgIwAAIAAAAAAAAEAAA=</HashCode>
-      <FileName>Scene.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="RayTracer.Geometry">
     <Position X="0.75" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAEAAAAABAAAAAEAAAAAAAAAAAAACAAAAAgAAAAAA=</HashCode>
+      <HashCode>AEAAEAAAAABAAAAAEAAAAAQAAAAAAACAAAAAgEAAAAA=</HashCode>
       <FileName>Shape\Geometry.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -92,7 +82,7 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAECAAAAAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Transform\Transform.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -109,14 +99,14 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAIAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Light\DirectionalLight.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Material">
     <Position X="3" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAAAAAAAAIAAAAAAIAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <HashCode>AEAAAAAAAQgAAAAAAgAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Material.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -143,7 +133,7 @@
   <Class Name="RayTracer.Matrix">
     <Position X="8.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAIAgAAYAEAACAAMAAAACAAAAAAACAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAIAgAAYAEAACAAMACAACAAAAAAACAAEAA=</HashCode>
       <FileName>Type\Matrix.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -166,6 +156,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Transform\Scaling.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Scene">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QMYCgAACAoAAgAAAAJAAAiAAAgIwAAIBAAAAAUEEAAA=</HashCode>
+      <FileName>Scene.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

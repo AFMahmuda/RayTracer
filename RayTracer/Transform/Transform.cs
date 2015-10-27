@@ -19,7 +19,7 @@ namespace RayTracer
 
         internal void ShowInformation()
         {
-            Console.WriteLine("Scaling Information======================================");
+            Console.WriteLine("Transform Information======================================");
             Console.WriteLine("value");
             for (int row = 0; row < 4; row++)
             {

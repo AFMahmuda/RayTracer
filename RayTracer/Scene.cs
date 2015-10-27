@@ -10,29 +10,27 @@ namespace RayTracer
     public class Scene
     {
         private Size size = new Size();
-
-        public Size Size
-        {
-            get { return size; }
-            set { size = value; }
-        }
         private int maxDepth = 5;
         private Camera camera;
         private ViewPlane viewPlane;
         private LinkedList<Geometry> geometries = new LinkedList<Geometry>();
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
         private LinkedList<Light> lights = new LinkedList<Light>();
-        private String outputFilename;
         private List<Point3> vertices = new List<Point3>();
+        private Attenuation attenuation;
+        private MyColor ambient;
+        private String outputFilename;
+
 
         public Scene()
         {
-            camera = new Camera();
-            viewPlane = new ViewPlane(1, 1, camera);
-            //Transforms.AddFirst(new Translation(new Point3(-.3f, -.2f, .3f)));
+            Camera = new Camera();
+            ViewPlane = new ViewPlane(1, 1, camera);
+            Transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
+            Material = new Material();
+            Ambient = new MyColor(.2f, .2f, .2f);
+            Attenuation = new Attenuation();
 
-            //Transforms.AddFirst(new Rotation());
-            //Transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
         }
 
         public Scene(String scenefile)
@@ -76,10 +74,12 @@ namespace RayTracer
                 case "maxdepth":
                     MaxDepth = (int)param[0];
                     break;
+
+                //geo
                 case "sphere":
                     Sphere sphere = new Sphere(param);
                     ApplyTransform(sphere);
-
+                    ApplyMaterial(sphere);
                     Geometries.AddLast(sphere);
                     break;
                 case "tri":
@@ -89,7 +89,7 @@ namespace RayTracer
 
                     Triangle tri = new Triangle(a, b, c);
                     ApplyTransform(tri);
-
+                    ApplyMaterial(tri);
                     Geometries.AddLast(tri);
                     break;
                 case "maxverts":
@@ -98,23 +98,83 @@ namespace RayTracer
                 case "vertex":
                     vertices.Add(new Point3(param));
                     break;
+
+                //transforms
+                case "pushTransform":
+                    Transform transform = new Translation(Point3.ZERO);
+                    transform.Matrix = Matrix.Mult44x44(transforms.First().Matrix, transform.Matrix);
+                    transforms.AddFirst(transform);
+                    break;
+                case "popTransform":
+                    transforms.RemoveFirst();
+                    break;
                 case "translate":
-                    transforms.AddFirst(new Translation(param));
+                    transforms.First().Matrix = Matrix.Mult44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
                     break;
                 case "scale":
-                    transforms.AddFirst(new Scaling(param));
+                    transforms.First().Matrix = Matrix.Mult44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
                     break;
                 case "rotate":
-                    transforms.AddFirst(new Rotation(param));
+                    transforms.First().Matrix = Matrix.Mult44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
                     break;
 
 
+                //material
+                case "diffuse":
+                    Material.Diffuse = Color.FromArgb((int)param[0] * 255, (int)param[1] * 255, (int)param[2] * 255);
+                    break;
+                case "specular":
+                    Material.Specular = Color.FromArgb((int)param[0] * 255, (int)param[1] * 255, (int)param[2] * 255);
+                    break;
+                case "shininess":
+                    Material.Shininess = param[0];
+                    break;
+                case "emission":
+                    Material.Emission = Color.FromArgb((int)param[0] * 255, (int)param[1] * 255, (int)param[2] * 255);
+                    break;
 
+
+                //light
+                case "attenuation":
+                    Attenuation = new Attenuation(param);
+                    break;
+                case "ambient":
+                    Ambient = new MyColor(param);
+                    break;
+                case "directional":
+                    Lights.AddFirst(new DirectionalLight(param));
+                    break;
+                case "point":
+                    Lights.AddFirst(new PointLight(param));
+                    break;
 
                 default:
                     break;
             }
         }
+
+
+        private void ApplyTransform(Geometry shape)
+        {
+            shape.Transform = transforms.First();
+        }
+
+
+        private void ApplyMaterial(Geometry shape)
+        {
+            shape.Material = Material.Clone();
+        }
+
+        private void ApplyAmbient(Geometry shape)
+        {
+            shape.Ambient = Ambient;
+        }
+
+
+        public MyColor Ambient
+        { get; set; }
+
+
 
 
         public Camera Camera
@@ -162,13 +222,7 @@ namespace RayTracer
             set { outputFilename = value; }
         }
 
-        private void ApplyTransform(Geometry shape)
-        {
-            foreach (var item in Transforms)
-            {
-                shape.Transform = item;
-            }
-        }
+
 
         public Material Material
         {
@@ -176,5 +230,16 @@ namespace RayTracer
             set;
         }
 
+        internal Attenuation Attenuation
+        {
+            get { return attenuation; }
+            set { attenuation = value; }
+        }
+
+        public Size Size
+        {
+            get { return size; }
+            set { size = value; }
+        }
     }
 }

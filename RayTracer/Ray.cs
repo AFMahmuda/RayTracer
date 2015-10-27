@@ -39,20 +39,25 @@ namespace RayTracer
             foreach (var item in scene.Geometries)
             {
 
-                
-                Direction = Matrix.Mult44x41(item.Transform.Matrix.Inverse4X4(), Direction);
+                Start = Matrix.Mult44x41(item.Transform.Matrix.Inverse4X4(), new Vector3(Start), 0).Value;
+                Direction = Matrix.Mult44x41(item.Transform.Matrix.Inverse4X4(), Direction, 1);
                 Direction /= Direction.Magnitude;
+
                 //              Direction.ShowInformation();
                 if (item.CheckIntersection(this))
                     IntersectWith = item;
 
-                Direction = Matrix.Mult44x41(item.Transform.Matrix, Direction);
+                Start = Matrix.Mult44x41(item.Transform.Matrix, new Vector3(Start), 0).Value;
+                Direction = Matrix.Mult44x41(item.Transform.Matrix, Direction, 1);
                 Direction /= Direction.Magnitude;
-                //                Direction.ShowInformation();
+                //                              Direction.ShowInformation();
             }
 
             if (IntersectWith != null)
-                Color = Color.CadetBlue;
+            {
+                Color = IntersectWith.Material.Diffuse;
+            }
+            
             //Direction = IntersectWith.CalculateReflection(this);
             //Start = Start + (Direction * IntersectDistance).Value;
             //return Trace(scene, bounce++);

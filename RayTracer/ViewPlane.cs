@@ -58,7 +58,7 @@ namespace RayTracer
             pixels = new Color[width, height];
 
             Camera = camera;
-            WorldHeight = 2 * (float)Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180);
+            WorldHeight = 2 * (float)Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180f);
             WorldWidth = WorldHeight * (float)((float)pixelWidth / (float)PixelHeight);
 
         }

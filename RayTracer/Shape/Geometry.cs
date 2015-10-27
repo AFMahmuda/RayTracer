@@ -30,17 +30,14 @@ namespace RayTracer
 
         public Material Material
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
         public abstract bool CheckIntersection(Ray ray);
         public abstract Vector3 CalculateReflection(Ray ray);
         public abstract void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W);
+
+        public MyColor Ambient { get; set; }
     }
 }

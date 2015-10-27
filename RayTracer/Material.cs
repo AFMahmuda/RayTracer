@@ -8,16 +8,30 @@ namespace RayTracer
 {
     public class Material
     {
-        public Color specular
+
+        public Material()
+        {
+            Specular = Color.Gray;
+            Diffuse = Color.Gray;
+            Emission = Color.Gray;
+            Shininess = .5f;
+        }
+
+        public Color Specular
         { get; set; }
 
-        public Color diffuse
+        public Color Diffuse
         { get; set; }
 
-        public Color emission
+        public Color Emission
         { get; set; }
 
-        public float shininess
+        public float Shininess
         { get; set; }
+
+        public Material Clone()
+        {
+            return (Material)this.MemberwiseClone();
+        }
     }
 }

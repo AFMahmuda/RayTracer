@@ -26,7 +26,7 @@ namespace RayTracer
             Matrix.SetValue(2, 2, values.Z);
 
 
-            ShowInformation();
+           // ShowInformation();
         }
 
        

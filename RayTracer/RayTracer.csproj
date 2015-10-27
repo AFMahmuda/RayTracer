@@ -42,10 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attenuation.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Light\DirectionalLight.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Material.cs" />
+    <Compile Include="Type\MyColor.cs" />
     <Compile Include="Shape\Geometry.cs" />
     <Compile Include="Transform\Rotation.cs" />
     <Compile Include="Transform\Scaling.cs" />

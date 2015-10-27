@@ -8,10 +8,11 @@ namespace RayTracer
 {
     public class Light
     {
-        public Color Ambient
+
+        public MyColor Color
         { get; set; }
 
-        public Color Color
+        public Color Ambient
         { get; set; }
 
         public struct Attenuation

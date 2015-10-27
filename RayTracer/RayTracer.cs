@@ -28,7 +28,6 @@ namespace RayTracer
 
                     Ray ray = new Ray();
                     ray.Start = scene.Camera.Position;
-                    //                    ray.Start = scene.Camera.CameraViewPosition();
 
                     Point3 newPosition = scene.ViewPlane.GetNewLocation(col, row);
                     ray.Direction = new Vector3(ray.Start, newPosition);
@@ -41,7 +40,7 @@ namespace RayTracer
                     //}
 
                     Color newColor = ray.Trace(scene, 0);
-                    if (!newColor.Equals(Color.CadetBlue))
+                    if (ray.IntersectWith == null)
                     {
                         int R = 135 * col / scene.ViewPlane.PixelWidth + 50;
                         int G = 135 * row / scene.ViewPlane.PixelHeight + 50;
@@ -54,7 +53,7 @@ namespace RayTracer
                     result.SetPixel(col, row, newColor);
 
                     count++;
-                    if(count == total / 10 )
+                    if (count == total / 10)
                     {
                         Console.Write("*");
                         count = 0;

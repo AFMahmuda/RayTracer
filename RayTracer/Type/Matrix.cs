@@ -188,7 +188,7 @@ namespace RayTracer
 
         }
 
-        public static Vector3 Mult44x41(Matrix matrix, Vector3 vector)
+        public static Vector3 Mult44x41(Matrix matrix, Vector3 vector, int homogeneousValue)
         {
 
             float[,] val = matrix.GetValue();
@@ -196,11 +196,45 @@ namespace RayTracer
             float y = vector.Value.Y;
             float z = vector.Value.Z;
 
-            float newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * 1;
-            float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * 1;
-            float newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * 1;
+            float newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
+            float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
+            float newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
 
             return new Vector3(newX, newY, newZ);
+        }
+
+        public static Matrix Mult44x44(Matrix matA, Matrix matB)
+        {
+            Matrix res = new Matrix(4, 4);
+
+            for (int col = 0; col < 4; col++)
+            {
+                Matrix mat41 = Mult44x41(matA, matB.GetCol(col));
+                for (int row = 0; row < 4; row++)
+                {
+                    res.SetValue(row, col, mat41.GetValue(row, 0));
+                }
+            }
+
+            return res;
+        }
+
+
+        public static Matrix Mult44x41(Matrix mat44, Matrix mat41)
+        {
+            Matrix res = new Matrix(4, 1);
+
+            for (int row = 0; row < 4; row++)
+            {
+                float val = 0;
+                for (int col = 0; col < 4; col++)
+                {
+                    val += mat44.GetValue(row, col) * mat41.GetValue(col, 0);
+                }
+                res.SetValue(row, 0, val);
+            }
+
+            return res;
         }
 
 
