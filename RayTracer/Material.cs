@@ -11,19 +11,19 @@ namespace RayTracer
 
         public Material()
         {
-            Specular = Color.Gray;
-            Diffuse = Color.Gray;
-            Emission = Color.Gray;
+            Specular = new MyColor(.4f,.4f,.4f);
+            Diffuse = new MyColor(.4f, .4f, .4f);
+            Emission = new MyColor(.4f, .4f, .4f);
             Shininess = .5f;
         }
 
-        public Color Specular
+        public MyColor Specular
         { get; set; }
 
-        public Color Diffuse
+        public MyColor Diffuse
         { get; set; }
 
-        public Color Emission
+        public MyColor Emission
         { get; set; }
 
         public float Shininess

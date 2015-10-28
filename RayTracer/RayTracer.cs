@@ -49,7 +49,7 @@ namespace RayTracer
 
                     }
 
-                    scene.ViewPlane.SetPixel(col, row, newColor);//not needed 
+
                     result.SetPixel(col, row, newColor);
 
                     count++;

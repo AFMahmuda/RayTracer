@@ -38,5 +38,9 @@ namespace RayTracer
             Console.WriteLine("=====================================================");
         }
 
+        public Transform Clone()
+        {
+            return (Transform) this.MemberwiseClone();
+        }
     }
 }

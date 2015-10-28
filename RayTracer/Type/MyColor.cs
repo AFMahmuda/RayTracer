@@ -34,9 +34,9 @@ namespace RayTracer
 
         public Color ToColor()
         {
-            int r = (int)R * 255;
-            int g = (int)G * 255;
-            int b = (int)B * 255;
+            int r = (int)(R * 255);
+            int g = (int)(G * 255);
+            int b = (int)(B * 255);
             return Color.FromArgb(r, g, b);
         }
 

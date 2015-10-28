@@ -25,6 +25,8 @@ namespace RayTracer
                     Scene scene = new Scene(scenefile);
                     RayTracer rayTracer = new RayTracer();
                     Bitmap result = rayTracer.TraceScene(scene);
+                    if (!scene.OutputFilename.Equals(""))
+                        outputFile = scene.OutputFilename;
                     result.Save(outputFile);
 
                     Console.WriteLine("Success!");
@@ -37,7 +39,7 @@ namespace RayTracer
             catch (Exception e)
             {
 
-                Console.WriteLine("plese insert a valid argument"           +      e.Message);
+                Console.WriteLine("plese insert a valid argument" + e.Message);
             }
             finally
             {

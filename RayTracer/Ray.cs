@@ -19,9 +19,7 @@ namespace RayTracer
 
         public Vector3 Direction
         { get; set; }
-
-
-
+        
         public Color Color
         { get; set; }
 
@@ -43,19 +41,19 @@ namespace RayTracer
                 Direction = Matrix.Mult44x41(item.Transform.Matrix.Inverse4X4(), Direction, 1);
                 Direction /= Direction.Magnitude;
 
-                //              Direction.ShowInformation();
                 if (item.CheckIntersection(this))
                     IntersectWith = item;
 
                 Start = Matrix.Mult44x41(item.Transform.Matrix, new Vector3(Start), 0).Value;
                 Direction = Matrix.Mult44x41(item.Transform.Matrix, Direction, 1);
                 Direction /= Direction.Magnitude;
-                //                              Direction.ShowInformation();
+
             }
 
             if (IntersectWith != null)
             {
-                Color = IntersectWith.Material.Diffuse;
+//                Color = IntersectWith.Material.Diffuse.ToColor();
+                Color = IntersectWith.Ambient.ToColor();
             }
             
             //Direction = IntersectWith.CalculateReflection(this);
@@ -64,7 +62,6 @@ namespace RayTracer
 
             return Color;
         }
-
 
         internal void ShowInformation()
         {
@@ -75,8 +72,5 @@ namespace RayTracer
             Direction.ShowInformation();
             Console.WriteLine("=====================================================");
         }
-
-
-
     }
 }

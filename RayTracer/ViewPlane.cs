@@ -49,33 +49,16 @@ namespace RayTracer
             set { pixelHeight = value; }
         }
 
-        private Color[,] pixels;
-
         public ViewPlane(int width, int height, Camera camera)
         {
             this.pixelWidth = width;
             this.pixelHeight = height;
-            pixels = new Color[width, height];
 
             Camera = camera;
             WorldHeight = 2 * (float)Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180f);
             WorldWidth = WorldHeight * (float)((float)pixelWidth / (float)PixelHeight);
 
         }
-
-        public void SetPixel(int row, int col, Color color)
-        {
-
-            this.pixels[row, col] = color;
-        }
-
-        public Color GetPixel(int x, int y)
-        {
-            return pixels[x, y];
-        }
-
-
-
 
         public Point3 GetUpperLeft()
         {

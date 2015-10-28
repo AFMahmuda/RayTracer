@@ -12,7 +12,7 @@ namespace RayTracer
         public MyColor Color
         { get; set; }
 
-        public Color Ambient
+        public MyColor Ambient
         { get; set; }
 
         public struct Attenuation
