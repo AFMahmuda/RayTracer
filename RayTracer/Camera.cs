@@ -38,8 +38,8 @@ namespace RayTracer
             this.Up = up;
             FieldOfView = fov;
 
-            W = (new Vector3(LookAt - Position)) / new Vector3(LookAt - Position).Magnitude;
-            U = Vector3.Cross(Up, W) / Vector3.Cross(Up, W).Magnitude;
+            W = (new Vector3(LookAt - Position)).Normalize();
+            U = Vector3.Cross(Up, W).Normalize();
             V = Vector3.Cross(W, U);
 
             //ShowInformation();

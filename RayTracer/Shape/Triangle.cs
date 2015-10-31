@@ -27,21 +27,19 @@ namespace RayTracer
 
         public override bool CheckIntersection(Ray ray)
         {
-
-
-
             Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A));
             norm /= norm.Magnitude;
             if (ray.Direction * norm == 0)
                 return false;
 
             float t = (new Vector3(A) * norm - new Vector3(ray.Start) * norm) / (ray.Direction * norm);
-            if (t > 0 && t < ray.IntersectDistance)
+            
+            if (t > 0 && ray.IsSmallerThanCurrent(t, Transform))
             {
 
                 if (IsInsideTriangle(ray.Start + (ray.Direction * t).Value))
                 {
-                    ray.IntersectDistance = t;
+                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude;
                     return true;
                 }
 
@@ -76,11 +74,13 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
-        public override void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
+        public override Vector3 GetNormal(Point3 point)
         {
-            A = ((U * A.X) + (V * A.Y) + (W * A.Z)).Value;
-            B = ((U * B.X) + (V * B.Y) + (W * B.Z)).Value;
-            C = ((U * C.X) + (V * C.Y) + (W * C.Z)).Value;
+            Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A));
+            return norm;
         }
+
+
+       
     }
 }

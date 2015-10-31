@@ -22,7 +22,7 @@ namespace RayTracer
             float rad = (angle) * (float)Math.PI / 180;
 
             float x = values.X;
-            float y = values.Y;
+            float y = -values.Y;
             float z = values.Z;
             float c = (float)Math.Cos(rad);
             float s = (float)Math.Sin(rad);

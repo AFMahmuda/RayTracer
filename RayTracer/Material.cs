@@ -11,10 +11,10 @@ namespace RayTracer
 
         public Material()
         {
-            Specular = new MyColor(.4f,.4f,.4f);
-            Diffuse = new MyColor(.4f, .4f, .4f);
-            Emission = new MyColor(.4f, .4f, .4f);
-            Shininess = .5f;
+            Specular = new MyColor();
+            Diffuse = new MyColor();
+            Emission = new MyColor();
+            Shininess = 0f;
         }
 
         public MyColor Specular

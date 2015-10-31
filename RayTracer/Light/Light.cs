@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RayTracer
 {
-    public class Light
+    public abstract class Light
     {
 
         public MyColor Color
@@ -38,8 +38,13 @@ namespace RayTracer
                 get { return quadratic; }
                 set { quadratic = value; }
             }
+
+
+
         }
+        public abstract Vector3 GetPointToLight(Point3 point);
+        public abstract bool IsEffective(Point3 point, List<Geometry> geometries); 
     }
 
-    
+
 }

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RayTracer
 {
@@ -11,9 +12,9 @@ namespace RayTracer
     {
 
 
-        private LinkedList<Geometry> geometries = new LinkedList<Geometry>();
+        private List<Geometry> geometries = new List<Geometry>();
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
-        private LinkedList<Light> lights = new LinkedList<Light>();
+        private List<Light> lights = new List<Light>();
         private List<Point3> vertices = new List<Point3>();
 
 
@@ -28,6 +29,7 @@ namespace RayTracer
             Material = new Material();
             Ambient = new MyColor(.2f, .2f, .2f);
             Attenuation = new Attenuation();
+            OutputFilename = "default.bmp";
 
         }
 
@@ -42,12 +44,20 @@ namespace RayTracer
         }
 
 
+        String CleanCommand(String command)
+        {
+            command = command.Trim();
+            command = Regex.Replace(command, @"\s+", " ");
+            return command;
+        }
+
         public void ExecuteCommand(String fullcommand)
         {
 
             if (fullcommand.Contains('#'))
                 return;
-            fullcommand = fullcommand.Trim();
+
+            fullcommand =  CleanCommand(fullcommand);
             String[] words = fullcommand.Split(' ');
             String command = words[0];
 
@@ -58,7 +68,6 @@ namespace RayTracer
             }
 
             float[] param = new float[words.Length - 1];
-
             for (int i = 0; i < param.Length; i++)
                 param[i] = float.Parse(words[i + 1]);
 
@@ -80,7 +89,7 @@ namespace RayTracer
                     ApplyTransform(sphere);
                     ApplyMaterial(sphere);
                     ApplyAmbient(sphere);
-                    Geometries.AddLast(sphere);
+                    Geometries.Add(sphere);
                     break;
                 case "tri":
                     Point3 a = vertices[(int)param[0]];
@@ -91,7 +100,7 @@ namespace RayTracer
                     ApplyTransform(tri);
                     ApplyMaterial(tri);
                     ApplyAmbient(tri);
-                    Geometries.AddLast(tri);
+                    Geometries.Add(tri);
                     break;
                 case "maxverts":
                     vertices = new List<Point3>((int)param[0]);
@@ -102,9 +111,7 @@ namespace RayTracer
 
                 //transforms
                 case "pushTransform":
-                    Transform transform = new Translation(Point3.ZERO);
-                    transform.Matrix = Matrix.Mult44x44(transforms.First().Matrix, transform.Matrix);
-                    transforms.AddFirst(transform);
+                    transforms.AddFirst(transforms.First().Clone());
                     break;
                 case "popTransform":
                     transforms.RemoveFirst();
@@ -142,10 +149,10 @@ namespace RayTracer
                     Ambient = new MyColor(param);
                     break;
                 case "directional":
-                    Lights.AddFirst(new DirectionalLight(param));
+                    Lights.Add(new DirectionalLight(param));
                     break;
                 case "point":
-                    Lights.AddFirst(new PointLight(param));
+                    Lights.Add(new PointLight(param));
                     break;
 
                 default:
@@ -186,7 +193,7 @@ namespace RayTracer
             set;
         }
 
-        public LinkedList<Geometry> Geometries
+        public List<Geometry> Geometries
         {
             get { return geometries; }
             set { geometries = value; }
@@ -198,7 +205,7 @@ namespace RayTracer
             set { transforms = value; }
         }
 
-        public LinkedList<Light> Lights
+        public List<Light> Lights
         {
             get { return lights; }
             set { lights = value; }

@@ -8,9 +8,39 @@ namespace RayTracer
 {
     public class MyColor
     {
-        public float R { get; set; }
-        public float G { get; set; }
-        public float B { get; set; }
+        private float r;
+        private float g;
+        private float b;
+
+        public float R
+        {
+            get { return r; }
+            set
+            {
+//                r = (value > 1) ? 1 : (value < 0) ? 0 : value;
+                if (value > 1)
+                    r = 1;
+                else if (value < 0)
+                    r = 0;
+                else r = value;
+            }
+        }
+        public float G
+        {
+            get { return g; }
+            set
+            {
+                g = (value > 1) ? 1 : (value < 0) ? 0 : value;
+            }
+        }
+        public float B
+        {
+            get { return b; }
+            set
+            {
+                b = (value > 1) ? 1 : (value < 0) ? 0 : value;
+            }
+        }
 
         public MyColor(float r, float g, float b)
         {
@@ -38,6 +68,56 @@ namespace RayTracer
             int g = (int)(G * 255);
             int b = (int)(B * 255);
             return Color.FromArgb(r, g, b);
+        }
+
+        public static MyColor operator +(MyColor color1, MyColor color2)
+        {
+            return new MyColor(
+                color1.R + color2.R,
+                color1.G + color2.G,
+                color1.B + color2.B
+                );
+        }
+
+        public static MyColor operator -(MyColor color1, MyColor color2)
+        {
+            return new MyColor(
+                color1.R - color2.R,
+                color1.G - color2.G,
+                color1.B - color2.B
+                );
+        }
+
+        public static MyColor operator *(MyColor color1, MyColor color2)
+        {
+            return new MyColor(
+                color1.R * color2.R,
+                color1.G * color2.G,
+                color1.B * color2.B
+                );
+        }
+
+        public static MyColor operator *(MyColor color, float value)
+        {
+            return new MyColor(
+                color.R * value,
+                color.G * value,
+                color.B * value
+                );
+        }
+
+        public static MyColor operator *(float value, MyColor color)
+        {
+            return color * value;
+        }
+
+        public MyColor Pow(float value)
+        {
+            R = (float)Math.Pow(R, value);
+            G = (float)Math.Pow(G, value);
+            B = (float)Math.Pow(B, value);
+
+            return this;
         }
 
     }

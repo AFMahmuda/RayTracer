@@ -39,10 +39,10 @@ namespace RayTracer
 
         public override bool CheckIntersection(Ray ray)
         {
-            Vector3 camToSphere = new Vector3(ray.Start,Center);
+            Vector3 camToSphere = new Vector3(ray.Start, Center);
 
             float a = ray.Direction * ray.Direction;
-            float b = - 2 * (camToSphere * ray.Direction);
+            float b = -2 * (camToSphere * ray.Direction);
             float c = (camToSphere * camToSphere) - (Radius * Radius);
             float dd = (b * b) - (4 * a * c);
             //ray.Direction.ShowInformation();
@@ -58,39 +58,23 @@ namespace RayTracer
 
                 float t1 = (-b + (float)Math.Sqrt(dd)) / 2f * a;
                 float t2 = (-b - (float)Math.Sqrt(dd)) / 2f * a;
-//                Console.WriteLine(t1 + " " + t2);
+                //                Console.WriteLine(t1 + " " + t2);
 
+                float t;
 
                 if (t1 < 0 && t2 < 0)
                     return false;
-                else if (t1 < 0)
-                {
-                    if (t2 < ray.IntersectDistance)
-                    {
-                        ray.IntersectDistance = t2;
-                        return true;
-                    }
-                    else return false;
-                }
-                else if (t2 < 0)
-                {
-                    if (t1 < ray.IntersectDistance)
-                    {
-                        ray.IntersectDistance = t1;
-                        return true;
-                    }
-                    else return false;
-                }
-
+                else if (t1 * t2 < 0)
+                    t = Math.Max(t1, t2);
                 else
+                    t = Math.Min(t1, t2);
+
+                if (ray.IsSmallerThanCurrent(t, Transform))
                 {
-                    if (Math.Min(t1, t2) < ray.IntersectDistance)
-                    {
-                        ray.IntersectDistance = Math.Min(t1, t2);
-                        return true;
-                    }
-                    else return false;
+                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude; ;
+                    return true;
                 }
+                else return false;
             }
             return false;
         }
@@ -100,15 +84,11 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
-        public override void TransformToCameraSpace(Vector3 U, Vector3 V, Vector3 W)
+
+
+        public override Vector3 GetNormal(Point3 point)
         {
-            Center = ((U * Center.X) + (V * Center.Y) + (W * Center.Z)).Value;
-            Console.WriteLine("Sphere");
-            Center.ShowInformation();
-            Console.WriteLine("rad = " + Radius);
-
+            return new Vector3(Center, point).Normalize();
         }
-
-
     }
 }

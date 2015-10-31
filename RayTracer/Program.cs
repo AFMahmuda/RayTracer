@@ -14,11 +14,12 @@ namespace RayTracer
         {
             try
             {
-                //                String scenefile = args[0];
-                //                String outputfile = args[1];
-                String scenefile = "scene1.test";
-                String outputFile = "tralala.bmp";
 
+                String scenefile = "scene1.test";
+                String outputFile = "default.bmp";
+                Console.WriteLine(args.Length);
+                if (args.Length != 0)
+                    scenefile = args[0];
 
                 if (File.Exists(scenefile))
                 {

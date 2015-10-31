@@ -20,12 +20,21 @@ namespace RayTracer
         {
         }
 
-
-
         public Vector3 Direction
         {
             get;
             set;
         }
+
+        public override Vector3 GetPointToLight(Point3 point)
+        {
+            return new Vector3(point, Direction.Value);
+        }
+
+        public override bool IsEffective(Point3 point, List<Geometry> geometries)
+        {
+            return true;
+        }
+
     }
 }

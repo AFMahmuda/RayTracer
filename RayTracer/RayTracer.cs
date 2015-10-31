@@ -20,7 +20,7 @@ namespace RayTracer
 
             int total = scene.ViewPlane.PixelWidth * scene.ViewPlane.PixelHeight;
             int count = 0;
-            Console.WriteLine("----------");
+            Console.WriteLine("--------------------");
             for (int row = 0; row < scene.ViewPlane.PixelHeight; row++)
             {
                 for (int col = 0; col < scene.ViewPlane.PixelWidth; col++)
@@ -39,7 +39,7 @@ namespace RayTracer
                     //    ray.ShowInformation();
                     //}
 
-                    Color newColor = ray.Trace(scene, 0);
+                    Color newColor = ray.Trace(scene, 0).ToColor();
                     if (ray.IntersectWith == null)
                     {
                         int R = 135 * col / scene.ViewPlane.PixelWidth + 50;
@@ -49,11 +49,10 @@ namespace RayTracer
 
                     }
 
-
                     result.SetPixel(col, row, newColor);
 
                     count++;
-                    if (count == total / 10)
+                    if (count == total / 20)
                     {
                         Console.Write("*");
                         count = 0;

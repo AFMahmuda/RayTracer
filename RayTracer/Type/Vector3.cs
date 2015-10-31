@@ -41,6 +41,11 @@ namespace RayTracer
             get { return (float)Math.Sqrt((Value.X * Value.X) + (Value.Y * Value.Y) + (Value.Z * Value.Z)); }
         }
 
+        public Vector3 Normalize()
+        {
+            return this / Magnitude;
+        }
+
 
         public static float operator *(Vector3 a, Vector3 b)
         {
