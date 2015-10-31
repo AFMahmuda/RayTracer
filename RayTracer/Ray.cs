@@ -51,14 +51,15 @@ namespace RayTracer
 
             if (IntersectWith != null)
             {
-                Color += CalculateColor(IntersectWith, PopulateEffectiveLight(scene.Lights, scene.Geometries));
-                //                Direction = IntersectWith.CalculateReflection(this);
+                Color = CalculateColor(IntersectWith, PopulateEffectiveLight(scene.Lights, scene.Geometries));
+
+
                 Ray ray = new Ray();
                 ray.Direction = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
                 ray.Start = HitPoint;
                 ray.IntersectDistance = float.MaxValue;
                 ray.IntersectWith = null;
-                return Color + (.3f * ray.Trace(scene, bounce++));
+                return Color +(.3f * ray.Trace(scene, bounce+1));
             }
 
             else return new MyColor();

@@ -24,10 +24,10 @@ specular 1 1 1
 shininess 50
 
 diffuse .1 .1 .5
-sphere -.5 -.5 0 .5
+sphere -.4 -.5 0 .5
 
 diffuse .5 .1 .1
-sphere .2 .2 .2 .2
+sphere .2 .15 .2 .2
 
 diffuse .1 .5 .1
-sphere .35 -.35 -.35 .35
+sphere .3 -.3 -.4 .35
