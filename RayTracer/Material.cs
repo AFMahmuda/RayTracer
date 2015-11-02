@@ -26,8 +26,19 @@ namespace RayTracer
         public MyColor Emission
         { get; set; }
 
+
+        float shininess;
         public float Shininess
-        { get; set; }
+        {
+            get
+            {
+                return shininess;
+            }
+            set
+            {
+                shininess = (value < 0) ? 0 : ((value > 128) ? 128 : value);
+            }
+        }
 
         public Material Clone()
         {

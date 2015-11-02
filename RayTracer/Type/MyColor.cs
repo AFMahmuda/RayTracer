@@ -17,12 +17,7 @@ namespace RayTracer
             get { return r; }
             set
             {
-//                r = (value > 1) ? 1 : (value < 0) ? 0 : value;
-                if (value > 1)
-                    r = 1;
-                else if (value < 0)
-                    r = 0;
-                else r = value;
+                r = (value < 0) ? 0 : ((value > 1) ? 1 : value);
             }
         }
         public float G
@@ -30,7 +25,7 @@ namespace RayTracer
             get { return g; }
             set
             {
-                g = (value > 1) ? 1 : (value < 0) ? 0 : value;
+                g = (value < 0) ? 0 : ((value > 1) ? 1 : value);
             }
         }
         public float B
@@ -38,7 +33,7 @@ namespace RayTracer
             get { return b; }
             set
             {
-                b = (value > 1) ? 1 : (value < 0) ? 0 : value;
+                b = (value < 0) ? 0 : ((value > 1) ? 1 : value);
             }
         }
 
