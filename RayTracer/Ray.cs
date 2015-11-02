@@ -15,6 +15,13 @@ namespace RayTracer
             IntersectWith = null;
         }
 
+        public Ray(Point3 start, Vector3 direction)
+            : this()
+        {
+            Start = start;
+            Direction = direction;
+        }
+
 
         public Point3 Start
         { get; set; }
@@ -51,15 +58,13 @@ namespace RayTracer
 
             if (IntersectWith != null)
             {
-                Color = CalculateColor(IntersectWith, PopulateEffectiveLight(scene.Lights, scene.Geometries));
 
+                Color = CalculateColor(PopulateEffectiveLight(scene.Lights, scene.Geometries));
 
-                Ray ray = new Ray();
-                ray.Direction = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
-                ray.Start = HitPoint;
-                ray.IntersectDistance = float.MaxValue;
-                ray.IntersectWith = null;
-                return Color +(.3f * ray.Trace(scene, bounce+1));
+                Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
+                Ray ray = new Ray(HitPoint, reflection);
+                float reflectability = .5f;
+                return Color + (reflectability * ray.Trace(scene, bounce + 1));
             }
 
             else return new MyColor();
@@ -67,27 +72,24 @@ namespace RayTracer
 
         }
 
-
-
-
-        MyColor CalculateColor(Geometry geometry, List<Light> effectiveLights)
+        MyColor CalculateColor(List<Light> effectiveLights)
         {
-
-            MyColor result = geometry.Ambient + geometry.Material.Emission;
-            Vector3 normal = geometry.GetNormal(HitPoint);
-            foreach (var item in effectiveLights)
+            MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
+            Vector3 normal = IntersectWith.GetNormal(HitPoint);
+            foreach (var light in effectiveLights)
             {
-                Vector3 pointToLight = item.GetPointToLight(HitPoint);
+                Vector3 pointToLight = light.GetPointToLight(HitPoint);
                 Vector3 halfToLight = (Direction * -1 + pointToLight).Normalize();
+
                 float attenuation = 1;
 
                 result +=
                     attenuation
-                    * (geometry.Material.Diffuse * (pointToLight * normal) * item.Color
-                    + (geometry.Material.Specular * (float)Math.Pow(halfToLight * normal, geometry.Material.Shininess) * item.Color));
+                    * (IntersectWith.Material.Diffuse * (pointToLight * normal)
+                    + (IntersectWith.Material.Specular * (float)Math.Pow(halfToLight * normal, IntersectWith.Material.Shininess))) * light.Color;
             }
-            //            Console.WriteLine(result.R +" "+ result.G + " "+ result.B );
             return result;
+
         }
 
         List<Light> PopulateEffectiveLight(List<Light> allLights, List<Geometry> geometries)
@@ -95,7 +97,7 @@ namespace RayTracer
             List<Light> result = new List<Light>();
             foreach (var light in allLights)
             {
-                if (light.IsEffective(HitPoint, geometries))
+                if (light.IsEffective(HitPoint, IntersectWith, geometries))
                     result.Add(light);
             }
 

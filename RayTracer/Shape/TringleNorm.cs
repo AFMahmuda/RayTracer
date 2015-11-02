@@ -30,11 +30,6 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
-        public override Vector3 CalculateReflection(Ray ray)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public override Vector3 GetNormal(Point3 point)
         {

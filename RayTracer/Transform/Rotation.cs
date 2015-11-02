@@ -39,6 +39,7 @@ namespace RayTracer
             Matrix.SetValue(2, 1, z * y * (1 - c) + x * s);
             Matrix.SetValue(2, 2, z * z * (1 - c) + c);
 
+
             //float x = values.X * rad;
             //float y = values.Y * rad;
             //float z = values.Z * rad;
@@ -75,7 +76,7 @@ namespace RayTracer
             //rotateZ.SetValue(1, 1, cosZ);
 
 
-            //Matrix = Matrix.Mult44x44(Matrix.Mult44x44(rotateZ, rotateY), rotateX);
+            //Matrix = Matrix.Mult44x44(Matrix.Mult44x44(rotateX, rotateY), rotateZ);
 
 
 

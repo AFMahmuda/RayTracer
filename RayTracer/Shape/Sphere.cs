@@ -71,7 +71,7 @@ namespace RayTracer
 
                 if (ray.IsSmallerThanCurrent(t, Transform))
                 {
-                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude; ;
+                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude;
                     return true;
                 }
                 else return false;
@@ -79,15 +79,11 @@ namespace RayTracer
             return false;
         }
 
-        public override Vector3 CalculateReflection(Ray ray)
-        {
-            throw new NotImplementedException();
-        }
-
-
+       
 
         public override Vector3 GetNormal(Point3 point)
         {
+            point = Matrix.Mult44x41(Transform.Matrix.Inverse4X4(), new Vector3 (point), 1).Value;
             return new Vector3(Center, point).Normalize();
         }
     }

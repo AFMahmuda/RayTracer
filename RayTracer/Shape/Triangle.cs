@@ -69,14 +69,10 @@ namespace RayTracer
         }
 
 
-        public override Vector3 CalculateReflection(Ray ray)
-        {
-            throw new NotImplementedException();
-        }
 
         public override Vector3 GetNormal(Point3 point)
         {
-            Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A));
+            Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A)).Normalize();
             return norm;
         }
 

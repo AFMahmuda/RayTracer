@@ -15,11 +15,13 @@ namespace RayTracer
         {
             scene.ViewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera);
             Bitmap result = new Bitmap(scene.ViewPlane.PixelWidth, scene.ViewPlane.PixelHeight);
-            scene.Camera.ShowInformation();
-            scene.ViewPlane.ShowInformation();
+//            scene.Camera.ShowInformation();
+  //          scene.ViewPlane.ShowInformation();
 
             int total = scene.ViewPlane.PixelWidth * scene.ViewPlane.PixelHeight;
             int count = 0;
+            DateTime start = DateTime.Now;
+    
             Console.WriteLine("--------------------");
             for (int row = 0; row < scene.ViewPlane.PixelHeight; row++)
             {
@@ -33,21 +35,15 @@ namespace RayTracer
                     ray.Direction = new Vector3(ray.Start, newPosition);
                     ray.Direction /= ray.Direction.Magnitude;
 
-                    //if (row % (scene.ViewPlane.PixelHeight - 1) == 0 && col % (scene.ViewPlane.PixelWidth - 1) == 0)
-                    //{
-                    //    Console.WriteLine("row , col = " + row + " , " + col);
-                    //    ray.ShowInformation();
-                    //}
-
                     Color newColor = ray.Trace(scene, 0).ToColor();
-                    if (ray.IntersectWith == null)
-                    {
-                        int R = 135 * col / scene.ViewPlane.PixelWidth + 50;
-                        int G = 135 * row / scene.ViewPlane.PixelHeight + 50;
-                        int B = 135 - R + 50;
-                        newColor = Color.FromArgb(R, G, B);
+                    //if (ray.IntersectWith == null)
+                    //{
+                    //    int R = 135 * col / scene.ViewPlane.PixelWidth + 50;
+                    //    int G = 135 * row / scene.ViewPlane.PixelHeight + 50;
+                    //    int B = 135 - R + 50;
+                    //    newColor = Color.FromArgb(R, G, B);
 
-                    }
+                    //}
 
                     result.SetPixel(col, row, newColor);
 
@@ -61,6 +57,8 @@ namespace RayTracer
 
             }
             Console.WriteLine();
+
+            Console.WriteLine("finised in :"  + (DateTime.Now- start));
             return result;
         }
 

@@ -27,23 +27,23 @@ namespace RayTracer
             return new Vector3(point, Position);
         }
 
-        public override bool IsEffective(Point3 point, List<Geometry> geometries)
+        public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
         {
 
-            Ray ray = new Ray();
-            ray.Start = point;
-            ray.Direction = GetPointToLight(point);
+            if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+                return false;
 
+            Ray ray = new Ray(point, GetPointToLight(point));
             foreach (var item in geometries)
             {
+                if (item.Equals(geometry))
+                    continue;
                 ray.TransformInv(item.Transform);
                 if (item.CheckIntersection(ray))
                     if (ray.IntersectDistance < 1)
                         return false;
                 ray.Transform(item.Transform);
             }
-
-
 
             return true;
         }

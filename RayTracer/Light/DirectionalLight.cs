@@ -9,9 +9,9 @@ namespace RayTracer
     {
 
 
-        public DirectionalLight(Vector3 from, MyColor color)
+        public DirectionalLight(Vector3 direction, MyColor color)
         {
-            Direction = from;
+            Direction = direction ;
             Color = color;
 
         }
@@ -28,13 +28,19 @@ namespace RayTracer
 
         public override Vector3 GetPointToLight(Point3 point)
         {
-            return new Vector3(point, Direction.Value);
+            return new Vector3(point, Direction.Value * -1);
         }
 
-        public override bool IsEffective(Point3 point, List<Geometry> geometries)
+        public override bool IsEffective(Point3 point,Geometry geometry , List<Geometry> geometries)
         {
+
+            if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+                return false;
+
             return true;
         }
+
+
 
     }
 }
