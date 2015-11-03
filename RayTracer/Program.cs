@@ -15,7 +15,7 @@ namespace RayTracer
             try
             {
 
-                String scenefile = "scene1.test";
+                String scenefile = "default.test";
                 String outputFile = "default.bmp";
                 if (args.Length != 0)
                     scenefile = args[0];

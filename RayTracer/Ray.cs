@@ -22,11 +22,16 @@ namespace RayTracer
             Direction = direction;
         }
 
-
         public Point3 Start
         { get; set; }
 
         public Vector3 Direction
+        { get; set; }
+
+        public float IntersectDistance
+        { get; set; }
+
+        public Geometry IntersectWith
         { get; set; }
 
         public MyColor Color
@@ -37,11 +42,6 @@ namespace RayTracer
             get { return Start + (Direction * (IntersectDistance * .999f)).Value; }
         }
 
-        public float IntersectDistance
-        { get; set; }
-
-        public Geometry IntersectWith
-        { get; set; }
 
         public MyColor Trace(Scene scene, int bounce)
         {
@@ -58,13 +58,12 @@ namespace RayTracer
 
             if (IntersectWith != null)
             {
-
-                Color = CalculateColor(PopulateEffectiveLight(scene.Lights, scene.Geometries));
+                Color = CalculateColor(PopulateEffectiveLight(scene.Lights, scene.Geometries), scene.Attenuation);
 
                 Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
-                Ray ray = new Ray(HitPoint, reflection);
-                float reflectability = .5f;
-                return Color + (reflectability * ray.Trace(scene, bounce + 1));
+                Ray reflectedRay = new Ray(HitPoint, reflection);
+                float reflectability = .3f;
+                return Color + (reflectability * reflectedRay.Trace(scene, bounce + 1));
             }
 
             else return new MyColor();
@@ -72,7 +71,7 @@ namespace RayTracer
 
         }
 
-        MyColor CalculateColor(List<Light> effectiveLights)
+        MyColor CalculateColor(List<Light> effectiveLights, Attenuation attenuation)
         {
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
             Vector3 normal = IntersectWith.GetNormal(HitPoint);
@@ -81,12 +80,14 @@ namespace RayTracer
                 Vector3 pointToLight = light.GetPointToLight(HitPoint);
                 Vector3 halfToLight = (Direction * -1 + pointToLight).Normalize();
 
-                float attenuation = 1;
+                float attenuationValue = 1f / (attenuation.Constant + attenuation.Linear * pointToLight.Magnitude + attenuation.Quadratic * pointToLight.Magnitude * pointToLight.Magnitude);
 
                 result +=
-                    attenuation
-                    * (IntersectWith.Material.Diffuse * (pointToLight * normal)
-                    + (IntersectWith.Material.Specular * (float)Math.Pow(halfToLight * normal, IntersectWith.Material.Shininess))) * light.Color;
+                    attenuationValue * light.Color
+                    * (
+                        IntersectWith.Material.Diffuse * (pointToLight.Normalize() * normal)
+                        + (IntersectWith.Material.Specular * (float)Math.Pow(halfToLight * normal, IntersectWith.Material.Shininess))
+                    ) ;
             }
             return result;
 

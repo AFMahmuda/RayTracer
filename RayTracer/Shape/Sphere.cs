@@ -74,7 +74,6 @@ namespace RayTracer
                     ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude;
                     return true;
                 }
-                else return false;
             }
             return false;
         }

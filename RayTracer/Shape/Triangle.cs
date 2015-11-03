@@ -33,7 +33,7 @@ namespace RayTracer
                 return false;
 
             float t = (new Vector3(A) * norm - new Vector3(ray.Start) * norm) / (ray.Direction * norm);
-            
+
             if (t > 0 && ray.IsSmallerThanCurrent(t, Transform))
             {
 
@@ -72,12 +72,12 @@ namespace RayTracer
 
         public override Vector3 GetNormal(Point3 point)
         {
-            Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A)).Normalize();
-            norm = Matrix.Mult44x41(Transform.Matrix.Inverse4X4(), norm, 1);
+            Vector3 norm = Vector3.Cross(new Vector3(B - A), new Vector3(C - A)).Normalize();
+            norm = Matrix.Mult44x41(Transform.Matrix.Inverse4X4(), norm, 1).Normalize();
             return norm;
         }
 
 
-       
+
     }
 }
