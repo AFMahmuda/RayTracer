@@ -8,35 +8,60 @@ namespace RayTracer
     public class Triangle : Geometry
     {
 
+        Point3 a;
+        Point3 b;
+        Point3 c;
+
+        Vector3 localNorm;
+
+        Vector3 ab;
+        Vector3 ac;
+        Vector3 ap;
+
+        //dot products
+        float dot_ab_ab;
+        float dot_ab_ac;
+        float dot_ac_ac;
+        float dot_ab_ap;
+        float dot_ac_ap;
+
+        float invDenom;
+
         public Triangle(Point3 a, Point3 b, Point3 c)
         {
-            A = a;
-            B = b;
-            C = c;
+            this.a = a;
+            this.b = b;
+            this.c = c;
+
+            PreCalculate();
         }
 
-
-        public Point3 A
-        { get; set; }
-
-        public Point3 B
-        { get; set; }
-
-        public Point3 C
-        { get; set; }
-
-        public override bool CheckIntersection(Ray ray)
+        void PreCalculate()
         {
-            Vector3 norm = Vector3.Cross(new Vector3(C - A), new Vector3(B - A));
-            norm /= norm.Magnitude;
-            if (ray.Direction * norm == 0)
+            //for IsIntersecting
+            localNorm = Vector3.Cross(new Vector3(b - a), new Vector3(c - a)).Normalize();
+
+
+            //for IsInsideTriangle
+            ab = new Vector3(b - a);
+            ac = new Vector3(c - a);
+
+            dot_ab_ab = ab * ab;
+            dot_ab_ac = ab * ac;
+            dot_ac_ac = ac * ac;
+
+            invDenom = 1 / (dot_ab_ab * dot_ac_ac - dot_ab_ac * dot_ab_ac);
+        }
+
+        public override bool IsIntersecting(Ray ray)
+        {
+            if (ray.Direction * localNorm == 0)
                 return false;
 
-            float t = (new Vector3(A) * norm - new Vector3(ray.Start) * norm) / (ray.Direction * norm);
+            float t = (new Vector3(a) * localNorm - new Vector3(ray.Start) * localNorm) / (ray.Direction * localNorm);
 
             if (t > 0 && ray.IsSmallerThanCurrent(t, Transform))
             {
-
                 if (IsInsideTriangle(ray.Start + (ray.Direction * t).Value))
                 {
                     ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude;
@@ -47,33 +72,28 @@ namespace RayTracer
             return false;
         }
 
-        public bool IsInsideTriangle(Point3 point)
+
+
+       
+
+        bool IsInsideTriangle(Point3 point)
         {
-            Vector3 ab = new Vector3(B - A);
-            Vector3 ac = new Vector3(C - A);
-            Vector3 ap = new Vector3(point - A);
+            ap = new Vector3(point - a);
 
-            float dot00 = ab * ab;
-            float dot01 = ab * ac;
-            float dot02 = ab * ap;
-            float dot11 = ac * ac;
-            float dot12 = ac * ap;
+            dot_ab_ap = ab * ap;
+            dot_ac_ap = ac * ap;
 
-
-            float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-            float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-            float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+            float u = (dot_ac_ac * dot_ab_ap - dot_ab_ac * dot_ac_ap) * invDenom;
+            float v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
 
             return (u >= 0) && (v >= 0) && (u + v <= 1);
-
         }
 
 
 
         public override Vector3 GetNormal(Point3 point)
         {
-            Vector3 norm = Vector3.Cross(new Vector3(B - A), new Vector3(C - A)).Normalize();
-            norm = Matrix.Mult44x41(Transform.Matrix.Inverse4X4(), norm, 1).Normalize();
+            Vector3 norm = Matrix.Mult44x41(Transform.Matrix.Inverse, localNorm, 1).Normalize();
             return norm;
         }
 

@@ -39,7 +39,7 @@ namespace RayTracer
                 if (item.Equals(geometry))
                     continue;
                 ray.TransformInv(item.Transform);
-                if (item.CheckIntersection(ray))
+                if (item.IsIntersecting(ray))
                     if (ray.IntersectDistance < 1)
                         return false;
                 ray.Transform(item.Transform);

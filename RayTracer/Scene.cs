@@ -24,7 +24,6 @@ namespace RayTracer
             Size = new Size();
             MaxDepth = 5;
             Camera = new Camera();
-            ViewPlane = new ViewPlane(1, 1, Camera);
             Transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
             Material = new Material();
             Ambient = new MyColor(.2f, .2f, .2f);
@@ -187,11 +186,6 @@ namespace RayTracer
             set;
         }
 
-        public ViewPlane ViewPlane
-        {
-            get;
-            set;
-        }
 
         public List<Geometry> Geometries
         {

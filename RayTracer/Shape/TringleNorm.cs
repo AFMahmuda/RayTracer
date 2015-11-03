@@ -25,7 +25,7 @@ namespace RayTracer
         public Point3 C_norm
         { get; set; }
 
-        public override bool CheckIntersection(Ray ray)
+        public override bool IsIntersecting(Ray ray)
         {
             throw new NotImplementedException();
         }

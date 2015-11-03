@@ -31,7 +31,7 @@ namespace RayTracer
             for (int row = 0; row < 4; row++)
             {
                 for (int col = 0; col < 4; col++) 
-                    Console.Write(Matrix.Inverse4X4().GetValue(row, col) + "\t");
+                    Console.Write(Matrix.Inverse.GetValue(row, col) + "\t");
                 Console.WriteLine();
             }
 

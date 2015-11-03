@@ -8,13 +8,17 @@ namespace RayTracer
     public class Matrix
     {
 
-
+        int rowNumber;
+        int colNumber;
         float[,] value;
+
         public Matrix(int row, int col)
         {
-            RowNumber = row;
-            ColNumber = col;
-            value = new float[RowNumber, ColNumber];
+            rowNumber = row;
+            colNumber = col;
+            value = new float[rowNumber, colNumber];
+            haveInverse = false;
+            //             this.value = I.value;
         }
 
         public Matrix(int row, int col, float[] val)
@@ -26,18 +30,16 @@ namespace RayTracer
         public void SetValue(float[] value)
         {
             if (value.Length == this.value.Length)
-                for (int row = 0; row < RowNumber; row++)
-                {
-                    for (int col = 0; col < ColNumber; col++)
-                    {
-                        this.value[row, col] = value[row * RowNumber + col];
-                    }
-                }
+                for (int row = 0; row < rowNumber; row++)
+                    for (int col = 0; col < colNumber; col++)
+                        this.value[row, col] = value[row * rowNumber + col];
+            haveInverse = false;
         }
 
         public void SetValue(int row, int col, float value)
         {
             this.value[row, col] = value;
+            haveInverse = false;
         }
 
 
@@ -50,68 +52,26 @@ namespace RayTracer
 
         public Matrix GetRow(int row)
         {
-            Matrix result = new Matrix(1, ColNumber);
-            for (int i = 0; i < ColNumber; i++)
-            {
+            Matrix result = new Matrix(1, colNumber);
+            for (int i = 0; i < colNumber; i++)
                 result.SetValue(0, i, this.value[row, i]);
-            }
             return result;
         }
 
         public Matrix GetCol(int col)
         {
-            Matrix result = new Matrix(RowNumber, 1);
-            for (int i = 0; i < RowNumber; i++)
-            {
+            Matrix result = new Matrix(rowNumber, 1);
+            for (int i = 0; i < rowNumber; i++)
                 result.SetValue(i, 0, this.value[i, col]);
-            }
-            return result;
-        }
-
-
-
-
-        public int RowNumber
-        {
-            get;
-            set;
-        }
-
-
-        public int ColNumber
-        {
-            get;
-            set;
-        }
-
-        public static bool IsSameSize(Matrix a, Matrix b)
-        {
-            if ((a.ColNumber == b.ColNumber) && (a.RowNumber == b.RowNumber))
-                return true;
-            else return false;
-        }
-
-        public static Matrix operator +(Matrix a, Matrix b)
-        {
-            Matrix result = new Matrix(a.ColNumber, a.RowNumber);
-
-            for (int row = 0; row < result.RowNumber; row++)
-            {
-                for (int col = 0; col < result.ColNumber; col++)
-                {
-                    float val = a.GetValue(row, col) + b.GetValue(row, col);
-                    result.SetValue(row, col, val);
-                }
-            }
             return result;
         }
 
         public static Matrix operator *(Matrix a, float b)
         {
-            Matrix result = new Matrix(a.ColNumber, a.RowNumber);
+            Matrix result = new Matrix(a.colNumber, a.rowNumber);
 
-            for (int row = 0; row < result.RowNumber; row++)
-                for (int col = 0; col < result.ColNumber; col++)
+            for (int row = 0; row < result.rowNumber; row++)
+                for (int col = 0; col < result.colNumber; col++)
                 {
                     float val = a.GetValue(row, col) * b;
                     result.SetValue(row, col, val);
@@ -119,31 +79,38 @@ namespace RayTracer
             return result;
         }
 
-        public static Matrix operator -(Matrix a, Matrix b)
-        {
-            return a + (b * -1);
-        }
-
 
         public Matrix I
         {
             get
             {
-                Matrix result = new Matrix(ColNumber, RowNumber);
-
-                for (int row = 0; row < result.RowNumber; row++)
-
-                    for (int col = 0; col < result.ColNumber; col++)
+                Matrix result = new Matrix(colNumber, rowNumber);
+                for (int row = 0; row < result.rowNumber; row++)
+                    for (int col = 0; col < result.colNumber; col++)
                     {
                         float val = (row == col) ? 1 : 0;
                         result.SetValue(row, col, val);
                     }
                 return result;
             }
-
         }
 
-        public Matrix Inverse4X4()
+        bool haveInverse;
+        Matrix inverse;
+        public Matrix Inverse
+        {
+            get
+            {
+                if (!haveInverse)
+                {
+                    inverse = CreateInverse();
+                    haveInverse = true;
+                }
+                return inverse;
+            }
+        }
+
+        Matrix CreateInverse()
         {
             float s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
             float s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
@@ -159,7 +126,6 @@ namespace RayTracer
             float c1 = value[2, 0] * value[3, 2] - value[3, 0] * value[2, 2];
             float c0 = value[2, 0] * value[3, 1] - value[3, 0] * value[2, 1];
 
-            //Should check for 0 determinant
             float invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
 
             Matrix result = new Matrix(4, 4);
@@ -185,7 +151,6 @@ namespace RayTracer
             result.SetValue(3, 3, (value[2, 0] * s3 - value[2, 1] * s1 + value[2, 2] * s0) * invdet);
 
             return result;
-
         }
 
         public static Vector3 Mult44x41(Matrix matrix, Vector3 vector, int homogeneousValue)
@@ -228,16 +193,12 @@ namespace RayTracer
             {
                 float val = 0;
                 for (int col = 0; col < 4; col++)
-                {
                     val += mat44.GetValue(row, col) * mat41.GetValue(col, 0);
-                }
                 res.SetValue(row, 0, val);
             }
 
             return res;
         }
-
-
 
     }
 }

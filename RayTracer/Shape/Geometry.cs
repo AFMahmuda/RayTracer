@@ -34,7 +34,7 @@ namespace RayTracer
             set;
         }
 
-        public abstract bool CheckIntersection(Ray ray);
+        public abstract bool IsIntersecting(Ray ray);
         public abstract Vector3 GetNormal(Point3 point);
         public MyColor Ambient { get; set; }
 
