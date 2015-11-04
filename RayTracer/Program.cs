@@ -38,14 +38,12 @@ namespace RayTracer
             }
             catch (Exception e)
             {
-
-                Console.WriteLine("plese insert a valid argument" + e.Message);
+                Console.WriteLine(e.Message);
             }
             finally
             {
                 Console.ReadKey();
             }
-
         }
     }
 }

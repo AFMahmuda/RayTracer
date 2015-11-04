@@ -16,6 +16,8 @@ namespace RayTracer
         int pixelWidth;
         Point3 position;
         Point3 upperLeft;
+        Point3 unitRight;
+        Point3 unitDown;
 
         public int PixelWidth
         {
@@ -49,7 +51,8 @@ namespace RayTracer
         void PreCalculate()
         {
             upperLeft = GetUpperLeft();
-
+            unitRight =(camera.U.Value * (worldWidth / (float)PixelWidth) * -1);
+            unitDown = (camera.V.Value * (worldHeight / (float)PixelHeight) * -1);
         }
 
         Point3 GetUpperLeft()
@@ -71,10 +74,8 @@ namespace RayTracer
         {
             Point3 newLocation =
                 upperLeft
-                - (camera.U.Value * (col + .5f) * (worldWidth / (float)PixelWidth)) //U is left
-                - (camera.V.Value * (row + .5f) * (worldHeight / (float)PixelHeight)); //V is up
-
-
+                + unitRight * (col + .5f)
+                + unitDown * (row + .5f);
             return newLocation;
         }
 
@@ -83,8 +84,8 @@ namespace RayTracer
 
             Point3 newLocation =
                 upperLeft
-                - (camera.U.Value * (col + .5f+ col2) * (worldWidth / (float)PixelWidth)) //U is left
-                - (camera.V.Value * (row + .5f+ row2) * (worldHeight / (float)PixelHeight)); //V is up
+                + unitRight * (col + .5f + col2)
+                + unitDown * (row + .5f + row2);
             return newLocation;
         }
 

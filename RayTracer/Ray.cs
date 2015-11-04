@@ -63,7 +63,7 @@ namespace RayTracer
 
                 Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
                 Ray reflectedRay = new Ray(HitPoint, reflection);
-                float reflectability = .3f;
+                float reflectability = .35f;
                 return color + (reflectability * reflectedRay.Trace(scene, bounce + 1));
             }
 
@@ -74,17 +74,17 @@ namespace RayTracer
         {
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
             Vector3 normal = IntersectWith.GetNormal(HitPoint);
+            float attenuationValue = 1;
+            if (!attenuation.Equals(new Attenuation()))
+                attenuationValue /=
+                    attenuation.Constant +
+                    attenuation.Linear * IntersectDistance +
+                    attenuation.Quadratic * IntersectDistance * IntersectDistance;
+
             foreach (var light in effectiveLights)
             {
                 Vector3 pointToLight = light.GetPointToLight(HitPoint);
                 Vector3 halfAngleToLight = (Direction * -1 + pointToLight).Normalize();
-                float attenuationValue = 1;
-                if (!attenuation.Equals(new Attenuation()))
-                    attenuationValue /=
-                        attenuation.Constant +
-                        attenuation.Linear * pointToLight.Magnitude +
-                        attenuation.Quadratic * pointToLight.Magnitude * pointToLight.Magnitude;
-
 
                 Material material = IntersectWith.Material;
                 result +=

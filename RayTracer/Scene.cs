@@ -60,7 +60,7 @@ namespace RayTracer
             String[] words = fullcommand.Split(' ');
             String command = words[0];
 
-            if (command.Equals("output"))
+            if (command.Equals("output")) 
             {
                 OutputFilename = words[1] + ".bmp";
                 return;
@@ -101,6 +101,7 @@ namespace RayTracer
                     ApplyAmbient(tri);
                     Geometries.Add(tri);
                     break;
+
                 case "maxverts":
                     vertices = new List<Point3>((int)param[0]);
                     break;

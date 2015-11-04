@@ -41,7 +41,6 @@ namespace RayTracer
             //for IsIntersecting
             localNorm = Vector3.Cross(new Vector3(b - a), new Vector3(c - a)).Normalize();
 
-
             //for IsInsideTriangle
             ab = new Vector3(b - a);
             ac = new Vector3(c - a);
@@ -55,26 +54,21 @@ namespace RayTracer
 
         public override bool IsIntersecting(Ray ray)
         {
+            //check is parallel
             if (ray.Direction * localNorm == 0)
                 return false;
 
-            float t = (new Vector3(a) * localNorm - new Vector3(ray.Start) * localNorm) / (ray.Direction * localNorm);
+            float distance = (new Vector3(a) * localNorm - new Vector3(ray.Start) * localNorm) / (ray.Direction * localNorm);
 
-            if (t > 0 && ray.IsSmallerThanCurrent(t, Transform))
-            {
-                if (IsInsideTriangle(ray.Start + (ray.Direction * t).Value))
+            if (distance > 0 && ray.IsSmallerThanCurrent(distance, Transform))
+                if (IsInsideTriangle(ray.Start + (ray.Direction * distance).Value))
                 {
-                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * t, 0).Magnitude;
+                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * distance, 0).Magnitude;
                     return true;
                 }
-
-            }
             return false;
         }
 
-
-
-       
 
         bool IsInsideTriangle(Point3 point)
         {
@@ -89,15 +83,10 @@ namespace RayTracer
             return (u >= 0) && (v >= 0) && (u + v <= 1);
         }
 
-
-
         public override Vector3 GetNormal(Point3 point)
         {
             Vector3 norm = Matrix.Mult44x41(Transform.Matrix.Inverse, localNorm, 1).Normalize();
             return norm;
         }
-
-
-
     }
 }

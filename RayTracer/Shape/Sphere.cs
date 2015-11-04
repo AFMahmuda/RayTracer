@@ -30,26 +30,27 @@ namespace RayTracer
         {
             Vector3 camToSphere = new Vector3(ray.Start, center);
 
+            //false if sphere is behind ray
+            if (camToSphere * ray.Direction <= 0)
+                return false;
+
             float a = ray.Direction * ray.Direction;
             float b = -2 * (camToSphere * ray.Direction);
             float c = (camToSphere * camToSphere) - (radius * radius);
             float dd = (b * b) - (4 * a * c);
 
-            if (dd <= 0)
+            if (dd > 0)
             {
-                return false;
-            }
-            else if (dd > 0)
-            {
-
                 float res1 = (-b + (float)Math.Sqrt(dd)) / 2f * a;
                 float res2 = (-b - (float)Math.Sqrt(dd)) / 2f * a;
-
                 float res;
 
-                if (res1 < 0 && res2 < 0)
-                    return false;
-                else if (res1 * res2 < 0)
+                // if both results are negative, then the sphere is behind our ray, 
+                // but we already checked that.
+                //if (res1 < 0 && res2 < 0)
+                //    return false;
+                //else
+                if (res1 * res2 < 0)
                     res = Math.Max(res1, res2);
                 else
                     res = Math.Min(res1, res2);
@@ -62,7 +63,6 @@ namespace RayTracer
             }
             return false;
         }
-
 
         public override Vector3 GetNormal(Point3 point)
         {

@@ -8,19 +8,6 @@ namespace RayTracer
 {
     public abstract class Geometry
     {
-        private MyColor color;
-        public MyColor Color
-        {
-            get
-            {
-                return color;
-            }
-            set
-            {
-                color = value;
-            }
-        }
-
         public Transform Transform
         {
             get;

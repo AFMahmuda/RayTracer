@@ -26,12 +26,7 @@ namespace RayTracer
         public static Vector3 DOWN { get { return UP * -1; } }
         public static Vector3 LEFT { get { return RIGHT * -1; } }
 
-        public void ShowInformation()
-        {
-            Console.WriteLine(" vector:");
-            Console.WriteLine(" Value     = " + Value.X.ToString("#.0000") + " " + Value.Y.ToString("#.0000") + " " + Value.Z.ToString("#.0000"));
-            Console.WriteLine(" Magnitude = " + Magnitude.ToString("#.0000"));
-        }
+
 
         public Point3 Value
         { get; set; }
@@ -95,9 +90,13 @@ namespace RayTracer
                 (A.X * B.Z - A.Z * B.X) * -1,
                 A.X * B.Y - A.Y * B.X
             );
-
-
         }
 
+        public void ShowInformation()
+        {
+            Console.WriteLine(" vector:");
+            Console.WriteLine(" Value     = " + Value.X.ToString("#.0000") + " " + Value.Y.ToString("#.0000") + " " + Value.Z.ToString("#.0000"));
+            Console.WriteLine(" Magnitude = " + Magnitude.ToString("#.0000"));
+        }
     }
 }

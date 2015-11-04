@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 
@@ -11,70 +13,76 @@ namespace RayTracer
 
     public class RayTracer
     {
+        ViewPlane viewPlane;
+        Bitmap result;
+        Point3 startPosition;
+
+        int total;
+        int count;
+
         public Bitmap TraceScene(Scene scene)
         {
-            ViewPlane viewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera);
-            Bitmap result = new Bitmap(viewPlane.PixelWidth, viewPlane.PixelHeight);
-//            scene.Camera.ShowInformation();
-  //          scene.ViewPlane.ShowInformation();
 
-            int total = viewPlane.PixelWidth * viewPlane.PixelHeight;
-            int count = 0;
+            viewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera);
+            result = new Bitmap(viewPlane.PixelWidth, viewPlane.PixelHeight);
+            startPosition = scene.Camera.Position;
+
+            total = viewPlane.PixelWidth * viewPlane.PixelHeight;
+            count = 0;
+
             DateTime start = DateTime.Now;
-    
             Console.WriteLine("--------------------");
+
+            
             for (int row = 0; row < viewPlane.PixelHeight; row++)
             {
+                MyColor[] tempColor = new MyColor[3];
+
+                Ray temp = new Ray();
+                temp.Start = startPosition;
+
+                for (int i = -1; i < 2; i++)
+                {
+                    Point3 tempDir = viewPlane.GetNewLocation(0, row, .5f, i * .5f);
+                    temp.Direction = new Vector3(temp.Start, tempDir).Normalize();
+                    tempColor[i + 1] = temp.Trace(scene, 0) * (1f / 9f);
+                }
+
                 for (int col = 0; col < viewPlane.PixelWidth; col++)
                 {
+                    MyColor color = new MyColor();
 
                     Ray ray = new Ray();
-                    ray.Start = scene.Camera.Position;
+                    ray.Start = startPosition;
+                    //Point3 newPosition = viewPlane.GetNewLocation(col, row);
+                    //ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
 
-                    Point3 newPosition = viewPlane.GetNewLocation(col, row);
-                    ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
+                    //color += ray.Trace(scene, 0);
 
-                    MyColor color = ray.Trace(scene, 0);// *.2f;
-                    //if (ray.IntersectWith == null)
-                    //{
-                    //    int R = 135 * col / scene.ViewPlane.PixelWidth + 50;
-                    //    int G = 135 * row / scene.ViewPlane.PixelHeight + 50;
-                    //    int B = 135 - R + 50;
-                    //    newColor = Color.FromArgb(R, G, B);
-                    //}
 
-                    //Ray ray0 = new Ray();
-                    //ray0.Start = scene.Camera.Position;
-                    //newPosition = viewPlane.GetNewLocation(col, row, -.5f, -.5f);
-                    //ray0.Direction = new Vector3(ray.Start, newPosition).Normalize();
+                    color += tempColor[0];
+                    color += tempColor[1];
+                    color += tempColor[2];
 
-                    //color += ray0.Trace(scene, 0) * .2f;
+                    for (int i = 0; i <= 1; i++)
+                    {
+                        for (int j = -1; j <= 1; j++)
+                        {
+                            Point3 newPosition = viewPlane.GetNewLocation(col, row, i * .5f, j * .5f);
+                            ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
+                            MyColor rayColor = ray.Trace(scene, 0) * (1f / 9f);
+                            color += rayColor;
 
-                    //Ray ray1 = new Ray();
-                    //ray1.Start = scene.Camera.Position;
-                    //newPosition = viewPlane.GetNewLocation(col, row, -.5f, .5f);
-                    //ray1.Direction = new Vector3(ray.Start, newPosition).Normalize();
-
-                    //color += ray1.Trace(scene, 0) * .2f;
-
-                    //Ray ray2 = new Ray();
-                    //ray2.Start = scene.Camera.Position;
-                    //newPosition = viewPlane.GetNewLocation(col, row, .5f, -.5f);
-                    //ray2.Direction = new Vector3(ray.Start, newPosition).Normalize();
-
-                    //color += ray2.Trace(scene, 0) * .2f;
-
-                    //Ray ray3 = new Ray();
-                    //ray3.Start = scene.Camera.Position;
-                    //newPosition = viewPlane.GetNewLocation(col, row, .5f, .5f);
-                    //ray3.Direction = new Vector3(ray.Start, newPosition).Normalize();
-
-                    //color += ray3.Trace(scene, 0) * .2f;
+                            if (i == 1)
+                                tempColor[j + 1] = rayColor; 
+                        }
+                    }
 
                     result.SetPixel(col, row, color.ToColor());
 
-                    count++;
-                    if (count == total / 20)
+
+
+                    if (++count == total / 20)
                     {
                         Console.Write("*");
                         count = 0;
@@ -82,11 +90,22 @@ namespace RayTracer
                 }
 
             }
+
             Console.WriteLine();
 
-            Console.WriteLine("finised in :"  + (DateTime.Now - start));
+            Console.WriteLine("finised in :" + (DateTime.Now - start));
             return result;
         }
+
+
+        //private object lockObject = new object();
+
+        //void TracePixel(Scene scene, Ray ray, int row, int col)
+        //{
+        //    MyColor color = ray.Trace(scene, 0);
+        //    lock (lockObject)
+        //        result.SetPixel(col, row, color.ToColor());
+        //}
 
     }
 }
