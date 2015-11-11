@@ -5,13 +5,14 @@ using System.Text;
 
 namespace RayTracer
 {
+    [Serializable]
     public class DirectionalLight : Light
     {
 
 
         public DirectionalLight(Vector3 direction, MyColor color)
         {
-            Direction = direction ;
+            Direction = direction;
             Color = color;
 
         }
@@ -28,16 +29,33 @@ namespace RayTracer
 
         public override Vector3 GetPointToLight(Point3 point)
         {
-            return new Vector3(point, Direction.Value * -1);
+            return new Vector3(Direction.Value * -1);
         }
 
-        public override bool IsEffective(Point3 point,Geometry geometry , List<Geometry> geometries)
+        public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
         {
 
             if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
                 return false;
 
+            Ray ray = new Ray(point, GetPointToLight(point));
+            foreach (var item in geometries)
+            {
+                //if (item.Equals(geometry))
+                //    continue;
+                ray.TransformInv(item.Transform);
+                if (item.IsIntersecting(ray))
+                    return false;
+                ray.Transform(item.Transform);
+            }
+
             return true;
+
+        }
+
+        public override float GetAttenuationValue(Point3 point, Attenuation attenuation)
+        {
+            return 1;
         }
 
 

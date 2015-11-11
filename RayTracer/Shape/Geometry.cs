@@ -6,6 +6,7 @@ using System.Text;
 
 namespace RayTracer
 {
+    [Serializable]
     public abstract class Geometry
     {
         public Transform Transform

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RayTracer
 {
+    [Serializable]
     public class Camera
     {
 

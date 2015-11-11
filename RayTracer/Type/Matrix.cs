@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RayTracer
 {
+    [Serializable]
     public class Matrix
     {
 
@@ -18,7 +19,7 @@ namespace RayTracer
             colNumber = col;
             value = new float[rowNumber, colNumber];
             haveInverse = false;
-            //             this.value = I.value;
+            haveIdentity = false;
         }
 
         public Matrix(int row, int col, float[] val)
@@ -80,20 +81,30 @@ namespace RayTracer
         }
 
 
+        private bool haveIdentity;
+        private Matrix identity;
         public Matrix I
         {
             get
             {
-                Matrix result = new Matrix(colNumber, rowNumber);
-                for (int row = 0; row < result.rowNumber; row++)
-                    for (int col = 0; col < result.colNumber; col++)
-                    {
-                        float val = (row == col) ? 1 : 0;
-                        result.SetValue(row, col, val);
-                    }
-                return result;
+                if (!haveIdentity)
+                {
+                    identity = CreateIdentity();
+                    haveIdentity = true;
+                }
+                return identity;
             }
         }
+        private Matrix CreateIdentity()
+        {
+            Matrix result = new Matrix(colNumber, rowNumber);
+            for (int row = 0; row < result.rowNumber; row++)
+                for (int col = 0; col < result.colNumber; col++)
+                    result.SetValue(row, col, (row == col) ? 1 : 0);
+            return result;
+        }
+
+
 
         bool haveInverse;
         Matrix inverse;
@@ -160,12 +171,14 @@ namespace RayTracer
             float x = vector.Value.X;
             float y = vector.Value.Y;
             float z = vector.Value.Z;
-
+        
             float newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
             float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
             float newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
 
-            return new Vector3(newX, newY, newZ);
+            Vector3 result = new Vector3(newX, newY, newZ);
+
+            return result;
         }
 
         public static Matrix Mult44x44(Matrix matA, Matrix matB)

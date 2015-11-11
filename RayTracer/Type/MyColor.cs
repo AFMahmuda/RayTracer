@@ -6,6 +6,7 @@ using System.Text;
 
 namespace RayTracer
 {
+    [Serializable]
     public class MyColor
     {
         private float r;

@@ -25,6 +25,7 @@ namespace RayTracer
                     Scene scene = new Scene(scenefile);
                     RayTracer rayTracer = new RayTracer();
                     Bitmap result = rayTracer.TraceScene(scene);
+//                    Bitmap result = rayTracer.TraceScene3D(scene);
                     if (!scene.OutputFilename.Equals(""))
                         outputFile = scene.OutputFilename;
                     result.Save(outputFile);

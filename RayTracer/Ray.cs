@@ -74,12 +74,7 @@ namespace RayTracer
         {
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
             Vector3 normal = IntersectWith.GetNormal(HitPoint);
-            float attenuationValue = 1;
-            if (!attenuation.Equals(new Attenuation()))
-                attenuationValue /=
-                    attenuation.Constant +
-                    attenuation.Linear * IntersectDistance +
-                    attenuation.Quadratic * IntersectDistance * IntersectDistance;
+
 
             foreach (var light in effectiveLights)
             {
@@ -87,6 +82,9 @@ namespace RayTracer
                 Vector3 halfAngleToLight = (Direction * -1 + pointToLight).Normalize();
 
                 Material material = IntersectWith.Material;
+
+                float attenuationValue = light.GetAttenuationValue(HitPoint, attenuation);
+                 
                 result +=
                     attenuationValue * light.Color *
                     (
@@ -108,7 +106,6 @@ namespace RayTracer
             }
 
             return result;
-
         }
 
         public void Transform(Transform transform)

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace RayTracer
 {
+        [Serializable]
     public class PointLight : Light
     {
 
@@ -46,6 +47,19 @@ namespace RayTracer
             }
 
             return true;
+        }
+
+        public override float GetAttenuationValue(Point3 point, Attenuation attenuation)
+        {
+            if (!attenuation.Equals(new Attenuation()))
+                return 1;
+            
+            
+            return 1 /
+                (attenuation.Constant +
+                attenuation.Linear * GetPointToLight(point).Magnitude +
+                attenuation.Quadratic * GetPointToLight(point).Magnitude * GetPointToLight(point).Magnitude);
+
         }
 
     }

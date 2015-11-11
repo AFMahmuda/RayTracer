@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RayTracer
 {
-    class Attenuation
+    [Serializable]
+    public class Attenuation
     {
         public Attenuation()
         {

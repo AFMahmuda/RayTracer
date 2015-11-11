@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RayTracer
 {
+    [Serializable]
     public class Scene
     {
 
@@ -16,6 +18,8 @@ namespace RayTracer
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
         private List<Light> lights = new List<Light>();
         private List<Point3> vertices = new List<Point3>();
+        private MyColor ambient;
+        private Material material;
 
 
 
@@ -24,9 +28,9 @@ namespace RayTracer
             Size = new Size();
             MaxDepth = 5;
             Camera = new Camera();
-            Transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
-            Material = new Material();
-            Ambient = new MyColor(.2f, .2f, .2f);
+            transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
+            material = new Material();
+            ambient = new MyColor(.2f, .2f, .2f);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
 
@@ -56,11 +60,11 @@ namespace RayTracer
             if (fullcommand.Contains('#'))
                 return;
 
-            fullcommand =  CleanCommand(fullcommand);
+            fullcommand = CleanCommand(fullcommand);
             String[] words = fullcommand.Split(' ');
             String command = words[0];
 
-            if (command.Equals("output")) 
+            if (command.Equals("output"))
             {
                 OutputFilename = words[1] + ".bmp";
                 return;
@@ -111,7 +115,7 @@ namespace RayTracer
 
                 //transforms
                 case "pushTransform":
-                    transforms.AddFirst(transforms.First().Clone());
+                    transforms.AddFirst(Utils.DeepClone(transforms.First()));
                     break;
                 case "popTransform":
                     transforms.RemoveFirst();
@@ -128,16 +132,16 @@ namespace RayTracer
 
                 //material
                 case "diffuse":
-                    Material.Diffuse = new MyColor(param[0], param[1], param[2]);
+                    material.Diffuse = new MyColor(param[0], param[1], param[2]);
                     break;
                 case "specular":
-                    Material.Specular = new MyColor(param[0], param[1], param[2]);
+                    material.Specular = new MyColor(param[0], param[1], param[2]);
                     break;
                 case "emission":
-                    Material.Emission = new MyColor(param[0], param[1], param[2]);
+                    material.Emission = new MyColor(param[0], param[1], param[2]);
                     break;
                 case "shininess":
-                    Material.Shininess = param[0];
+                    material.Shininess = param[0];
                     break;
 
 
@@ -146,7 +150,7 @@ namespace RayTracer
                     Attenuation = new Attenuation(param);
                     break;
                 case "ambient":
-                    Ambient = new MyColor(param);
+                    ambient = new MyColor(param);
                     break;
                 case "directional":
                     Lights.Add(new DirectionalLight(param));
@@ -162,42 +166,27 @@ namespace RayTracer
 
         private void ApplyTransform(Geometry shape)
         {
-            shape.Transform = transforms.First().Clone();
+            shape.Transform = Utils.DeepClone(transforms.First());
         }
 
         private void ApplyMaterial(Geometry shape)
         {
-            shape.Material = Material.Clone();
+            shape.Material = Utils.DeepClone(material);
         }
 
         private void ApplyAmbient(Geometry shape)
         {
-            shape.Ambient = Ambient.Clone();
-        }
-
-        public MyColor Ambient
-        {
-            get;
-            set;
+            shape.Ambient = Utils.DeepClone(ambient);
         }
 
         public Camera Camera
-        {
-            get;
-            set;
-        }
+        { get; set; }
 
 
         public List<Geometry> Geometries
         {
             get { return geometries; }
             set { geometries = value; }
-        }
-
-        public LinkedList<Transform> Transforms
-        {
-            get { return transforms; }
-            set { transforms = value; }
         }
 
         public List<Light> Lights
@@ -207,33 +196,16 @@ namespace RayTracer
         }
 
         public int MaxDepth
-        {
-            get;
-            set;
-        }
+        { get; set; }
 
         public String OutputFilename
-        {
-            get;
-            set;
-        }
+        { get; set; }
 
-        public Material Material
-        {
-            get;
-            set;
-        }
 
-        internal Attenuation Attenuation
-        {
-            get;
-            set;
-        }
+        public Attenuation Attenuation
+        { get; set; }
 
         public Size Size
-        {
-            get;
-            set;
-        }
+        { get; set; }
     }
 }
