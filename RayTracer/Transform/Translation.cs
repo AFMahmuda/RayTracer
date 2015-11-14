@@ -19,7 +19,7 @@ namespace RayTracer
 
         public Translation(Point3 values)
         {
-            Matrix = new Matrix(4, 4);
+            Matrix = new MyMatrix(4, 4);
             Matrix = Matrix.I;
 
             Matrix.SetValue(0, 3, values.X);

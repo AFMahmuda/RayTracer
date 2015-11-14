@@ -18,12 +18,12 @@ namespace RayTracer
 
         public Rotation(Point3 values, float angle)
         {
-            Matrix = new Matrix(4, 4);
+            Matrix = new MyMatrix(4, 4);
 
             float rad = (angle) * (float)Math.PI / 180;
 
             float x = values.X;
-            float y = -values.Y;
+            float y = values.Y;
             float z = values.Z;
             float c = (float)Math.Cos(rad);
             float s = (float)Math.Sin(rad);

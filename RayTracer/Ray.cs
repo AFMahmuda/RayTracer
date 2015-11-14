@@ -39,22 +39,38 @@ namespace RayTracer
 
         Point3 HitPoint
         {
-            get { return Start + (Direction * (IntersectDistance * .999f)).Value; }
+            get { return Start + (Direction * (IntersectDistance * (.999f))).Value; }
         }
-
 
         public MyColor Trace(Scene scene, int bounce)
         {
             if (bounce > scene.MaxDepth)
                 return new MyColor();
 
-            foreach (var geometry in scene.Geometries)
+
+
+            try
             {
-                TransformInv(geometry.Transform);
-                if (geometry.IsIntersecting(this))
-                    IntersectWith = geometry;
-                Transform(geometry.Transform);
+                foreach (var geometry in scene.Geometries)
+                {
+                    //          Point3 pos = Utils.DeepClone(Start);
+                    //            Vector3 dir = Utils.DeepClone(Direction);
+
+                    TransformInv(geometry.Transform);
+                    if (geometry.IsIntersecting(this))
+                        IntersectWith = geometry;
+                    //              Start = pos;
+                    //                Direction = dir;
+                    Transform(geometry.Transform);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("from ray.trace " + e.InnerException + e.Message);
+                throw;
+            }
+
+
 
             if (IntersectWith != null)
             {
@@ -79,12 +95,12 @@ namespace RayTracer
             foreach (var light in effectiveLights)
             {
                 Vector3 pointToLight = light.GetPointToLight(HitPoint);
-                Vector3 halfAngleToLight = (Direction * -1 + pointToLight).Normalize();
+                Vector3 halfAngleToLight = (Direction * -1f + pointToLight).Normalize();
 
                 Material material = IntersectWith.Material;
 
                 float attenuationValue = light.GetAttenuationValue(HitPoint, attenuation);
-                 
+
                 result +=
                     attenuationValue * light.Color *
                     (
@@ -110,19 +126,19 @@ namespace RayTracer
 
         public void Transform(Transform transform)
         {
-            Start = Matrix.Mult44x41(transform.Matrix, new Vector3(Start), 1).Value;
-            Direction = Matrix.Mult44x41(transform.Matrix, Direction, 0).Normalize();
+            Start = MyMatrix.Mult44x41(transform.Matrix, new Vector3(Start), 1).Value;
+            Direction = MyMatrix.Mult44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = Matrix.Mult44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Value;
-            Direction = Matrix.Mult44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
+            Start = MyMatrix.Mult44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Value;
+            Direction = MyMatrix.Mult44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
 
-        public bool IsSmallerThanCurrent(float t, Transform trans)
+        public bool IsSmallerThanCurrent(float distance, Transform trans)
         {
-            float newMagnitude = Matrix.Mult44x41(trans.Matrix, Direction * t, 0).Magnitude;
+            float newMagnitude = MyMatrix.Mult44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
 

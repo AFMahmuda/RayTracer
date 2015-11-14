@@ -3,5 +3,7 @@ D:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.exe
 D:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.pdb
 D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.exe
 D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
-D:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.exe.CodeAnalysisLog.xml
-D:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.exe.lastcodeanalysissucceeded
+D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.csprojResolveAssemblyReference.cache
+F:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.exe.config
+F:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.exe
+F:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.pdb

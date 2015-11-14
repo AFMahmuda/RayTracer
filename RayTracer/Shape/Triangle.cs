@@ -59,12 +59,12 @@ namespace RayTracer
             if (ray.Direction * localNorm == 0)
                 return false;
 
-            float distance = (new Vector3(a) * localNorm - new Vector3(ray.Start) * localNorm) / (ray.Direction * localNorm);
+            float distanceToPlane = ((new Vector3(a) * localNorm) - (new Vector3(ray.Start) * localNorm)) / (ray.Direction * localNorm);
 
-            if (distance > 0 && ray.IsSmallerThanCurrent(distance, Transform))
-                if (IsInsideTriangle(ray.Start + (ray.Direction * distance).Value))
+            if (distanceToPlane > 0 && ray.IsSmallerThanCurrent(distanceToPlane, Transform))
+                if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Value))
                 {
-                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * distance, 0).Magnitude;
+                    ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
                     return true;
                 }
             return false;
@@ -82,11 +82,13 @@ namespace RayTracer
             float v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
 
             return (u >= 0) && (v >= 0) && (u + v <= 1);
+
+
         }
 
         public override Vector3 GetNormal(Point3 point)
         {
-            Vector3 norm = Matrix.Mult44x41(Transform.Matrix.Inverse, localNorm, 1).Normalize();
+            Vector3 norm = MyMatrix.Mult44x41(Transform.Matrix.Inverse, localNorm, 0).Normalize();
             return norm;
         }
     }

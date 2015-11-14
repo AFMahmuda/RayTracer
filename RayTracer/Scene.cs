@@ -36,14 +36,21 @@ namespace RayTracer
 
         }
 
+        public String SceneFile { get; set; }
         public Scene(String scenefile)
             : this()
         {
+            ParseCommand(scenefile);
+        }
+
+        public void ParseCommand(String scenefile) 
+        {
+            SceneFile = scenefile;
             StreamReader filereader = new StreamReader(scenefile);
             String command;
             while ((command = filereader.ReadLine()) != null)
                 ExecuteCommand(command);
-            filereader.Close();
+            filereader.Close();        
         }
 
 
@@ -121,13 +128,13 @@ namespace RayTracer
                     transforms.RemoveFirst();
                     break;
                 case "translate":
-                    transforms.First().Matrix = Matrix.Mult44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
+                    transforms.First().Matrix = MyMatrix.Mult44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
                     break;
                 case "scale":
-                    transforms.First().Matrix = Matrix.Mult44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
+                    transforms.First().Matrix = MyMatrix.Mult44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
                     break;
                 case "rotate":
-                    transforms.First().Matrix = Matrix.Mult44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
+                    transforms.First().Matrix = MyMatrix.Mult44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
                     break;
 
                 //material
@@ -167,6 +174,7 @@ namespace RayTracer
         private void ApplyTransform(Geometry shape)
         {
             shape.Transform = Utils.DeepClone(transforms.First());
+            MyMatrix foo = shape.Transform.Matrix.Inverse;
         }
 
         private void ApplyMaterial(Geometry shape)
@@ -186,13 +194,11 @@ namespace RayTracer
         public List<Geometry> Geometries
         {
             get { return geometries; }
-            set { geometries = value; }
         }
 
         public List<Light> Lights
         {
             get { return lights; }
-            set { lights = value; }
         }
 
         public int MaxDepth
@@ -207,5 +213,16 @@ namespace RayTracer
 
         public Size Size
         { get; set; }
+
+        public void ShowInformation()
+        {
+            Console.WriteLine("=======Scene Information===========================");
+            //Camera.ShowInformation();
+            Console.WriteLine("Total Objects : " + Geometries.Count);
+            Console.WriteLine("Total Lights  : " + Lights.Count);
+            Console.WriteLine("Max Bounce    : " + MaxDepth);
+            Console.WriteLine("Image Size    : " + Size.Width +" x " + Size.Height);
+            Console.WriteLine("===================================================");
+        }
     }
 }

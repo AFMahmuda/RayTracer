@@ -11,16 +11,16 @@ namespace RayTracer
     {
         public Attenuation()
         {
-            Constant = 1f;
-            Linear = 0f;
-            Quadratic = 0f;
+            constant = 1f;
+            linear = 0f;
+            quadratic = 0f;
         }
 
         public Attenuation(float[] param)
         {
-            Constant = param[0];
-            Linear = param[1];
-            Quadratic = param[2];
+            constant = param[0];
+            linear = param[1];
+            quadratic = param[2];
 
         }
         float constant;
@@ -28,21 +28,18 @@ namespace RayTracer
         public float Constant
         {
             get { return constant; }
-            set { constant = value; }
         }
         float linear;
 
         public float Linear
         {
             get { return linear; }
-            set { linear = value; }
         }
         float quadratic;
 
         public float Quadratic
         {
             get { return quadratic; }
-            set { quadratic = value; }
         }
 
     }

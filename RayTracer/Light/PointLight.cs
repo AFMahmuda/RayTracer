@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RayTracer
 {
-        [Serializable]
+    [Serializable]
     public class PointLight : Light
     {
 
@@ -33,17 +33,23 @@ namespace RayTracer
 
             if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
                 return false;
-
             Ray ray = new Ray(point, GetPointToLight(point));
             foreach (var item in geometries)
             {
                 if (item.Equals(geometry))
                     continue;
+
+                Point3 pos = Utils.DeepClone(ray.Start);
+                Vector3 dir = Utils.DeepClone(ray.Direction);
                 ray.TransformInv(item.Transform);
+
                 if (item.IsIntersecting(ray))
-                    if (ray.IntersectDistance < 1)
+                    if (ray.IntersectDistance < GetPointToLight(point).Magnitude)
                         return false;
-                ray.Transform(item.Transform);
+                
+                ray.Start = pos;
+                ray.Direction = dir;
+                //ray.Transform(item.Transform);
             }
 
             return true;
@@ -52,13 +58,13 @@ namespace RayTracer
         public override float GetAttenuationValue(Point3 point, Attenuation attenuation)
         {
             if (!attenuation.Equals(new Attenuation()))
-                return 1;
-            
-            
-            return 1 /
+                return 1f;
+
+            float d = GetPointToLight(point).Magnitude;
+            return 1f /
                 (attenuation.Constant +
-                attenuation.Linear * GetPointToLight(point).Magnitude +
-                attenuation.Quadratic * GetPointToLight(point).Magnitude * GetPointToLight(point).Magnitude);
+                attenuation.Linear * d +
+                attenuation.Quadratic * (float)Math.Pow(d, 2));
 
         }
 

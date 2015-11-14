@@ -44,7 +44,7 @@ namespace RayTracer
             {
                 float res1 = (-b + (float)Math.Sqrt(dd)) / 2f * a;
                 float res2 = (-b - (float)Math.Sqrt(dd)) / 2f * a;
-                float res;
+                float distance;
 
                 // if both results are negative, then the sphere is behind our ray, 
                 // but we already checked that.
@@ -52,13 +52,13 @@ namespace RayTracer
                 //    return false;
                 //else
                 if (res1 * res2 < 0)
-                    res = Math.Max(res1, res2);
+                    distance = Math.Max(res1, res2);
                 else
-                    res = Math.Min(res1, res2);
+                    distance = Math.Min(res1, res2);
 
-                if (ray.IsSmallerThanCurrent(res, Transform))
+                if (ray.IsSmallerThanCurrent(distance, Transform))
                 {
-                    ray.IntersectDistance = Matrix.Mult44x41(Transform.Matrix, ray.Direction * res, 0).Magnitude;
+                    ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distance, 0).Magnitude;
                     return true;
                 }
             }
@@ -67,8 +67,9 @@ namespace RayTracer
 
         public override Vector3 GetNormal(Point3 point)
         {
-            point = Matrix.Mult44x41(Transform.Matrix.Inverse, new Vector3(point), 1).Value;
+            point = MyMatrix.Mult44x41(Transform.Matrix.Inverse, new Vector3(point), 1).Value;
             Vector3 norm = new Vector3(center, point).Normalize();
+//            norm = Matrix.Mult44x41(Transform.Matrix.Inverse, norm, 0).Normalize();
             return norm;
         }
     }

@@ -5,46 +5,44 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
+using System.Drawing.Drawing2D;
 
 namespace RayTracer
 {
+
+
     class Program
     {
         static void Main(string[] args)
         {
-            try
-            {
 
-                String scenefile = "default.test";
-                String outputFile = "default.bmp";
-                if (args.Length != 0)
-                    scenefile = args[0];
+            String scenefile = "default.test";
+            String outputFile = "default.bmp";
+            if (args.Length != 0)
+                scenefile = args[0];
 
-                if (File.Exists(scenefile))
-                {
-                    Scene scene = new Scene(scenefile);
-                    RayTracer rayTracer = new RayTracer();
-                    Bitmap result = rayTracer.TraceScene(scene);
-//                    Bitmap result = rayTracer.TraceScene3D(scene);
-                    if (!scene.OutputFilename.Equals(""))
-                        outputFile = scene.OutputFilename;
-                    result.Save(outputFile);
 
-                    Console.WriteLine("Success!");
-                }
-                else
-                {
-                    Console.WriteLine("File not found!");
-                }
-            }
-            catch (Exception e)
+            if (File.Exists(scenefile))
             {
-                Console.WriteLine(e.Message);
+                DateTime start = DateTime.Now;
+                Console.WriteLine("Preparing File. Please wait...");
+                Scene scene = new Scene(scenefile);
+                Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
+                Console.WriteLine();
+                RayTracer rayTracer = new RayTracer();
+                rayTracer.SuperSampling = false;
+                Bitmap result = rayTracer.TraceScene(scene);
+                //Bitmap result = rayTracer.TraceScene3D(scene);
+                if (!scene.OutputFilename.Equals(""))
+                    outputFile = scene.OutputFilename;
+                result.Save(outputFile);
             }
-            finally
+            else
             {
-                Console.ReadKey();
+                Console.WriteLine("File not found!");
             }
+
         }
     }
 }

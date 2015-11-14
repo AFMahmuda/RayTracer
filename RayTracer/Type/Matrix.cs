@@ -6,14 +6,14 @@ using System.Text;
 namespace RayTracer
 {
     [Serializable]
-    public class Matrix
+    public class MyMatrix
     {
 
         int rowNumber;
         int colNumber;
         float[,] value;
 
-        public Matrix(int row, int col)
+        public MyMatrix(int row, int col)
         {
             rowNumber = row;
             colNumber = col;
@@ -22,7 +22,7 @@ namespace RayTracer
             haveIdentity = false;
         }
 
-        public Matrix(int row, int col, float[] val)
+        public MyMatrix(int row, int col, float[] val)
             : this(row, col)
         {
             SetValue(val);
@@ -51,25 +51,25 @@ namespace RayTracer
             return value[column, row];
         }
 
-        public Matrix GetRow(int row)
+        public MyMatrix GetRow(int row)
         {
-            Matrix result = new Matrix(1, colNumber);
+            MyMatrix result = new MyMatrix(1, colNumber);
             for (int i = 0; i < colNumber; i++)
                 result.SetValue(0, i, this.value[row, i]);
             return result;
         }
 
-        public Matrix GetCol(int col)
+        public MyMatrix GetCol(int col)
         {
-            Matrix result = new Matrix(rowNumber, 1);
+            MyMatrix result = new MyMatrix(rowNumber, 1);
             for (int i = 0; i < rowNumber; i++)
                 result.SetValue(i, 0, this.value[i, col]);
             return result;
         }
 
-        public static Matrix operator *(Matrix a, float b)
+        public static MyMatrix operator *(MyMatrix a, float b)
         {
-            Matrix result = new Matrix(a.colNumber, a.rowNumber);
+            MyMatrix result = new MyMatrix(a.colNumber, a.rowNumber);
 
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
@@ -82,8 +82,8 @@ namespace RayTracer
 
 
         private bool haveIdentity;
-        private Matrix identity;
-        public Matrix I
+        private MyMatrix identity;
+        public MyMatrix I
         {
             get
             {
@@ -95,9 +95,9 @@ namespace RayTracer
                 return identity;
             }
         }
-        private Matrix CreateIdentity()
+        private MyMatrix CreateIdentity()
         {
-            Matrix result = new Matrix(colNumber, rowNumber);
+            MyMatrix result = new MyMatrix(colNumber, rowNumber);
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
                     result.SetValue(row, col, (row == col) ? 1 : 0);
@@ -107,8 +107,8 @@ namespace RayTracer
 
 
         bool haveInverse;
-        Matrix inverse;
-        public Matrix Inverse
+        MyMatrix inverse;
+        public MyMatrix Inverse
         {
             get
             {
@@ -121,7 +121,7 @@ namespace RayTracer
             }
         }
 
-        Matrix CreateInverse()
+        MyMatrix CreateInverse()
         {
             float s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
             float s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
@@ -139,7 +139,7 @@ namespace RayTracer
 
             float invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
 
-            Matrix result = new Matrix(4, 4);
+            MyMatrix result = new MyMatrix(4, 4);
 
             result.SetValue(0, 0, (value[1, 1] * c5 - value[1, 2] * c4 + value[1, 3] * c3) * invdet);
             result.SetValue(0, 1, (-value[0, 1] * c5 + value[0, 2] * c4 - value[0, 3] * c3) * invdet);
@@ -164,14 +164,14 @@ namespace RayTracer
             return result;
         }
 
-        public static Vector3 Mult44x41(Matrix matrix, Vector3 vector, int homogeneousValue)
+        public static Vector3 Mult44x41(MyMatrix matrix, Vector3 vector, int homogeneousValue)
         {
 
             float[,] val = matrix.GetValue();
             float x = vector.Value.X;
             float y = vector.Value.Y;
             float z = vector.Value.Z;
-        
+
             float newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
             float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
             float newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
@@ -181,26 +181,24 @@ namespace RayTracer
             return result;
         }
 
-        public static Matrix Mult44x44(Matrix matA, Matrix matB)
+        public static MyMatrix Mult44x44(MyMatrix matA, MyMatrix matB)
         {
-            Matrix res = new Matrix(4, 4);
+            MyMatrix res = new MyMatrix(4, 4);
 
             for (int col = 0; col < 4; col++)
             {
-                Matrix mat41 = Mult44x41(matA, matB.GetCol(col));
+                MyMatrix mat41 = Mult44x41(matA, matB.GetCol(col));
                 for (int row = 0; row < 4; row++)
-                {
                     res.SetValue(row, col, mat41.GetValue(row, 0));
-                }
             }
 
             return res;
         }
 
 
-        public static Matrix Mult44x41(Matrix mat44, Matrix mat41)
+        public static MyMatrix Mult44x41(MyMatrix mat44, MyMatrix mat41)
         {
-            Matrix res = new Matrix(4, 1);
+            MyMatrix res = new MyMatrix(4, 1);
 
             for (int row = 0; row < 4; row++)
             {

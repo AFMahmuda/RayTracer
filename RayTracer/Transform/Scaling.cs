@@ -19,7 +19,7 @@ namespace RayTracer
 
         public Scaling(Point3 values)
         {
-            Matrix = new Matrix(4, 4);
+            Matrix = new MyMatrix(4, 4);
 
             Matrix.SetValue(0, 0, values.X);
             Matrix.SetValue(1, 1, values.Y);

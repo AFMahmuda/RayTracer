@@ -64,7 +64,7 @@ namespace RayTracer
             U.ShowInformation();
             Console.Write("V : ");
             V.ShowInformation();
-            Console.WriteLine("====================================================");
+            Console.WriteLine("===================================================");
         }
 
 
