@@ -15,7 +15,7 @@ namespace RayTracer
 
         public abstract Vector3 GetPointToLight(Point3 point);
         public abstract bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries);
-        public abstract float GetAttenuationValue(Point3 point, Attenuation attenuation);
+        public abstract Double GetAttenuationValue(Point3 point, Attenuation attenuation);
         
     }
 

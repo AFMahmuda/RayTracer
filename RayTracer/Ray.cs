@@ -11,7 +11,7 @@ namespace RayTracer
         public Ray()
         {
             color = new MyColor();
-            IntersectDistance = float.MaxValue;
+            IntersectDistance = Double.MaxValue;
             IntersectWith = null;
         }
 
@@ -28,7 +28,7 @@ namespace RayTracer
         public Vector3 Direction
         { get; set; }
 
-        public float IntersectDistance
+        public Double IntersectDistance
         { get; set; }
 
         public Geometry IntersectWith
@@ -79,7 +79,7 @@ namespace RayTracer
 
                 Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
                 Ray reflectedRay = new Ray(HitPoint, reflection);
-                float reflectability = .35f;
+                Double reflectability = .35;
                 return color + (reflectability * reflectedRay.Trace(scene, bounce + 1));
             }
 
@@ -99,13 +99,13 @@ namespace RayTracer
 
                 Material material = IntersectWith.Material;
 
-                float attenuationValue = light.GetAttenuationValue(HitPoint, attenuation);
+                Double attenuationValue = light.GetAttenuationValue(HitPoint, attenuation);
 
                 result +=
                     attenuationValue * light.Color *
                     (
                         material.Diffuse * (pointToLight.Normalize() * normal) +
-                        (material.Specular * (float)Math.Pow(halfAngleToLight * normal, material.Shininess))
+                        (material.Specular * Math.Pow(halfAngleToLight * normal, material.Shininess))
                     );
             }
             return result;
@@ -136,9 +136,9 @@ namespace RayTracer
             Direction = MyMatrix.Mult44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
 
-        public bool IsSmallerThanCurrent(float distance, Transform trans)
+        public bool IsSmallerThanCurrent(Double distance, Transform trans)
         {
-            float newMagnitude = MyMatrix.Mult44x41(trans.Matrix, Direction * distance, 0).Magnitude;
+            Double newMagnitude = MyMatrix.Mult44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
 

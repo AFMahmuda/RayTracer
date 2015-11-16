@@ -9,11 +9,11 @@ namespace RayTracer
     [Serializable]
     public class MyColor
     {
-        private float r;
-        private float g;
-        private float b;
+        private Double r;
+        private Double g;
+        private Double b;
 
-        public float R
+        public Double R
         {
             get { return r; }
             set
@@ -21,7 +21,7 @@ namespace RayTracer
                 r = (value < 0) ? 0 : ((value > 1) ? 1 : value);
             }
         }
-        public float G
+        public Double G
         {
             get { return g; }
             set
@@ -29,7 +29,7 @@ namespace RayTracer
                 g = (value < 0) ? 0 : ((value > 1) ? 1 : value);
             }
         }
-        public float B
+        public Double B
         {
             get { return b; }
             set
@@ -38,14 +38,14 @@ namespace RayTracer
             }
         }
 
-        public MyColor(float r, float g, float b)
+        public MyColor(Double r, Double g, Double b)
         {
             R = r;
             G = g;
             B = b;
         }
 
-        public MyColor(float[] param)
+        public MyColor(Double[] param)
             : this(param[0], param[1], param[2])
         { }
         public MyColor()
@@ -93,7 +93,7 @@ namespace RayTracer
                 );
         }
 
-        public static MyColor operator *(MyColor color, float value)
+        public static MyColor operator *(MyColor color, Double value)
         {
             return new MyColor(
                 color.R * value,
@@ -102,16 +102,16 @@ namespace RayTracer
                 );
         }
 
-        public static MyColor operator *(float value, MyColor color)
+        public static MyColor operator *(Double value, MyColor color)
         {
             return color * value;
         }
 
-        public MyColor Pow(float value)
+        public MyColor Pow(Double value)
         {
-            R = (float)Math.Pow(R, value);
-            G = (float)Math.Pow(G, value);
-            B = (float)Math.Pow(B, value);
+            R = Math.Pow(R, value);
+            G = Math.Pow(G, value);
+            B = Math.Pow(B, value);
 
             return this;
         }

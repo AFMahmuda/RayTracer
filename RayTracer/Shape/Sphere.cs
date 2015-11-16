@@ -10,16 +10,16 @@ namespace RayTracer
     {
 
         Point3 center;
-        float radius;
+        Double radius;
 
         public Sphere()
             : this(Point3.ZERO, 0f)
         { }
 
-        public Sphere(float[] values)
+        public Sphere(Double[] values)
             : this(new Point3(values[0], values[1], values[2]), values[3])
         { }
-        public Sphere(Point3 center, float radius)
+        public Sphere(Point3 center, Double radius)
         {
             this.center = center;
             this.radius = radius;
@@ -35,16 +35,16 @@ namespace RayTracer
             if (camToSphere * ray.Direction <= 0)
                 return false;
 
-            float a = ray.Direction * ray.Direction;
-            float b = -2 * (camToSphere * ray.Direction);
-            float c = (camToSphere * camToSphere) - (radius * radius);
-            float dd = (b * b) - (4 * a * c);
+            Double a = ray.Direction * ray.Direction;
+            Double b = -2 * (camToSphere * ray.Direction);
+            Double c = (camToSphere * camToSphere) - (radius * radius);
+            Double dd = (b * b) - (4 * a * c);
 
             if (dd > 0)
             {
-                float res1 = (-b + (float)Math.Sqrt(dd)) / 2f * a;
-                float res2 = (-b - (float)Math.Sqrt(dd)) / 2f * a;
-                float distance;
+                Double res1 = (-b + Math.Sqrt(dd)) / (2.0 * a);
+                Double res2 = (-b - Math.Sqrt(dd)) / (2.0 * a);
+                Double distance;
 
                 // if both results are negative, then the sphere is behind our ray, 
                 // but we already checked that.

@@ -15,7 +15,7 @@ namespace RayTracer
 
         }
 
-        public Camera(float[] parameter)
+        public Camera(Double[] parameter)
             : this(
             new Point3(parameter[0], parameter[1], parameter[2]),
             new Point3(parameter[3], parameter[4], parameter[5]),
@@ -32,7 +32,7 @@ namespace RayTracer
         }
 
 
-        public Camera(Point3 position, Point3 lookAt, Vector3 up, float fov)
+        public Camera(Point3 position, Point3 lookAt, Vector3 up, double fov)
         {
             this.Position = position;
             this.LookAt = lookAt;
@@ -94,9 +94,9 @@ namespace RayTracer
         private Point3 position;
         private Point3 lookAt;
         private Vector3 up;
-        private float fieldOfView;
+        private Double fieldOfView;
 
-        public float FieldOfView
+        public Double FieldOfView
         {
             get { return fieldOfView; }
             set

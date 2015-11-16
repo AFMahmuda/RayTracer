@@ -76,6 +76,7 @@ namespace RayTracer
 
             Task.WaitAll(task1, task2, task3, task4, task5, task6);
 
+
             using (Graphics finalResult = Graphics.FromImage(result))
             {
                 finalResult.DrawImage(result2, 0, 0);
@@ -102,8 +103,8 @@ namespace RayTracer
 
         void TraceThread(Bitmap result, Scene scene, ViewPlane viewPlane, int rowStart, int colStart, int rowEnd, int colEnd)
         {
-            float total = (colEnd - colStart) * (rowEnd - rowStart);
-            float count = 0f;
+            Double total = (colEnd - colStart) * (rowEnd - rowStart);
+            Double count = 0;
             for (int row = rowStart; row < rowEnd; row++)
             {
                 MyColor tempColor = new MyColor();

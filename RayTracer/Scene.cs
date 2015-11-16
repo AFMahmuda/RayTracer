@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RayTracer
@@ -30,7 +28,7 @@ namespace RayTracer
             Camera = new Camera();
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
             material = new Material();
-            ambient = new MyColor(.2f, .2f, .2f);
+            ambient = new MyColor(.2, .2, .2);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
 
@@ -47,14 +45,14 @@ namespace RayTracer
         {
             SceneFile = scenefile;
             StreamReader filereader = new StreamReader(scenefile);
-            String command;
+            string command;
             while ((command = filereader.ReadLine()) != null)
                 ExecuteCommand(command);
-            filereader.Close();        
+            filereader.Close();
         }
 
 
-        String CleanCommand(String command)
+        string CleanCommand(string command)
         {
             command = command.Trim();
             command = Regex.Replace(command, @"\s+", " ");
@@ -67,6 +65,7 @@ namespace RayTracer
             if (fullcommand.Contains('#'))
                 return;
 
+
             fullcommand = CleanCommand(fullcommand);
             String[] words = fullcommand.Split(' ');
             String command = words[0];
@@ -77,10 +76,11 @@ namespace RayTracer
                 return;
             }
 
-            float[] param = new float[words.Length - 1];
+            double[] param = new double[words.Length - 1];
             for (int i = 0; i < param.Length; i++)
-                param[i] = float.Parse(words[i + 1]);
-
+            {
+                param[i] = double.Parse(words[i + 1]);
+            }
             switch (command)
             {
                 case "size":
@@ -120,7 +120,7 @@ namespace RayTracer
                     vertices.Add(new Point3(param));
                     break;
 
-                //transforms
+                //transforms 
                 case "pushTransform":
                     transforms.AddFirst(Utils.DeepClone(transforms.First()));
                     break;

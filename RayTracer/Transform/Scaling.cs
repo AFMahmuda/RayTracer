@@ -13,7 +13,7 @@ namespace RayTracer
             : this(new Point3(1,1,1))
         { }
 
-        public Scaling(float[] values)
+        public Scaling(Double[] values)
             : this(new Point3(values))
         { }
 

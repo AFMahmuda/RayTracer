@@ -13,7 +13,7 @@ namespace RayTracer
             : this(Point3.ZERO)
         { }
 
-        public Translation(float[] values)
+        public Translation(Double[] values)
             : this(new Point3(values))
         { }
 

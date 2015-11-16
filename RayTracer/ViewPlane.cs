@@ -10,8 +10,8 @@ namespace RayTracer
     {
         Camera camera;
 
-        float worldWidth;
-        float worldHeight;
+        Double worldWidth;
+        Double worldHeight;
         int pixelHeight;
         int pixelWidth;
         Point3 position;
@@ -40,8 +40,8 @@ namespace RayTracer
 
             this.camera = camera;
 
-            worldHeight = 2 * (float)Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180f);
-            worldWidth = worldHeight * (float)((float)pixelWidth / (float)PixelHeight);
+            worldHeight = 2.0 * Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180.0);
+            worldWidth = worldHeight * (double)((double)pixelWidth / (double)PixelHeight);
 
             PreCalculate();
 
@@ -51,8 +51,8 @@ namespace RayTracer
         void PreCalculate()
         {
             upperLeft = GetUpperLeft();
-            unitRight =(camera.U.Value * (worldWidth / (float)PixelWidth) * -1);
-            unitDown = (camera.V.Value * (worldHeight / (float)PixelHeight) * -1);
+            unitRight = (camera.U.Value * (worldWidth / (Double)PixelWidth) * -1);
+            unitDown = (camera.V.Value * (worldHeight / (Double)PixelHeight) * -1);
         }
 
         Point3 GetUpperLeft()
@@ -63,8 +63,8 @@ namespace RayTracer
             position = center;
             Point3 upperLeft =
                 center
-                + camera.U.Value * (worldWidth / 2f)    //U is left
-                + camera.V.Value * (worldHeight / 2f);  //V is up
+                + camera.U.Value * (worldWidth / 2.0)    //U is left
+                + camera.V.Value * (worldHeight / 2.0);  //V is up
 
 
             return upperLeft;
@@ -74,18 +74,18 @@ namespace RayTracer
         {
             Point3 newLocation =
                 upperLeft
-                + unitRight * (col + .5f)
-                + unitDown * (row + .5f);
+                + unitRight * (col + .5)
+                + unitDown * (row + .5);
             return newLocation;
         }
 
-        public Point3 GetNewLocation(int col, int row, float col2, float row2)
+        public Point3 GetNewLocation(int col, int row, Double col2, Double row2)
         {
 
             Point3 newLocation =
                 upperLeft
-                + unitRight * (col + .5f + col2)
-                + unitDown * (row + .5f + row2);
+                + unitRight * (col + .5 + col2)
+                + unitDown * (row + .5 + row2);
             return newLocation;
         }
 

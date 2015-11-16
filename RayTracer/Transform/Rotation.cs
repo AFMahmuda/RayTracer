@@ -12,21 +12,21 @@ namespace RayTracer
             : this(Point3.ZERO, 0f)
         { }
 
-        public Rotation(float[] values)
+        public Rotation(Double[] values)
             : this(new Point3(values[0], values[1], values[2]), values[3])
         { }
 
-        public Rotation(Point3 values, float angle)
+        public Rotation(Point3 values, Double angle)
         {
             Matrix = new MyMatrix(4, 4);
 
-            float rad = (angle) * (float)Math.PI / 180;
+            Double rad = (angle) * Math.PI / 180;
 
-            float x = values.X;
-            float y = values.Y;
-            float z = values.Z;
-            float c = (float)Math.Cos(rad);
-            float s = (float)Math.Sin(rad);
+            Double x = values.X;
+            Double y = values.Y;
+            Double z = values.Z;
+            Double c = Math.Cos(rad);
+            Double s = Math.Sin(rad);
 
             Matrix.SetValue(0, 0, x * x * (1 - c) + c);
             Matrix.SetValue(0, 1, x * y * (1 - c) - z * s);

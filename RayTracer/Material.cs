@@ -28,8 +28,8 @@ namespace RayTracer
         { get; set; }
 
 
-        float shininess;
-        public float Shininess
+        Double shininess;
+        public Double Shininess
         {
             get
             {

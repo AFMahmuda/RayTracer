@@ -20,13 +20,13 @@ namespace RayTracer
         Vector3 ap;
 
         //dot products
-        float dot_ab_ab;
-        float dot_ab_ac;
-        float dot_ac_ac;
-        float dot_ab_ap;
-        float dot_ac_ap;
+        Double dot_ab_ab;
+        Double dot_ab_ac;
+        Double dot_ac_ac;
+        Double dot_ab_ap;
+        Double dot_ac_ap;
 
-        float invDenom;
+        Double invDenom;
 
         public Triangle(Point3 a, Point3 b, Point3 c)
         {
@@ -50,7 +50,7 @@ namespace RayTracer
             dot_ab_ac = ab * ac;
             dot_ac_ac = ac * ac;
 
-            invDenom = 1 / (dot_ab_ab * dot_ac_ac - dot_ab_ac * dot_ab_ac);
+            invDenom = 1.0 / (dot_ab_ab * dot_ac_ac - dot_ab_ac * dot_ab_ac);
         }
 
         public override bool IsIntersecting(Ray ray)
@@ -59,7 +59,7 @@ namespace RayTracer
             if (ray.Direction * localNorm == 0)
                 return false;
 
-            float distanceToPlane = ((new Vector3(a) * localNorm) - (new Vector3(ray.Start) * localNorm)) / (ray.Direction * localNorm);
+            Double distanceToPlane = ((new Vector3(a) * localNorm) - (new Vector3(ray.Start) * localNorm)) / (ray.Direction * localNorm);
 
             if (distanceToPlane > 0 && ray.IsSmallerThanCurrent(distanceToPlane, Transform))
                 if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Value))
@@ -78,8 +78,8 @@ namespace RayTracer
             dot_ab_ap = ab * ap;
             dot_ac_ap = ac * ap;
 
-            float u = (dot_ac_ac * dot_ab_ap - dot_ab_ac * dot_ac_ap) * invDenom;
-            float v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
+            Double u = (dot_ac_ac * dot_ab_ap - dot_ab_ac * dot_ac_ap) * invDenom;
+            Double v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
 
             return (u >= 0) && (v >= 0) && (u + v <= 1);
 
