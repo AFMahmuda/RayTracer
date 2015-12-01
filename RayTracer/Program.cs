@@ -31,7 +31,6 @@ namespace RayTracer
                 Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
                 Console.WriteLine();
                 RayTracer rayTracer = new RayTracer();
-                rayTracer.SuperSampling = false;
                 Bitmap result = rayTracer.TraceScene(scene);
                 //Bitmap result = rayTracer.TraceScene3D(scene);
                 if (!scene.OutputFilename.Equals(""))

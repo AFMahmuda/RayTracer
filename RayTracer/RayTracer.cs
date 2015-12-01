@@ -19,15 +19,9 @@ namespace RayTracer
         {
 
             scene.ShowInformation();
-            ViewPlane viewPlane;
-            Bitmap result;
-            Point3 startPosition;
-            viewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera);
-            result = new Bitmap(viewPlane.PixelWidth, viewPlane.PixelHeight);
-            startPosition = scene.Camera.Position;
 
-            int h = viewPlane.PixelHeight;
-            int w = viewPlane.PixelWidth;
+            ViewPlane viewPlane;
+            viewPlane = new ViewPlane(scene.Size.Width, scene.Size.Height, scene.Camera);
 
             DateTime start = DateTime.Now;
             Console.WriteLine("Preparing Tracer. Please Wait...");
@@ -46,23 +40,17 @@ namespace RayTracer
             Task.WaitAll(taskScene2, taskScene3, taskScene4, taskScene5, taskScene6);
 
             Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
-
             start = DateTime.Now;
 
+            int h = viewPlane.PixelHeight;
+            int w = viewPlane.PixelWidth;
 
-
-
+            Bitmap result = new Bitmap(w, h);
             Bitmap result2 = new Bitmap(w, h);
             Bitmap result3 = new Bitmap(w, h);
             Bitmap result4 = new Bitmap(w, h);
             Bitmap result5 = new Bitmap(w, h);
             Bitmap result6 = new Bitmap(w, h);
-            //Console.WriteLine("task 1 : from " + 0 + " " + 0 + " to " + h / 2 + " " + w / 3);
-            //Console.WriteLine("task 2 : from " + 0 + " " + (w / 3) + " to " + (h / 2) + " " + (w * 2 / 3));
-            //Console.WriteLine("task 3 : from " + 0 + " " + (w * 2 / 3) + " to " + (h / 2) + " " + (w));
-            //Console.WriteLine("task 4 : from " + (h / 2) + " " + 0 + " to " + h + " " + w / 3);
-            //Console.WriteLine("task 5 : from " + (h / 2) + " " + (w / 3) + " to " + h + " " + (w * 2 / 3));
-            //Console.WriteLine("task 6 : from " + (h / 2) + " " + (w * 2 / 3) + " to " + h + " " + (w));
             Console.WriteLine("Tracing...Please Wait...\n------------------------------");
 
             Task task1 = Task.Factory.StartNew(() => TraceThread(result, scene, viewPlane, 0, 0, h / 2, w / 3));
@@ -71,9 +59,6 @@ namespace RayTracer
             Task task4 = Task.Factory.StartNew(() => TraceThread(result4, scene4, viewPlane, h / 2, 0, h, w / 3));
             Task task5 = Task.Factory.StartNew(() => TraceThread(result5, scene5, viewPlane, h / 2, w / 3, h, w * 2 / 3));
             Task task6 = Task.Factory.StartNew(() => TraceThread(result6, scene6, viewPlane, h / 2, w * 2 / 3, h, w));
-
-
-
             Task.WaitAll(task1, task2, task3, task4, task5, task6);
 
 
@@ -88,18 +73,9 @@ namespace RayTracer
 
             Console.WriteLine("\nFinised in :" + (DateTime.Now - start) + "\n");
 
-
             return result;
         }
-
-
-        private bool superSampling;
-        public bool SuperSampling
-        {
-            set { superSampling = value; }
-            get { return superSampling; }
-        }
-
+         
 
         void TraceThread(Bitmap result, Scene scene, ViewPlane viewPlane, int rowStart, int colStart, int rowEnd, int colEnd)
         {
@@ -114,55 +90,67 @@ namespace RayTracer
                     Point3 newPosition;
                     MyColor rayColor = new MyColor();
 
+                    ray = new Ray();
+                    ray.Start = scene.Camera.Position;
+                    newPosition = viewPlane.GetNewLocation(col, row);
+                    ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
+                    rayColor = ray.Trace(scene, 0);
 
-                    if (superSampling)
+                    result.SetPixel(col, row, rayColor.ToColor());
+
+                    if (++count >= total / 5.0)
                     {
-                        if (col == colStart)
-                        {
-                            for (int i = -1; i <= 1; i++)
-                            {
-                                ray = new Ray();
-                                ray.Start = scene.Camera.Position;
-                                newPosition = viewPlane.GetNewLocation(col, row, .5f, .5f * i);
-                                ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
-                                tempColor += ray.Trace(scene, 0) * (1f / 9f);
-                            }
-                        }
+                        Console.Write("*");
+                        count = count - (total / 5.0);
+                    }
+                }
+            }
 
-                        rayColor += tempColor;
-                        tempColor = new MyColor();
+        }
+
+
+        void TraceThreadSuperSampling(Bitmap result, Scene scene, ViewPlane viewPlane, int rowStart, int colStart, int rowEnd, int colEnd)
+        {
+            double total = (colEnd - colStart) * (rowEnd - rowStart);
+            double count = 0;
+            for (int row = rowStart; row < rowEnd; row++)
+            {
+                MyColor tempColor = new MyColor();
+                for (int col = colStart; col < colEnd; col++)
+                {
+                    Ray ray;
+                    Point3 newPosition;
+                    MyColor rayColor = new MyColor();
+
+
+
+                    if (col == colStart)
+                    {
                         for (int i = -1; i <= 1; i++)
-                            for (int j = 0; j <= 1; j++)
-                            {
-
-                                ray = new Ray();
-                                ray.Start = scene.Camera.Position;
-                                newPosition = viewPlane.GetNewLocation(col, row, .5f * i, .5f * j);
-                                ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
-                                MyColor currentColor = ray.Trace(scene, 0) * (1f / 9f);
-                                if (j == 1)
-                                    tempColor += currentColor;
-                                rayColor += currentColor;
-                            }
+                        {
+                            ray = new Ray();
+                            ray.Start = scene.Camera.Position;
+                            newPosition = viewPlane.GetNewLocation(col, row, .5f, .5f * i);
+                            ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
+                            tempColor += ray.Trace(scene, 0) * (1f / 9f);
+                        }
                     }
 
-                    else
-                    {
-                        try
+                    rayColor += tempColor;
+                    tempColor = new MyColor();
+                    for (int i = -1; i <= 1; i++)
+                        for (int j = 0; j <= 1; j++)
                         {
 
+                            ray = new Ray();
+                            ray.Start = scene.Camera.Position;
+                            newPosition = viewPlane.GetNewLocation(col, row, .5f * i, .5f * j);
+                            ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
+                            MyColor currentColor = ray.Trace(scene, 0) * (1f / 9f);
+                            if (j == 1)
+                                tempColor += currentColor;
+                            rayColor += currentColor;
                         }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("from thread " + e.InnerException + e.Message);
-                            throw;
-                        }
-                        ray = new Ray();
-                        ray.Start = scene.Camera.Position;
-                        newPosition = viewPlane.GetNewLocation(col, row);
-                        ray.Direction = new Vector3(ray.Start, newPosition).Normalize();
-                        rayColor = ray.Trace(scene, 0);
-                    }
 
                     result.SetPixel(col, row, rayColor.ToColor());
 

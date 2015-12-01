@@ -19,19 +19,16 @@ namespace RayTracer
         private MyColor ambient;
         private Material material;
 
-
-
         public Scene()
         {
             Size = new Size();
-            MaxDepth = 5;
+            maxDepth = 5;
             Camera = new Camera();
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
             material = new Material();
             ambient = new MyColor(.2, .2, .2);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
-
         }
 
         public String SceneFile { get; set; }
@@ -65,7 +62,6 @@ namespace RayTracer
             if (fullcommand.Contains('#'))
                 return;
 
-
             fullcommand = CleanCommand(fullcommand);
             String[] words = fullcommand.Split(' ');
             String command = words[0];
@@ -90,28 +86,9 @@ namespace RayTracer
                     Camera = new Camera(param);
                     break;
                 case "maxdepth":
-                    MaxDepth = (int)param[0];
+                    maxDepth = (int)param[0];
                     break;
 
-                //geo
-                case "sphere":
-                    Sphere sphere = new Sphere(param);
-                    ApplyTransform(sphere);
-                    ApplyMaterial(sphere);
-                    ApplyAmbient(sphere);
-                    Geometries.Add(sphere);
-                    break;
-                case "tri":
-                    Point3 a = vertices[(int)param[0]];
-                    Point3 b = vertices[(int)param[1]];
-                    Point3 c = vertices[(int)param[2]];
-
-                    Triangle tri = new Triangle(a, b, c);
-                    ApplyTransform(tri);
-                    ApplyMaterial(tri);
-                    ApplyAmbient(tri);
-                    Geometries.Add(tri);
-                    break;
 
                 case "maxverts":
                     vertices = new List<Point3>((int)param[0]);
@@ -119,6 +96,18 @@ namespace RayTracer
                 case "vertex":
                     vertices.Add(new Point3(param));
                     break;
+
+                //geometry
+                case "tri":
+                    Triangle tri = CrerateTriangle(param);
+                    Geometries.Add(tri);
+                    break;
+
+                case "sphere":
+                    Sphere sphere = CreateSphere(param);
+                    Geometries.Add(sphere);
+                    break;
+
 
                 //transforms 
                 case "pushTransform":
@@ -171,10 +160,39 @@ namespace RayTracer
             }
         }
 
+
+        Sphere CreateSphere(double[] param)
+        {
+            Sphere sphere = new Sphere(param);
+
+            ApplyTransform(sphere);
+            ApplyMaterial(sphere);
+            ApplyAmbient(sphere);
+
+            return sphere;
+        }
+
+        Triangle CrerateTriangle(double[] param)
+        {
+            Point3 a = vertices[(int)param[0]];
+            Point3 b = vertices[(int)param[1]];
+            Point3 c = vertices[(int)param[2]];
+
+            Triangle tri = new Triangle(a, b, c);
+
+            ApplyTransform(tri);
+            ApplyMaterial(tri);
+            ApplyAmbient(tri);
+
+            return tri;
+        }
+
+
+
+        
         private void ApplyTransform(Geometry shape)
         {
             shape.Transform = Utils.DeepClone(transforms.First());
-            MyMatrix foo = shape.Transform.Matrix.Inverse;
         }
 
         private void ApplyMaterial(Geometry shape)
@@ -201,8 +219,11 @@ namespace RayTracer
             get { return lights; }
         }
 
+
+
+        int maxDepth;
         public int MaxDepth
-        { get; set; }
+        { get { return maxDepth; } }
 
         public String OutputFilename
         { get; set; }
