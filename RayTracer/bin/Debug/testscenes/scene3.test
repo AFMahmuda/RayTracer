@@ -3,14 +3,12 @@
 # I know it's not the most exciting of scenes...
 
 size 640 480 
-#size 100 74 
-
 
 camera 0 -4 4 0 -1 0 0 1 1 45
 
-output scene3_3
+output scene3
 
-maxdepth 2
+maxdepth 1
 
 maxverts 8
 
