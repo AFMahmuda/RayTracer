@@ -2,11 +2,8 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="RayTracer.Camera">
     <Position X="2.5" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAgIAAAMAAAAAAAAAACABoAAgAaAAI=</HashCode>
+      <HashCode>AAAAAgAAAAAAAAAgIAAAMAAAAAAAAAACQBoAAgAaAAI=</HashCode>
       <FileName>Camera.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -19,26 +16,20 @@
   </Class>
   <Class Name="RayTracer.Point3">
     <Position X="4.75" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAYAEAEAAAAAAAAAAAAABgAQAAYQE=</HashCode>
       <FileName>Type\Point3.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.ViewPlane">
-    <Position X="5.75" Y="7.25" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
+    <Position X="5.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAEAAAABggAAAAJAAAAMAAIBgCAAAAAAAAAAAAIAAA=</HashCode>
+      <HashCode>BAAEAAAABAgAAAAJAAAAMAAIBgCAAAAAQAAAAAAIAAA=</HashCode>
       <FileName>ViewPlane.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Ray">
-    <Position X="16.75" Y="0.5" Width="1.5" />
+    <Position X="15" Y="0.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -50,14 +41,14 @@
   <Class Name="RayTracer.RayTracer">
     <Position X="18.5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAQBAAAAgAAAAAAAAAAAEAAAAAAAgE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAIgA=</HashCode>
       <FileName>RayTracer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Geometry">
-    <Position X="0.75" Y="6" Width="1.5" />
+    <Position X="2.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAAAAAAAAAAAAAgAAAAAQAAAIAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>AEAAAAAAAAAAIAAAgAAAAAQAAAIAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>Shape\Geometry.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -65,8 +56,8 @@
     <Position X="0.5" Y="9" Width="1.5" />
     <InheritanceLine Type="RayTracer.Geometry" FixedToPoint="true">
       <Path>
-        <Point X="1.5" Y="8.132" />
-        <Point X="1.5" Y="8.625" />
+        <Point X="3" Y="8.334" />
+        <Point X="3" Y="8.625" />
         <Point X="1.188" Y="8.625" />
         <Point X="1.188" Y="9" />
       </Path>
@@ -78,9 +69,6 @@
   </Class>
   <Class Name="RayTracer.Triangle">
     <Position X="2.5" Y="9" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
       <HashCode>AAgAQAAAAACAAAAAgAAAAAAEAAKAAACgASAACAAAAAA=</HashCode>
       <FileName>Shape\Triangle.cs</FileName>
@@ -121,7 +109,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Material">
-    <Position X="3.75" Y="4.25" Width="1.5" />
+    <Position X="4.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEABAAAAAQgAAAAAAgAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Material.cs</FileName>
@@ -137,7 +125,7 @@
       <FileName>Light\Light.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="RayTracer.Matrix">
+  <Class Name="RayTracer.MyMatrix">
     <Position X="12.25" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAgAAIAIUACAAEAQIAKAAAAAAACBAkAA=</HashCode>
@@ -187,20 +175,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.Scene">
-    <Position X="0.5" Y="1.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QIQCAAACAAAAgAAAABAAAiAAAAIQAAIAAAAAIQFEAAA=</HashCode>
+      <HashCode>QIQAAAACQAAAgAAAABQAEiAAAAIwAAIAEAAAIQFEAAA=</HashCode>
       <FileName>Scene.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.MyColor">
     <Position X="7.5" Y="4.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAYAEAAAAEAACAAAAIAQABCAEAARA=</HashCode>
       <FileName>Type\MyColor.cs</FileName>
@@ -208,9 +190,6 @@
   </Class>
   <Class Name="RayTracer.Attenuation">
     <Position X="9.5" Y="0.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAAAIAAAAAAAAAAAAAAAAAgAIAAIACAAAAA=</HashCode>
       <FileName>Attenuation.cs</FileName>

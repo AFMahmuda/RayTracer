@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RayTracer
 {
-        [Serializable]
+    [Serializable]
     public class Triangle : Geometry
     {
 
@@ -40,7 +40,7 @@ namespace RayTracer
         void PreCalculate()
         {
             //for IsIntersecting
-            localNorm = Vector3.Cross(new Vector3(b - a), new Vector3(c - a)).Normalize();
+            localNorm = Vector3.Cross(new Vector3(c - a), new Vector3(b - a)).Normalize();
 
             //for IsInsideTriangle
             ab = new Vector3(b - a);
@@ -61,13 +61,18 @@ namespace RayTracer
 
             Double distanceToPlane = ((new Vector3(a) * localNorm) - (new Vector3(ray.Start) * localNorm)) / (ray.Direction * localNorm);
 
-            if (distanceToPlane > 0 && ray.IsSmallerThanCurrent(distanceToPlane, Transform))
-                if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Value))
-                {
-                    ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
-                    return true;
-                }
+            if (distanceToPlane > 0)
+                if (ray.IsSmallerThanCurrent(distanceToPlane, Transform))
+                    if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Value))
+                    {
+
+                        ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
+                        return true;
+
+                    }
+
             return false;
+
         }
 
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RayTracer
 {
-        [Serializable]
+    [Serializable]
     public class Sphere : Geometry
     {
 
@@ -29,6 +29,8 @@ namespace RayTracer
 
         public override bool IsIntersecting(Ray ray)
         {
+
+
             Vector3 camToSphere = new Vector3(ray.Start, center);
 
             //false if sphere is behind ray
@@ -51,11 +53,7 @@ namespace RayTracer
                 //if (res1 < 0 && res2 < 0)
                 //    return false;
                 //else
-                if (res1 * res2 < 0)
-                    distance = Math.Max(res1, res2);
-                else
-                    distance = Math.Min(res1, res2);
-
+                distance = (res1 * res2 < 0) ? Math.Max(res1, res2) : Math.Min(res1, res2);
                 if (ray.IsSmallerThanCurrent(distance, Transform))
                 {
                     ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distance, 0).Magnitude;
@@ -63,13 +61,14 @@ namespace RayTracer
                 }
             }
             return false;
+
+
         }
 
         public override Vector3 GetNormal(Point3 point)
         {
             point = MyMatrix.Mult44x41(Transform.Matrix.Inverse, new Vector3(point), 1).Value;
             Vector3 norm = new Vector3(center, point).Normalize();
-//            norm = Matrix.Mult44x41(Transform.Matrix.Inverse, norm, 0).Normalize();
             return norm;
         }
     }

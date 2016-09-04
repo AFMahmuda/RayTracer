@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace RayTracer
 {
     public class ViewPlane
     {
-        Camera camera;
-
-        Double worldWidth;
-        Double worldHeight;
+        public static ViewPlane Instance;
+        double worldWidth;
+        double worldHeight;
         int pixelHeight;
         int pixelWidth;
         Point3 position;
@@ -32,15 +27,13 @@ namespace RayTracer
         }
 
 
-        public ViewPlane(int width, int height, Camera camera)
+        public ViewPlane(int width, int height)
         {
-            this.pixelWidth = width;
-            this.pixelHeight = height;
+            pixelWidth = width;
+            pixelHeight = height;
 
 
-            this.camera = camera;
-
-            worldHeight = 2.0 * Math.Tan((camera.FieldOfView / 2f) * Math.PI / 180.0);
+            worldHeight = 2.0 * Math.Tan((Camera.Instance.FieldOfView / 2f) * Math.PI / 180.0);
             worldWidth = worldHeight * (double)((double)pixelWidth / (double)PixelHeight);
 
             PreCalculate();
@@ -51,20 +44,20 @@ namespace RayTracer
         void PreCalculate()
         {
             upperLeft = GetUpperLeft();
-            unitRight = (camera.U.Value * (worldWidth / (Double)PixelWidth) * -1);
-            unitDown = (camera.V.Value * (worldHeight / (Double)PixelHeight) * -1);
+            unitRight = (Camera.Instance.U.Value * (worldWidth / (Double)PixelWidth) * -1);
+            unitDown = (Camera.Instance.V.Value * (worldHeight / (Double)PixelHeight) * -1);
         }
 
         Point3 GetUpperLeft()
         {
 
-            Point3 center = camera.Position;
-            center += camera.W.Value;
+            Point3 center = Camera.Instance.Position;
+            center += Camera.Instance.W.Value;
             position = center;
             Point3 upperLeft =
                 center
-                + camera.U.Value * (worldWidth / 2.0)    //U is left
-                + camera.V.Value * (worldHeight / 2.0);  //V is up
+                + Camera.Instance.U.Value * (worldWidth / 2.0)    //U is left
+                + Camera.Instance.V.Value * (worldHeight / 2.0);  //V is up
 
 
             return upperLeft;

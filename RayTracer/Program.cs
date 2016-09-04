@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-using System.Drawing.Drawing2D;
 
 namespace RayTracer
 {
-
-
     class Program
     {
         static void Main(string[] args)

@@ -23,7 +23,6 @@ namespace RayTracer
         {
             Size = new Size();
             maxDepth = 5;
-            Camera = new Camera();
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
             material = new Material();
             ambient = new MyColor(.2, .2, .2);
@@ -83,7 +82,7 @@ namespace RayTracer
                     Size = new Size((int)param[0], (int)param[1]);
                     break;
                 case "camera":
-                    Camera = new Camera(param);
+                    Camera.Instance = new Camera(param);
                     break;
                 case "maxdepth":
                     maxDepth = (int)param[0];
@@ -204,9 +203,6 @@ namespace RayTracer
         {
             shape.Ambient = Utils.DeepClone(ambient);
         }
-
-        public Camera Camera
-        { get; set; }
 
 
         public List<Geometry> Geometries
