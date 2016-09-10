@@ -67,7 +67,7 @@ namespace RayTracer
 
         public override Vector3 GetNormal(Point3 point)
         {
-            point = MyMatrix.Mult44x41(Transform.Matrix.Inverse, new Vector3(point), 1).Value;
+            point = MyMatrix.Mult44x41(Transform.Matrix.Inverse, new Vector3(point), 1).Point;
             Vector3 norm = new Vector3(center, point).Normalize();
             return norm;
         }

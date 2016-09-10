@@ -41,7 +41,7 @@ namespace RayTracer
 
         public Point3 CameraViewPosition()
         {
-            return (U * Position.X + V * Position.Y + W * Position.Z).Value;
+            return (U * Position.X + V * Position.Y + W * Position.Z).Point;
         }
 
 

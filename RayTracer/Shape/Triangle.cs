@@ -63,7 +63,7 @@ namespace RayTracer
 
             if (distanceToPlane > 0)
                 if (ray.IsSmallerThanCurrent(distanceToPlane, Transform))
-                    if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Value))
+                    if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
 
                         ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;

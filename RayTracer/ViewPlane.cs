@@ -44,20 +44,20 @@ namespace RayTracer
         void PreCalculate()
         {
             upperLeft = GetUpperLeft();
-            unitRight = (Camera.Instance.U.Value * (worldWidth / (Double)PixelWidth) * -1);
-            unitDown = (Camera.Instance.V.Value * (worldHeight / (Double)PixelHeight) * -1);
+            unitRight = (Camera.Instance.U.Point * (worldWidth / (Double)PixelWidth) * -1);
+            unitDown = (Camera.Instance.V.Point * (worldHeight / (Double)PixelHeight) * -1);
         }
 
         Point3 GetUpperLeft()
         {
 
             Point3 center = Camera.Instance.Position;
-            center += Camera.Instance.W.Value;
+            center += Camera.Instance.W.Point;
             position = center;
             Point3 upperLeft =
                 center
-                + Camera.Instance.U.Value * (worldWidth / 2.0)    //U is left
-                + Camera.Instance.V.Value * (worldHeight / 2.0);  //V is up
+                + Camera.Instance.U.Point * (worldWidth / 2.0)    //U is left
+                + Camera.Instance.V.Point * (worldHeight / 2.0);  //V is up
 
 
             return upperLeft;

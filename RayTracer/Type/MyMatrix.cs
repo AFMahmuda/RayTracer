@@ -20,7 +20,6 @@ namespace RayTracer
             value = new Double[rowNumber, colNumber];
             haveInverse = false;
             haveIdentity = false;
-
         }
 
         public MyMatrix(int row, int col, Double[] val)
@@ -169,17 +168,17 @@ namespace RayTracer
         {
 
             Double[,] val = matrix.GetValue();
-            Double x = vector.Point.X;
-            Double y = vector.Point.Y;
-            Double z = vector.Point.Z;
+            Double x = vector.Value.X;
+            Double y = vector.Value.Y;
+            Double z = vector.Value.Z;
 
             Double newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
             Double newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
             Double newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
 
-            Vector3 result = new Vector3(newX, newY, newZ);
+            return new Vector3(newX, newY, newZ);
 
-            return result;
+
         }
 
         public static MyMatrix Mult44x44(MyMatrix matA, MyMatrix matB)

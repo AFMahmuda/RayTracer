@@ -29,7 +29,7 @@ namespace RayTracer
 
         public override Vector3 GetPointToLight(Point3 point)
         {
-            return new Vector3(Direction.Value * -1);
+            return new Vector3(Direction.Point * -1);
         }
 
         public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)

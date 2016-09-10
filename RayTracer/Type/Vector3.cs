@@ -5,21 +5,24 @@ using System.Text;
 
 namespace RayTracer
 {
-        [Serializable]
+    [Serializable]
     public class Vector3
     {
 
         public Vector3(Double x, Double y, Double z)
-            : this(new Point3(x, y, z))
-        { }
+        {
+            Point = new Point3(x, y, z);
+        }
 
         public Vector3(Point3 point)
-            : this(Point3.ZERO, point)
-        { }
+        {
+            //point is a reference! we only need value.
+            Point = point * 1;
+        }
 
         public Vector3(Point3 start, Point3 end)
         {
-            this.Value = end - start;
+            this.Point = end - start;
         }
 
         public static Vector3 UP { get { return new Vector3(0, 1, 0); } }
@@ -29,12 +32,12 @@ namespace RayTracer
 
 
 
-        public Point3 Value
+        public Point3 Point
         { get; set; }
 
         public Double Magnitude
         {
-            get { return Math.Sqrt((Value.X * Value.X) + (Value.Y * Value.Y) + (Value.Z * Value.Z)); }
+            get { return Math.Sqrt((Point.X * Point.X) + (Point.Y * Point.Y) + (Point.Z * Point.Z)); }
         }
 
         public Vector3 Normalize()
@@ -45,8 +48,8 @@ namespace RayTracer
 
         public static Double operator *(Vector3 a, Vector3 b)
         {
-            Point3 newA = a.Value;
-            Point3 newB = b.Value;
+            Point3 newA = a.Point;
+            Point3 newB = b.Point;
             Double result = ((newA.X * newB.X) + (newA.Y * newB.Y) + (newA.Z * newB.Z));
 
             return result;
@@ -54,10 +57,10 @@ namespace RayTracer
 
         public static Vector3 operator *(Vector3 vector, Double scalar)
         {
-            Vector3 result = new Vector3(vector.Value);
-            result.Value.X *= scalar;
-            result.Value.Y *= scalar;
-            result.Value.Z *= scalar;
+            Vector3 result = new Vector3(vector.Point);
+            result.Point.X *= scalar;
+            result.Point.Y *= scalar;
+            result.Point.Z *= scalar;
             return result;
         }
 
@@ -67,7 +70,7 @@ namespace RayTracer
 
             Vector3 newA = a * 1;
             Vector3 newB = b * 1;
-            Vector3 result = new Vector3(newA.Value + newB.Value);
+            Vector3 result = new Vector3(newA.Point + newB.Point);
             return result;
 
         }
@@ -84,8 +87,8 @@ namespace RayTracer
 
         public static Vector3 Cross(Vector3 a, Vector3 b)
         {
-            Point3 A = a.Value;
-            Point3 B = b.Value;
+            Point3 A = a.Point;
+            Point3 B = b.Point;
             return new Vector3(
                 A.Y * B.Z - A.Z * B.Y,
                 (A.X * B.Z - A.Z * B.X) * -1,
@@ -96,7 +99,7 @@ namespace RayTracer
         public void ShowInformation()
         {
             Console.WriteLine(" vector:");
-            Console.WriteLine(" Value     = " + Value.X.ToString("#.0000") + " " + Value.Y.ToString("#.0000") + " " + Value.Z.ToString("#.0000"));
+            Console.WriteLine(" Value     = " + Point.X.ToString("#.0000") + " " + Point.Y.ToString("#.0000") + " " + Point.Z.ToString("#.0000"));
             Console.WriteLine(" Magnitude = " + Magnitude.ToString("#.0000"));
         }
     }

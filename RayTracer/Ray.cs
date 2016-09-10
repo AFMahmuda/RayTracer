@@ -36,7 +36,7 @@ namespace RayTracer
 
         Point3 HitPoint
         {
-            get { return Start + (Direction * (IntersectDistance * (.999f))).Value; }
+            get { return Start + (Direction * (IntersectDistance * (.999f))).Point; }
         }
 
         public MyColor Trace(Scene scene, int bounce = 0)
@@ -115,13 +115,13 @@ namespace RayTracer
 
         public void Transform(Transform transform)
         {
-            Start = MyMatrix.Mult44x41(transform.Matrix, new Vector3(Start), 1).Value;
+            Start = MyMatrix.Mult44x41(transform.Matrix, new Vector3(Start), 1).Point;
             Direction = MyMatrix.Mult44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = MyMatrix.Mult44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Value;
+            Start = MyMatrix.Mult44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Point;
             Direction = MyMatrix.Mult44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
         public bool IsSmallerThanCurrent(Double distance, Transform trans)
