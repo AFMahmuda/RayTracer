@@ -46,31 +46,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attenuation.cs" />
-    <Compile Include="Camera.cs" />
+    <Compile Include="Light\Attenuation.cs" />
+    <Compile Include="Tracer\Camera.cs" />
     <Compile Include="Light\DirectionalLight.cs" />
     <Compile Include="Light\Light.cs" />
-    <Compile Include="Material.cs" />
-    <Compile Include="Type\MyColor.cs" />
+    <Compile Include="Material\Material.cs" />
+    <Compile Include="Common\MyColor.cs" />
     <Compile Include="Shape\Geometry.cs" />
     <Compile Include="Transform\Rotation.cs" />
     <Compile Include="Transform\Scaling.cs" />
     <Compile Include="Transform\Translation.cs" />
-    <Compile Include="Type\Matrix.cs" />
-    <Compile Include="Type\Point3.cs" />
+    <Compile Include="Common\Matrix.cs" />
+    <Compile Include="Common\Point3.cs" />
     <Compile Include="Light\PointLight.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ray.cs" />
-    <Compile Include="RayTracer.cs" />
-    <Compile Include="Scene.cs" />
+    <Compile Include="Tracer\Ray.cs" />
+    <Compile Include="Tracer\RayTracer.cs" />
+    <Compile Include="Tracer\Scene.cs" />
     <Compile Include="Shape\Sphere.cs" />
     <Compile Include="Transform\Transform.cs" />
     <Compile Include="Shape\Triangle.cs" />
     <Compile Include="Shape\TringleNorm.cs" />
-    <Compile Include="Type\Vector3.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="ViewPlane.cs" />
+    <Compile Include="Common\Vector3.cs" />
+    <Compile Include="Common\Utils.cs" />
+    <Compile Include="Tracer\ViewPlane.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
