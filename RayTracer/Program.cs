@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RayTracer.Tracer;
+using System;
 using System.Drawing;
 using System.IO;
 
@@ -22,9 +23,8 @@ namespace RayTracer
                 Scene scene = new Scene(scenefile);
                 Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
                 Console.WriteLine();
-                RayTracer rayTracer = new RayTracer();
+                RayTraceManager rayTracer = new RayTraceManager();
                 Bitmap result = rayTracer.TraceScene(scene);
-                //Bitmap result = rayTracer.TraceScene3D(scene);
                 if (!scene.OutputFilename.Equals(""))
                     outputFile = scene.OutputFilename;
                 result.Save(outputFile);
@@ -35,7 +35,6 @@ namespace RayTracer
                 Console.WriteLine("File not found!");
             }
 
-            //Console.ReadLine();
         }
     }
 }

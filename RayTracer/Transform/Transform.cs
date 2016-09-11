@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using RayTracer.Common;
+using System;
 
-namespace RayTracer
+
+namespace RayTracer.Transformation
 {
     [Serializable]
     public class Transform
     {
-         
+
         MyMatrix matrix;
 
         public MyMatrix Matrix
@@ -31,7 +30,7 @@ namespace RayTracer
             Console.WriteLine("inverse");
             for (int row = 0; row < 4; row++)
             {
-                for (int col = 0; col < 4; col++) 
+                for (int col = 0; col < 4; col++)
                     Console.Write(Matrix.Inverse.GetValue(row, col) + "\t");
                 Console.WriteLine();
             }
@@ -41,7 +40,7 @@ namespace RayTracer
 
         public Transform Clone()
         {
-            return (Transform) this.MemberwiseClone();
+            return (Transform)this.MemberwiseClone();
         }
     }
 }

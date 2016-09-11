@@ -1,11 +1,12 @@
-﻿using System;
+﻿using RayTracer.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Transformation
 {
-        [Serializable]
+    [Serializable]
     public class Rotation : Transform
     {
         public Rotation()

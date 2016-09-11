@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RayTracer
+namespace RayTracer.Lighting
 {
     [Serializable]
     public class Attenuation

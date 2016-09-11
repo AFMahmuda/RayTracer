@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BVH\BVHBuilder.cs" />
     <Compile Include="Light\Attenuation.cs" />
+    <Compile Include="RadixSort.cs" />
     <Compile Include="Tracer\Camera.cs" />
     <Compile Include="Light\DirectionalLight.cs" />
     <Compile Include="Light\Light.cs" />

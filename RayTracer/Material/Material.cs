@@ -1,16 +1,17 @@
-﻿using System;
+﻿using RayTracer.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Material
 {
     [Serializable]
-    public class Material
+    public class Mat
     {
 
-        public Material()
+        public Mat()
         {
             Specular = new MyColor();
             Diffuse = new MyColor();
@@ -41,9 +42,9 @@ namespace RayTracer
             }
         }
 
-        public Material Clone()
+        public Mat Clone()
         {
-            return (Material)this.MemberwiseClone();
+            return (Mat)this.MemberwiseClone();
         }
     }
 }

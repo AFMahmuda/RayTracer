@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using RayTracer.Common;
+using System;
 
-namespace RayTracer
+
+namespace RayTracer.Transformation
 {
-        [Serializable]
+    [Serializable]
     public class Scaling : Transform
     {
 
         public Scaling()
-            : this(new Point3(1,1,1))
+            : this(new Point3(1, 1, 1))
         { }
 
         public Scaling(Double[] values)
@@ -26,9 +25,9 @@ namespace RayTracer
             Matrix.SetValue(2, 2, values.Z);
 
             Matrix.SetValue(3, 3, 1f);
-           // ShowInformation();
+            // ShowInformation();
         }
 
-       
+
     }
 }

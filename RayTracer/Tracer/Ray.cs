@@ -1,10 +1,15 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Shape;
+using RayTracer.Lighting;
+using RayTracer.Material;
+using RayTracer.Transformation;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Tracer
 {
     public class Ray
     {
@@ -41,6 +46,9 @@ namespace RayTracer
 
         public MyColor Trace(Scene scene, int bounce = 0)
         {
+            //TODO : for debugging purpose only
+//            return new MyColor();
+
             if (bounce > scene.MaxDepth)
                 return new MyColor();
 
@@ -48,10 +56,10 @@ namespace RayTracer
             {
                 foreach (var geometry in scene.Geometries)
                 {
-                    TransformInv(geometry.Transform);
+                    TransformInv(geometry.Trans);
                     if (geometry.IsIntersecting(this))
                         IntersectWith = geometry;
-                    Transform(geometry.Transform);
+                    Transform(geometry.Trans);
                 }
             }
             catch (Exception e)
@@ -86,7 +94,7 @@ namespace RayTracer
                 Vector3 pointToLight = light.GetPointToLight(HitPoint);
                 Vector3 halfAngleToLight = (Direction * -1f + pointToLight).Normalize();
 
-                Material material = IntersectWith.Material;
+                Mat material = IntersectWith.Material;
 
                 double attenuationValue = light.GetAttenuationValue(HitPoint, attenuation);
 

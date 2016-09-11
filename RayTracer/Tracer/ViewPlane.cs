@@ -1,6 +1,8 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Shape;
+using System;
 
-namespace RayTracer
+namespace RayTracer.Tracer
 {
     public class ViewPlane
     {

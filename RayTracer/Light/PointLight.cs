@@ -1,9 +1,12 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Shape;
+using RayTracer.Tracer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Lighting
 {
     [Serializable]
     public class PointLight : Light
@@ -41,7 +44,7 @@ namespace RayTracer
 
                 Point3 pos = Utils.DeepClone(ray.Start);
                 Vector3 dir = Utils.DeepClone(ray.Direction);
-                ray.TransformInv(item.Transform);
+                ray.TransformInv(item.Trans);
 
                 if (item.IsIntersecting(ray))
                     if (ray.IntersectDistance < GetPointToLight(point).Magnitude)

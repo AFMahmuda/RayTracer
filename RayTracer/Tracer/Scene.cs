@@ -1,11 +1,16 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Shape;
+using RayTracer.Lighting;
+using RayTracer.Material;
+using RayTracer.Transformation;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace RayTracer
+namespace RayTracer.Tracer
 {
     [Serializable]
     public class Scene
@@ -17,14 +22,14 @@ namespace RayTracer
         private List<Light> lights = new List<Light>();
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
-        private Material material;
+        private Mat material;
 
         public Scene()
         {
             Size = new Size();
             maxDepth = 5;
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
-            material = new Material();
+            material = new Mat();
             ambient = new MyColor(.2, .2, .2);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
@@ -191,7 +196,7 @@ namespace RayTracer
         
         private void ApplyTransform(Geometry shape)
         {
-            shape.Transform = Utils.DeepClone(transforms.First());
+            shape.Trans= Utils.DeepClone(transforms.First());
         }
 
         private void ApplyMaterial(Geometry shape)
@@ -208,6 +213,7 @@ namespace RayTracer
         public List<Geometry> Geometries
         {
             get { return geometries; }
+            set { geometries = value; }
         }
 
         public List<Light> Lights

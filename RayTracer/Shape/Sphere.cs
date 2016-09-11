@@ -1,9 +1,11 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Tracer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Shape
 {
     [Serializable]
     public class Sphere : Geometry
@@ -21,8 +23,11 @@ namespace RayTracer
         { }
         public Sphere(Point3 center, Double radius)
         {
+
             this.center = center;
             this.radius = radius;
+            pos = center;
+            hasMorton = false;
         }
 
 
@@ -54,9 +59,9 @@ namespace RayTracer
                 //    return false;
                 //else
                 distance = (res1 * res2 < 0) ? Math.Max(res1, res2) : Math.Min(res1, res2);
-                if (ray.IsSmallerThanCurrent(distance, Transform))
+                if (ray.IsSmallerThanCurrent(distance, Trans))
                 {
-                    ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distance, 0).Magnitude;
+                    ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;
                     return true;
                 }
             }
@@ -67,7 +72,7 @@ namespace RayTracer
 
         public override Vector3 GetNormal(Point3 point)
         {
-            point = MyMatrix.Mult44x41(Transform.Matrix.Inverse, new Vector3(point), 1).Point;
+            point = MyMatrix.Mult44x41(Trans.Matrix.Inverse, new Vector3(point), 1).Point;
             Vector3 norm = new Vector3(center, point).Normalize();
             return norm;
         }

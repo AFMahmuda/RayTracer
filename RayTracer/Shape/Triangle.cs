@@ -1,14 +1,15 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Tracer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Shape
 {
     [Serializable]
     public class Triangle : Geometry
     {
-
         Point3 a;
         Point3 b;
         Point3 c;
@@ -34,6 +35,8 @@ namespace RayTracer
             this.b = b;
             this.c = c;
 
+            pos = (a + b + c) * (.33f);
+            hasMorton = false;
             PreCalculate();
         }
 
@@ -62,11 +65,11 @@ namespace RayTracer
             Double distanceToPlane = ((new Vector3(a) * localNorm) - (new Vector3(ray.Start) * localNorm)) / (ray.Direction * localNorm);
 
             if (distanceToPlane > 0)
-                if (ray.IsSmallerThanCurrent(distanceToPlane, Transform))
+                if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
                     if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
 
-                        ray.IntersectDistance = MyMatrix.Mult44x41(Transform.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
+                        ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
                         return true;
 
                     }
@@ -93,7 +96,7 @@ namespace RayTracer
 
         public override Vector3 GetNormal(Point3 point)
         {
-            Vector3 norm = MyMatrix.Mult44x41(Transform.Matrix.Inverse, localNorm, 0).Normalize();
+            Vector3 norm = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
             return norm;
         }
     }

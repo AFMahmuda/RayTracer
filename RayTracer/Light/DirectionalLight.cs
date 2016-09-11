@@ -1,9 +1,12 @@
-﻿using System;
+﻿using RayTracer.Common;
+using RayTracer.Shape;
+using RayTracer.Tracer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer
+namespace RayTracer.Lighting
 {
     [Serializable]
     public class DirectionalLight : Light
@@ -43,10 +46,10 @@ namespace RayTracer
             {
                 //if (item.Equals(geometry))
                 //    continue;
-                ray.TransformInv(item.Transform);
+                ray.TransformInv(item.Trans);
                 if (item.IsIntersecting(ray))
                     return false;
-                ray.Transform(item.Transform);
+                ray.Transform(item.Trans);
             }
 
             return true;

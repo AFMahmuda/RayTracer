@@ -1,13 +1,15 @@
-﻿using System;
+﻿using RayTracer.BVH;
+using RayTracer.Common;
+using System;
 using System.Drawing;
 using System.Threading.Tasks;
 
 
 
-namespace RayTracer
+namespace RayTracer.Tracer
 {
 
-    public class RayTracer
+    public class RayTraceManager
     {
 
         public Bitmap TraceScene(Scene scene)
@@ -47,6 +49,10 @@ namespace RayTracer
             Console.WriteLine("Tracing...Please Wait...\n------------------------------");
 
 
+            //TODO : for debugging only
+            new BVHBuilder().BuildBVH(scene);
+
+
             Task task1 = Task.Factory.StartNew(() => TraceThread(results[0], scene, 0, 0, h / 2, w / 3));
             Task task2 = Task.Factory.StartNew(() => TraceThread(results[1], scene2, 0, w / 3, h / 2, w * 2 / 3));
             Task task3 = Task.Factory.StartNew(() => TraceThread(results[2], scene3, 0, w * 2 / 3, h / 2, w));
@@ -77,7 +83,7 @@ namespace RayTracer
             for (int currRow = rowStart; currRow < rowEnd; currRow++)
             {
                 for (int currCol = colStart; currCol < colEnd; currCol++)
-                {                     
+                {
                     Ray ray = new Ray();
                     Point3 pixPosition = ViewPlane.Instance.GetNewLocation(currCol, currRow);
                     ray.Start = Camera.Instance.Position;
