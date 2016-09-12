@@ -42,12 +42,13 @@ namespace RayTracer.Shape
 
         void PreCalculate()
         {
-            //for IsIntersecting
-            localNorm = Vector3.Cross(new Vector3(c - a), new Vector3(b - a)).Normalize();
 
             //for IsInsideTriangle
-            ab = new Vector3(b - a);
-            ac = new Vector3(c - a);
+            ab = new Vector3(a, b);
+            ac = new Vector3(a, c);
+
+            //for IsIntersecting
+            localNorm = Vector3.Cross(ac, ab).Normalize();
 
             dot_ab_ab = ab * ab;
             dot_ab_ac = ab * ac;
@@ -62,16 +63,20 @@ namespace RayTracer.Shape
             if (ray.Direction * localNorm == 0)
                 return false;
 
-            Double distanceToPlane = ((new Vector3(a) * localNorm) - (new Vector3(ray.Start) * localNorm)) / (ray.Direction * localNorm);
+
+
+
+            Double distanceToPlane = (
+                 (new Vector3(a) * localNorm) -
+                 (new Vector3(ray.Start) * localNorm))
+                / (ray.Direction * localNorm);
 
             if (distanceToPlane > 0)
                 if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
                     if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
-
                         ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
                         return true;
-
                     }
 
             return false;
@@ -93,6 +98,7 @@ namespace RayTracer.Shape
 
 
         }
+
 
         public override Vector3 GetNormal(Point3 point)
         {
