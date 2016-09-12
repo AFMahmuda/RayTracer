@@ -46,8 +46,6 @@ namespace RayTracer.Tracer
 
         public MyColor Trace(Scene scene, int bounce = 0)
         {
-            //TODO : for debugging purpose only
-//            return new MyColor();
 
             if (bounce > scene.MaxDepth)
                 return new MyColor();
@@ -73,10 +71,10 @@ namespace RayTracer.Tracer
                 List<Light> effectiveLight = PopulateEffectiveLight(scene.Lights, scene.Geometries);
                 MyColor color = CalculateColor(effectiveLight, scene.Attenuation);
 
-                Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2 * (Direction * IntersectWith.GetNormal(HitPoint)));
+                Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPoint)));
                 Ray reflectedRay = new Ray(HitPoint, reflection);
                 double reflectability = .35;
-                return color + (reflectability * reflectedRay.Trace(scene, bounce + 1));
+                return color + IntersectWith.Material.Specular * (reflectability * reflectedRay.Trace(scene, bounce + 1));
             }
 
             else return new MyColor();
