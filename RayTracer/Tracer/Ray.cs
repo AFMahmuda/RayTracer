@@ -39,9 +39,18 @@ namespace RayTracer.Tracer
         { get; set; }
 
 
-        Point3 HitPoint
+        Point3 HitPointMinus
         {
             get { return Start + (Direction * (IntersectDistance * (.999f))).Point; }
+        }
+
+        Point3 HitPointPlus
+        {
+            get { return Start + (Direction * (IntersectDistance * (1.001f))).Point; }
+        }
+        Point3 RealHitPoint
+        {
+            get { return Start + (Direction * (IntersectDistance)).Point; }
         }
 
         public MyColor Trace(Scene scene, int bounce = 0)
@@ -71,10 +80,10 @@ namespace RayTracer.Tracer
                 List<Light> effectiveLight = PopulateEffectiveLight(scene.Lights, scene.Geometries);
                 MyColor color = CalculateColor(effectiveLight, scene.Attenuation);
 
-                Vector3 reflection = Direction - (IntersectWith.GetNormal(HitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPoint)));
-                Ray reflectedRay = new Ray(HitPoint, reflection);
-                double reflectability = .35;
-                return color + IntersectWith.Material.Specular * (reflectability * reflectedRay.Trace(scene, bounce + 1));
+                Vector3 reflection = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPointMinus)));
+                Ray reflectedRay = new Ray(HitPointMinus, reflection);
+                return color + IntersectWith.Material.Specular * (reflectedRay.Trace(scene, bounce + 1));
+
             }
 
             else return new MyColor();
@@ -84,17 +93,17 @@ namespace RayTracer.Tracer
         {
 
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
-            Vector3 normal = IntersectWith.GetNormal(HitPoint);
+            Vector3 normal = IntersectWith.GetNormal(HitPointMinus);
 
 
             foreach (var light in effectiveLights)
             {
-                Vector3 pointToLight = light.GetPointToLight(HitPoint);
+                Vector3 pointToLight = light.GetPointToLight(HitPointMinus);
                 Vector3 halfAngleToLight = (Direction * -1f + pointToLight).Normalize();
 
                 Mat material = IntersectWith.Material;
 
-                double attenuationValue = light.GetAttenuationValue(HitPoint, attenuation);
+                double attenuationValue = light.GetAttenuationValue(HitPointMinus, attenuation);
 
                 result +=
                     attenuationValue * light.Color *
@@ -112,7 +121,7 @@ namespace RayTracer.Tracer
             List<Light> result = new List<Light>();
             foreach (var light in allLights)
             {
-                if (light.IsEffective(HitPoint, IntersectWith, geometries))
+                if (light.IsEffective(HitPointMinus, IntersectWith, geometries))
                     result.Add(light);
             }
 
