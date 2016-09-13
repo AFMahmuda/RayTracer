@@ -33,32 +33,32 @@ namespace RayTracer.Lighting
 
         public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
         {
-
             if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
                 return false;
-            Ray ray = new Ray(point, GetPointToLight(point));
+
+            Ray shadowRay = new Ray(point, GetPointToLight(point));
             foreach (var item in geometries)
             {
                 if (item.Equals(geometry))
                     continue;
 
-                Point3 pos = Utils.DeepClone(ray.Start);
-                Vector3 dir = Utils.DeepClone(ray.Direction);
-                ray.TransformInv(item.Trans);
+                Point3 pos = Utils.DeepClone(shadowRay.Start);
+                Vector3 dir = Utils.DeepClone(shadowRay.Direction);
 
-                if (item.IsIntersecting(ray))
-                    if (ray.IntersectDistance < GetPointToLight(point).Magnitude)
+                shadowRay.TransformInv(item.Trans);
+
+                if (item.IsIntersecting(shadowRay))
+                    if (shadowRay.IntersectDistance < GetPointToLight(point).Magnitude)
                         return false;
                 
-                ray.Start = pos;
-                ray.Direction = dir;
-                //ray.Transform(item.Transform);
+                shadowRay.Start = pos;
+                shadowRay.Direction = dir;
             }
 
             return true;
         }
 
-        public override Double GetAttenuationValue(Point3 point, Attenuation attenuation)
+        public override Double GetAttValue(Point3 point, Attenuation attenuation)
         {
             if (!attenuation.Equals(new Attenuation()))
                 return 1f;

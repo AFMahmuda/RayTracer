@@ -15,10 +15,14 @@ namespace RayTracer.Shape
 
 
         public Point3 Pos { get { return pos; } }
+        private Transform trans;
         public Transform Trans
         {
-            get;
-            set;
+            get { return trans; }
+            set { trans = value;
+                hasMorton = false;
+                UpdatePos();
+                }
         }
 
 
@@ -27,7 +31,7 @@ namespace RayTracer.Shape
             get;
             set;
         }
-
+        public abstract void UpdatePos();
         public abstract bool IsIntersecting(Ray ray);
         public abstract Vector3 GetNormal(Point3 point);
         public MyColor Ambient { get; set; }

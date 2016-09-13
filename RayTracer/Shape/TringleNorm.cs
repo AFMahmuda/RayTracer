@@ -39,5 +39,9 @@ namespace RayTracer
             throw new NotImplementedException();
         }
 
+        public override void UpdatePos()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

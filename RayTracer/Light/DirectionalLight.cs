@@ -37,15 +37,13 @@ namespace RayTracer.Lighting
 
         public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
         {
-
-            if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
-                return false;
+            //not needed. lights effective to both sides
+            //if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+            //    return false;
 
             Ray ray = new Ray(point, GetPointToLight(point));
             foreach (var item in geometries)
             {
-                //if (item.Equals(geometry))
-                //    continue;
                 ray.TransformInv(item.Trans);
                 if (item.IsIntersecting(ray))
                     return false;
@@ -56,7 +54,7 @@ namespace RayTracer.Lighting
 
         }
 
-        public override Double GetAttenuationValue(Point3 point, Attenuation attenuation)
+        public override Double GetAttValue(Point3 point, Attenuation attenuation)
         {
             return 1;
         }

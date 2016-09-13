@@ -1,5 +1,6 @@
 ﻿using RayTracer.Common;
 using RayTracer.Tracer;
+using RayTracer.Transformation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +35,7 @@ namespace RayTracer.Shape
             this.a = a;
             this.b = b;
             this.c = c;
-
-            pos = (a + b + c) * (.33f);
+            Trans = new Scaling();
             hasMorton = false;
             PreCalculate();
         }
@@ -59,19 +59,20 @@ namespace RayTracer.Shape
 
         public override bool IsIntersecting(Ray ray)
         {
-            //check is parallel
+            //check if parallel
             if (ray.Direction * localNorm == 0)
                 return false;
-
-
-
-
+            /*
+            relative to ray direction
+            */
             Double distanceToPlane = (
                  (new Vector3(a) * localNorm) -
                  (new Vector3(ray.Start) * localNorm))
                 / (ray.Direction * localNorm);
-
-            if (distanceToPlane > 0)
+            /*
+            dist < 0 = behind cam
+            */
+            if (distanceToPlane > 0) 
                 if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
                     if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
@@ -104,6 +105,12 @@ namespace RayTracer.Shape
         {
             Vector3 norm = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
             return norm;
+        }
+
+        public override void UpdatePos()
+        {
+            Vector3 temp = new Vector3(a + b + c) * (.33f);
+            pos = MyMatrix.Mult44x41(Trans.Matrix,temp, 1).Point;
         }
     }
 }

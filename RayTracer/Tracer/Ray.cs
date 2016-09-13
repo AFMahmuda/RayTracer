@@ -13,10 +13,13 @@ namespace RayTracer.Tracer
 {
     public class Ray
     {
+
+
         public Ray()
         {
             IntersectDistance = double.MaxValue;
             IntersectWith = null;
+            Type = TYPE.RAY;
         }
 
         public Ray(Point3 start, Vector3 direction)
@@ -37,7 +40,14 @@ namespace RayTracer.Tracer
 
         public Geometry IntersectWith
         { get; set; }
+        public enum TYPE
+        {
+            RAY,
+            REFLECTION,
+            REFRACTION
+        }
 
+        public TYPE Type { get; set; }
 
         Point3 HitPointMinus
         {
@@ -59,14 +69,25 @@ namespace RayTracer.Tracer
             if (bounce > scene.MaxDepth)
                 return new MyColor();
 
+
             try
             {
+                //save original value
+                Point3 tempStart = Utils.DeepClone(Start);
+                Vector3 tempDir = Utils.DeepClone(Direction);
                 foreach (var geometry in scene.Geometries)
                 {
+                    //transform ray according to each shapes transformation
                     TransformInv(geometry.Trans);
+
+
                     if (geometry.IsIntersecting(this))
                         IntersectWith = geometry;
-                    Transform(geometry.Trans);
+
+                    //assign original value for start and direction by memory
+                    Start = tempStart;
+                    Direction = tempDir;
+                    //Transform(geometry.Trans);
                 }
             }
             catch (Exception e)
@@ -77,24 +98,48 @@ namespace RayTracer.Tracer
 
             if (IntersectWith != null)
             {
-                List<Light> effectiveLight = PopulateEffectiveLight(scene.Lights, scene.Geometries);
-                MyColor color = CalculateColor(effectiveLight, scene.Attenuation);
+                List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Geometries);
+                MyColor color = CalcColor(effectiveLights, scene.Attenuation);
 
-                Vector3 reflection = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPointMinus)));
-                Ray reflectedRay = new Ray(HitPointMinus, reflection);
-                return color + IntersectWith.Material.Specular * (reflectedRay.Trace(scene, bounce + 1));
-
+                return color +
+                    CalcReflection(scene, bounce + 1);
+                //CalcRefraction(scene, bounce + 1) ;
             }
 
             else return new MyColor();
         }
+        MyColor CalcReflection(Scene scene, int bounce)
+        {
+            if (Type != TYPE.REFRACTION)
+            {
+                Vector3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPointMinus)));
+                Ray reflectRay = new Ray(HitPointMinus, rreflectDir);
+                //reflectRay.Type = TYPE.REFLECTION;
 
-        MyColor CalculateColor(List<Light> effectiveLights, Attenuation attenuation)
+                return IntersectWith.Material.Specular * (reflectRay.Trace(scene, bounce));
+            }
+            else return new MyColor();
+        }
+
+        //        MyColor CalcRefraction(Scene scene, int bounce)
+        //        {
+        //            if (IntersectWith.GetType() == typeof(Sphere))
+        //            {
+        //                Vector3 refDir = Direction;
+        //                Ray refRay = new Ray(HitPointPlus, refDir);
+        ////              refRay.Type = TYPE.REFRACTION;
+        //                return (refRay.Trace(scene, bounce));
+        //            }
+        //            else return new MyColor();
+        //        }
+
+
+
+        MyColor CalcColor(List<Light> effectiveLights, Attenuation attenuation)
         {
 
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
             Vector3 normal = IntersectWith.GetNormal(HitPointMinus);
-
 
             foreach (var light in effectiveLights)
             {
@@ -103,7 +148,7 @@ namespace RayTracer.Tracer
 
                 Mat material = IntersectWith.Material;
 
-                double attenuationValue = light.GetAttenuationValue(HitPointMinus, attenuation);
+                double attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
 
                 result +=
                     attenuationValue * light.Color *
