@@ -49,7 +49,7 @@
     <Compile Include="BVH\BVHBuilder.cs" />
     <Compile Include="BVH\Container.cs" />
     <Compile Include="Light\Attenuation.cs" />
-    <Compile Include="RadixSort.cs" />
+    <Compile Include="Common\RadixSort.cs" />
     <Compile Include="Tracer\Camera.cs" />
     <Compile Include="Light\DirectionalLight.cs" />
     <Compile Include="Light\Light.cs" />

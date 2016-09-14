@@ -13,7 +13,6 @@ namespace RayTracer.BVH
         public void BuildBVH(Scene scene)
         {
 
-
             foreach (Geometry item in scene.Geometries)
             {
                 item.GetMortonPos();

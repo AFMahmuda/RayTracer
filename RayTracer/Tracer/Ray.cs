@@ -66,8 +66,9 @@ namespace RayTracer.Tracer
         public MyColor Trace(Scene scene, int bounce = 0)
         {
 
-            //test
-            return new MyColor();
+            ////test
+            //return new MyColor();
+
             if (bounce > scene.MaxDepth)
                 return new MyColor();
 
@@ -101,9 +102,8 @@ namespace RayTracer.Tracer
             if (IntersectWith != null)
             {
                 List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Geometries);
-                MyColor color = CalcColor(effectiveLights, scene.Attenuation);
 
-                return color +
+                return CalcColor(effectiveLights, scene.Attenuation) +
                     CalcReflection(scene, bounce + 1);
                 //CalcRefraction(scene, bounce + 1) ;
             }
@@ -112,6 +112,10 @@ namespace RayTracer.Tracer
         }
         MyColor CalcReflection(Scene scene, int bounce)
         {
+            //no specular = no refrection
+            if (IntersectWith.Material.Specular == new MyColor())
+                return new MyColor();
+
             if (Type != TYPE.REFRACTION)
             {
                 Vector3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPointMinus)));
