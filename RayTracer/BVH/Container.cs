@@ -1,43 +1,46 @@
 ﻿using RayTracer.Common;
+using RayTracer.Shape;
 using RayTracer.Tracer;
 using RayTracer.Transformation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace RayTracer.Shape
+namespace RayTracer.BVH
 {
-    [Serializable]
-    public class Sphere : Geometry
+    class SphereContainer
     {
+        List<SphereContainer> childs = new List<SphereContainer>();
+        Geometry geo;
+        public Point3 center;
+        public float radius;
+        public float area;
 
-        readonly Point3 center;
-        readonly double radius;
-
-        public Sphere()
-            : this(Point3.ZERO, 0f)
-        { }
-
-        public Sphere(Double[] values)
-            : this(new Point3(values[0], values[1], values[2]), values[3])
-        { }
-        public Sphere(Point3 center, Double radius)
+        public SphereContainer(Geometry item)
         {
-
-            this.center = center;
-            this.radius = radius;
-            Trans = new Scaling();
-            hasMorton = false;
+            geo = item;
         }
 
-        public override bool IsIntersecting(Ray ray)
+        public SphereContainer(SphereContainer a, SphereContainer b)
+        {
+            childs.Add(a);
+            childs.Add(b);
+
+            Vector3 aToB = new Vector3(a.center, b.center);
+            radius = a.radius + b.radius + (float)aToB.Magnitude / 2f;
+            center = (aToB.Normalize() * (radius - a.radius)).Point;
+            area = (4f / 3f) * (float)(Math.PI * Math.Pow(radius, 3));
+        }
+
+        public bool IsIntersecting(Ray ray)
         {
 
 
             Vector3 rayToSphere = new Vector3(ray.Start, center);
 
-            //sphere is behind ray
+            //sphere is behind cam
             if (rayToSphere * ray.Direction <= 0)
                 return false;
 
@@ -53,37 +56,27 @@ namespace RayTracer.Shape
                 Double distance;
 
                 // if both results are negative, then the sphere is behind our ray, 
-                // but we already checked that.
+                // we already checked that.
                 //if (res1 < 0 && res2 < 0)
                 //    return false;
                 //else
                 distance = (res1 * res2 < 0) ? Math.Max(res1, res2) : Math.Min(res1, res2);
-                if (ray.IsSmallerThanCurrent(distance, Trans))
+                if (ray.IsSmallerThanCurrent(distance, new Scaling()))
                 {
-                    ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;
+                    ray.IntersectDistance = (ray.Direction * distance).Magnitude;
                     return true;
                 }
             }
             return false;
 
-
         }
 
-        public override Vector3 GetNormal(Point3 point)
+        public Vector3 GetNormal(Point3 point)
         {
-            point = MyMatrix.Mult44x41(Trans.Matrix.Inverse, new Vector3(point), 1).Point;
             Vector3 norm = new Vector3(center, point).Normalize();
             return norm;
         }
 
-        public override void UpdatePos()
-        {
-            pos = MyMatrix.Mult44x41(Trans.Matrix, new Vector3(center), 1).Point;
 
-            // todo : think a way to normalize position with ??? range
-            pos.X /= (10) + .5;
-            pos.Y /= (10) + .5;
-            pos.Z /= (10) + .5;
-        }
     }
 }

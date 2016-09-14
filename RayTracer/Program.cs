@@ -28,7 +28,7 @@ namespace RayTracer
                 if (!scene.OutputFilename.Equals(""))
                     outputFile = scene.OutputFilename;
                 result.Save(outputFile);
-                Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory()+"\\"+outputFile);
+                Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + outputFile);
             }
             else
             {

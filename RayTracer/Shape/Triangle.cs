@@ -59,7 +59,7 @@ namespace RayTracer.Shape
 
         public override bool IsIntersecting(Ray ray)
         {
-            //check if parallel
+            //parallel -> return false
             if (ray.Direction * localNorm == 0)
                 return false;
             /*
@@ -72,14 +72,13 @@ namespace RayTracer.Shape
             /*
             dist < 0 = behind cam
             */
-            if (distanceToPlane > 0) 
+            if (distanceToPlane > 0)
                 if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
                     if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
                         ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
                         return true;
                     }
-
             return false;
 
         }
@@ -96,21 +95,29 @@ namespace RayTracer.Shape
             Double v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
 
             return (u >= 0) && (v >= 0) && (u + v <= 1);
-
-
         }
 
 
+        Vector3 triNormal;
+        bool hasNormal = false;
         public override Vector3 GetNormal(Point3 point)
         {
-            Vector3 norm = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
-            return norm;
+            if (!hasNormal)
+            {
+                triNormal = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
+                hasNormal = true;
+            }
+            return triNormal;
+
         }
 
         public override void UpdatePos()
         {
             Vector3 temp = new Vector3(a + b + c) * (.33f);
-            pos = MyMatrix.Mult44x41(Trans.Matrix,temp, 1).Point;
+            pos = MyMatrix.Mult44x41(Trans.Matrix, temp, 1).Point;
+            pos.X /= (10) + .5;
+            pos.Y /= (10) + .5;
+            pos.Z /= (10) + .5;
         }
     }
 }
