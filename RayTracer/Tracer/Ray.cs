@@ -66,6 +66,8 @@ namespace RayTracer.Tracer
         public MyColor Trace(Scene scene, int bounce = 0)
         {
 
+            //test
+            return new MyColor();
             if (bounce > scene.MaxDepth)
                 return new MyColor();
 

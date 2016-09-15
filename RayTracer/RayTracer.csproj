@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BVH\BVHBuilder.cs" />
+    <Compile Include="BVH\Container.cs" />
     <Compile Include="Light\Attenuation.cs" />
     <Compile Include="RadixSort.cs" />
     <Compile Include="Tracer\Camera.cs" />
