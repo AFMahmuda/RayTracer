@@ -79,11 +79,6 @@ namespace RayTracer.Shape
         public override void UpdatePos()
         {
             pos = MyMatrix.Mult44x41(Trans.Matrix, new Vector3(center), 1).Point;
-
-            // todo : think a way to normalize position with ??? range
-            pos.X /= (10) + .5;
-            pos.Y /= (10) + .5;
-            pos.Z /= (10) + .5;
         }
     }
 }

@@ -25,6 +25,7 @@ namespace RayTracer.Shape
                 }
         }
 
+
         public Mat Material
         {
             get;

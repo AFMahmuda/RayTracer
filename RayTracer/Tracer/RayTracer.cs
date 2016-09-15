@@ -20,7 +20,7 @@ namespace RayTracer.Tracer
 
             DateTime start = DateTime.Now;
             Console.WriteLine("Preparing Scene. Please Wait...");
-            new BVHBuilder().BuildBVH(scene);
+
             Scene scene2 = new Scene();
             Scene scene3 = new Scene();
             Scene scene4 = new Scene();
