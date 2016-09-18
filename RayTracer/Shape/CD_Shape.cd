@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RayTracer.Shape.Geometry">
+    <Position X="1.25" Y="1" Width="1.5" />
+    <Members>
+      <Field Name="hasMorton" Hidden="true" />
+      <Field Name="pos" Hidden="true" />
+      <Field Name="trans" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AGAAAABgAAAAAAAAgAAAAIAAAAKQAAABAAQAAEAAEAA=</HashCode>
+      <FileName>Shape\Geometry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Shape.Sphere">
+    <Position X="3.75" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="UpdatePos" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAACAAAAAAAgAAAAAAAAAKAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shape\Sphere.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Shape.Triangle">
+    <Position X="6" Y="2.25" Width="1.5" />
+    <Members>
+      <Field Name="ab" Hidden="true" />
+      <Field Name="ac" Hidden="true" />
+      <Field Name="dot_ab_ab" Hidden="true" />
+      <Field Name="dot_ab_ac" Hidden="true" />
+      <Field Name="dot_ab_ap" Hidden="true" />
+      <Field Name="dot_ac_ac" Hidden="true" />
+      <Field Name="dot_ac_ap" Hidden="true" />
+      <Field Name="hasNormal" Hidden="true" />
+      <Field Name="invDenom" Hidden="true" />
+      <Field Name="localNorm" Hidden="true" />
+      <Field Name="triNormal" Hidden="true" />
+      <Method Name="UpdatePos" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAQAAAAACAAAAAgAAAAAAEAAKAAACgASAACACAAAA=</HashCode>
+      <FileName>Shape\Triangle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

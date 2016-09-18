@@ -1,5 +1,6 @@
 ﻿using RayTracer.BVH;
 using RayTracer.Common;
+using RayTracer.Material;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;

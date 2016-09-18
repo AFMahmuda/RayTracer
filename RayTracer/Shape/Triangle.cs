@@ -19,7 +19,6 @@ namespace RayTracer.Shape
 
         Vector3 ab;
         Vector3 ac;
-        Vector3 ap;
 
         //dot products
         Double dot_ab_ab;
@@ -47,7 +46,7 @@ namespace RayTracer.Shape
             ab = new Vector3(a, b);
             ac = new Vector3(a, c);
 
-            //for IsIntersecting
+            //for IsIntersect
             localNorm = Vector3.Cross(ac, ab).Normalize();
 
             dot_ab_ab = ab * ab;
@@ -86,7 +85,7 @@ namespace RayTracer.Shape
 
         bool IsInsideTriangle(Point3 point)
         {
-            ap = new Vector3(point - a);
+            Vector3 ap = new Vector3(point - a);
 
             dot_ab_ap = ab * ap;
             dot_ac_ap = ac * ap;

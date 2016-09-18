@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace RayTracer.Common
+namespace RayTracer.Material
 {
     [Serializable]
     public class MyColor

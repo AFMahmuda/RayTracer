@@ -6,6 +6,7 @@ namespace RayTracer.Tracer
 {
     public class ViewPlane
     {
+        //TO DO: make NOT singleton
         public static ViewPlane Instance;
         double worldWidth;
         double worldHeight;

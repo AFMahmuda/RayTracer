@@ -9,6 +9,7 @@ namespace RayTracer.Tracer
     [Serializable]
     public class Camera
     {
+        //TO DO : make NOT singleton (due to multithreading)
         public static Camera Instance;
 
         public Camera()

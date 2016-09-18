@@ -1,4 +1,5 @@
 ﻿using RayTracer.Common;
+using RayTracer.Material;
 using RayTracer.Shape;
 using System;
 using System.Collections.Generic;

@@ -5,7 +5,7 @@ using System;
 
 namespace RayTracer.Transformation
 {
-        [Serializable]
+    [Serializable]
     public class Translation : Transform
     {
         public Translation()
@@ -25,7 +25,7 @@ namespace RayTracer.Transformation
             Matrix.SetValue(1, 3, values.Y);
             Matrix.SetValue(2, 3, values.Z);
 
-           // ShowInformation();
+            // ShowInformation();
         }
 
 
