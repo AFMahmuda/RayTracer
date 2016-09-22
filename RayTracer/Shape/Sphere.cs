@@ -12,8 +12,8 @@ namespace RayTracer.Shape
     public class Sphere : Geometry
     {
 
-        readonly Point3 center;
-        readonly double radius;
+        public Point3 center;
+        public double radius;
 
         public Sphere()
             : this(Point3.ZERO, 0f)

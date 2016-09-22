@@ -46,12 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\Clustering.cs" />
     <Compile Include="BVH\BoxContainer.cs" />
     <Compile Include="BVH\BVHBuilder.cs" />
     <Compile Include="BVH\Container.cs" />
     <Compile Include="BVH\SphereContainer.cs" />
     <Compile Include="Light\Attenuation.cs" />
-    <Compile Include="RadixSort.cs" />
+    <Compile Include="Algorithm\RadixSort.cs" />
     <Compile Include="Tracer\Camera.cs" />
     <Compile Include="Light\DirectionalLight.cs" />
     <Compile Include="Light\Light.cs" />

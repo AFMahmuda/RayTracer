@@ -1,24 +1,48 @@
-﻿using RayTracer.Shape;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using RayTracer.Common;
 using RayTracer.Tracer;
 
 namespace RayTracer.BVH
 {
-    class BoxContainer : Container
+   public class BoxContainer : Container
     {
-        public override Vector3 GetNormal(Point3 point)
-        {
-            throw new NotImplementedException();
-        }
+
+        Point3 min;
+        Point3 max;
 
         public override bool IsIntersecting(Ray ray)
         {
-            throw new NotImplementedException();
+            double tmin = double.MinValue, tmax = double.MaxValue;
+
+            if (ray.Direction.Point.X != 0.0)
+            {
+                double tx1 = (min.X - ray.Start.X) / ray.Direction.Point.X;
+                double tx2 = (max.X - ray.Start.X) / ray.Direction.Point.X;
+
+                tmin = Math.Max(tmin, Math.Min(tx1, tx2));
+                tmax = Math.Min(tmax, Math.Max(tx1, tx2));
+            }
+            if (ray.Direction.Point.Y != 0.0)
+            {
+                double tx1 = (min.Y - ray.Start.Y) / ray.Direction.Point.Y;
+                double tx2 = (max.Y - ray.Start.Y) / ray.Direction.Point.Y;
+
+                tmin = Math.Max(tmin, Math.Min(tx1, tx2));
+                tmax = Math.Min(tmax, Math.Max(tx1, tx2));
+            }
+
+            if (ray.Direction.Point.Z != 0.0)
+            {
+                double tx1 = (min.Z - ray.Start.Z) / ray.Direction.Point.Z;
+                double tx2 = (max.Z - ray.Start.Z) / ray.Direction.Point.Z;
+
+                tmin = Math.Max(tmin, Math.Min(tx1, tx2));
+                tmax = Math.Min(tmax, Math.Max(tx1, tx2));
+            }
+
+
+            return tmax >= tmin;
         }
+
     }
 }

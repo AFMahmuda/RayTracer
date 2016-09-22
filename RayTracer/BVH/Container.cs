@@ -9,16 +9,21 @@ using System.Threading.Tasks;
 
 namespace RayTracer.BVH
 {
-    abstract class Container
+    public abstract class Container
     {
+        public enum TYPE
+        {
+            BOX,
+            SPHERE
+        }
+        TYPE Type;
+
         protected List<SphereContainer> childs = new List<SphereContainer>();
-        protected Geometry geo;
-        public float area;
+        protected Geometry geo = null;
+        public double area;
 
         public abstract bool IsIntersecting(Ray ray);
-        public abstract Vector3 GetNormal(Point3 point);
+        public Geometry Geo { get { return geo; } }
+        public List<SphereContainer> Childs { get { return childs; } }
     }
-
-
-
 }
