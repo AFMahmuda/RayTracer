@@ -46,15 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\Clustering.cs" />
+    <Compile Include="BVH\BoxContainer.cs" />
     <Compile Include="BVH\BVHBuilder.cs" />
     <Compile Include="BVH\Container.cs" />
+    <Compile Include="BVH\SphereContainer.cs" />
     <Compile Include="Light\Attenuation.cs" />
-    <Compile Include="Common\RadixSort.cs" />
+    <Compile Include="Algorithm\RadixSort.cs" />
     <Compile Include="Tracer\Camera.cs" />
     <Compile Include="Light\DirectionalLight.cs" />
     <Compile Include="Light\Light.cs" />
     <Compile Include="Material\Material.cs" />
-    <Compile Include="Common\MyColor.cs" />
+    <Compile Include="Material\MyColor.cs" />
     <Compile Include="Shape\Geometry.cs" />
     <Compile Include="Transform\Rotation.cs" />
     <Compile Include="Transform\Scaling.cs" />
@@ -70,14 +73,16 @@
     <Compile Include="Shape\Sphere.cs" />
     <Compile Include="Transform\Transform.cs" />
     <Compile Include="Shape\Triangle.cs" />
-    <Compile Include="Shape\TringleNorm.cs" />
     <Compile Include="Common\Vector3.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Tracer\ViewPlane.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram.cd" />
+    <None Include="BVH\CD_BVH.cd" />
+    <None Include="Shape\CD_Shape.cd" />
+    <None Include="Tracer\CD_Tracer.cd" />
+    <None Include="Transform\CD_Transform.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

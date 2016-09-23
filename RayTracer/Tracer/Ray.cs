@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using RayTracer.BVH;
 
 namespace RayTracer.Tracer
 {
@@ -63,34 +64,55 @@ namespace RayTracer.Tracer
             get { return Start + (Direction * (IntersectDistance)).Point; }
         }
 
-        public MyColor Trace(Scene scene, int bounce = 0)
+        public void Trace(Scene scene, Container Bvh)
         {
 
-            ////test
-            //return new MyColor();
-
-            if (bounce > scene.MaxDepth)
-                return new MyColor();
-
+            //test
+            //            return new MyColor();
 
             try
             {
-                //save original value
-                Point3 tempStart = Utils.DeepClone(Start);
-                Vector3 tempDir = Utils.DeepClone(Direction);
-                foreach (var geometry in scene.Geometries)
+                if (Bvh.IsIntersecting(this))
                 {
-                    //transform ray according to each shapes transformation
-                    TransformInv(geometry.Trans);
+                    if (Bvh.Geo != null)
+                    {
+                        Point3 tempStart = Utils.DeepClone(Start);
+                        Vector3 tempDir = Utils.DeepClone(Direction);
 
-                    if (geometry.IsIntersecting(this))
-                        IntersectWith = geometry;
+                        //transform ray according to each shapes transformation
+                        TransformInv(Bvh.Geo.Trans);
 
-                    //assign original value for start and direction by memory
-                    Start = tempStart;
-                    Direction = tempDir;
-                    //Transform(geometry.Trans);
+                        if (Bvh.Geo.IsIntersecting(this))
+                            IntersectWith = Bvh.Geo;
+
+                        //assign original value for start and direction by memory
+                        Start = tempStart;
+                        Direction = tempDir;
+                        //Transform(geometry.Trans);
+                    }
+                    else
+                    {
+                        foreach (Container bin in Bvh.Childs)
+                            Trace(scene, bin);
+                    }
                 }
+
+                ////save original value
+                //Point3 tempStart = Utils.DeepClone(Start);
+                //Vector3 tempDir = Utils.DeepClone(Direction);
+                //foreach (var geometry in scene.Geometries)
+                //{
+                //    //transform ray according to each shapes transformation
+                //    TransformInv(geometry.Trans);
+
+                //    if (geometry.IsIntersecting(this))
+                //        IntersectWith = geometry;
+
+                //    //assign original value for start and direction by memory
+                //    Start = tempStart;
+                //    Direction = tempDir;
+                //    //Transform(geometry.Trans);
+                //}
             }
             catch (Exception e)
             {
@@ -98,30 +120,32 @@ namespace RayTracer.Tracer
                 throw;
             }
 
-            if (IntersectWith != null)
+        }
+
+
+        public MyColor GetColor(Scene scene, int bounce)
+        {
+            if (bounce <= 0 || IntersectWith == null)
+                return new MyColor();
+            else
             {
                 List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Geometries);
+                MyColor color = CalcColor(effectiveLights, scene.Attenuation);
 
-                return CalcColor(effectiveLights, scene.Attenuation) +
-                    CalcReflection(scene, bounce + 1);
-                //CalcRefraction(scene, bounce + 1) ;
+                return color +
+                    CalcReflection(scene, bounce - 1);
+                    //CalcRefraction(scene, bounce - 1) ;
             }
-
-            else return new MyColor();
         }
         MyColor CalcReflection(Scene scene, int bounce)
         {
-            //no specular = no refrection
-            if (IntersectWith.Material.Specular == new MyColor())
-                return new MyColor();
-
             if (Type != TYPE.REFRACTION)
             {
                 Vector3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPointMinus)));
                 Ray reflectRay = new Ray(HitPointMinus, rreflectDir);
                 //reflectRay.Type = TYPE.REFLECTION;
-
-                return IntersectWith.Material.Specular * (reflectRay.Trace(scene, bounce));
+                reflectRay.Trace(scene, scene.Bvh);
+                return IntersectWith.Material.Specular * reflectRay.GetColor(scene,bounce);
             }
             else return new MyColor();
         }
@@ -194,17 +218,5 @@ namespace RayTracer.Tracer
             double newMagnitude = MyMatrix.Mult44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
-
-        void ShowInformation()
-        {
-            Console.WriteLine("Ray Information======================================");
-            Console.Write("Start : ");
-            Start.ShowInformation();
-            Console.WriteLine("Direction");
-            Direction.ShowInformation();
-            Console.WriteLine("=====================================================");
-        }
-
-
     }
 }

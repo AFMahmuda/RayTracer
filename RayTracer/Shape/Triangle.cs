@@ -11,31 +11,32 @@ namespace RayTracer.Shape
     [Serializable]
     public class Triangle : Geometry
     {
-        Point3 a;
-        Point3 b;
-        Point3 c;
+        private Point3 a;
+        private Point3 b;
+        private Point3 c;
 
-        Vector3 localNorm;
 
-        Vector3 ab;
-        Vector3 ac;
-        Vector3 ap;
 
-        //dot products
-        Double dot_ab_ab;
-        Double dot_ab_ac;
-        Double dot_ac_ac;
-        Double dot_ab_ap;
-        Double dot_ac_ap;
+        //precalculated vals
+        private Vector3 localNorm;
 
-        Double invDenom;
+        private Vector3 ab;
+        private Vector3 ac;
+
+        private Double dot_ab_ab;
+        private Double dot_ab_ac;
+        private Double dot_ac_ac;
+        private Double dot_ab_ap;
+        private Double dot_ac_ap;
+
+        private Double invDenom;
 
         public Triangle(Point3 a, Point3 b, Point3 c)
         {
             this.a = a;
             this.b = b;
             this.c = c;
-            Trans = new Scaling();
+            Trans = new Translation();
             hasMorton = false;
             PreCalculate();
         }
@@ -47,8 +48,9 @@ namespace RayTracer.Shape
             ab = new Vector3(a, b);
             ac = new Vector3(a, c);
 
-            //for IsIntersecting
+            //for IsIntersect
             localNorm = Vector3.Cross(ac, ab).Normalize();
+            localNorm = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
 
             dot_ab_ab = ab * ab;
             dot_ab_ac = ab * ac;
@@ -86,7 +88,7 @@ namespace RayTracer.Shape
 
         bool IsInsideTriangle(Point3 point)
         {
-            ap = new Vector3(point - a);
+            Vector3 ap = new Vector3(point - a);
 
             dot_ab_ap = ab * ap;
             dot_ac_ap = ac * ap;
@@ -98,17 +100,9 @@ namespace RayTracer.Shape
         }
 
 
-        Vector3 triNormal;
-        bool hasNormal = false;
         public override Vector3 GetNormal(Point3 point)
         {
-            if (!hasNormal)
-            {
-                triNormal = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
-                hasNormal = true;
-            }
-            return triNormal;
-
+            return localNorm;
         }
 
         public override void UpdatePos()

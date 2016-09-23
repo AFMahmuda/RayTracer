@@ -2,6 +2,7 @@
 using RayTracer.Shape;
 using RayTracer.Lighting;
 using RayTracer.Material;
+using RayTracer.BVH;
 using RayTracer.Transformation;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 
 namespace RayTracer.Tracer
 {
@@ -23,6 +25,7 @@ namespace RayTracer.Tracer
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
         private Mat material;
+        public Container Bvh;
 
         public Scene()
         {

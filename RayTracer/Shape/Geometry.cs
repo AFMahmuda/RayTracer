@@ -59,7 +59,7 @@ namespace RayTracer.Shape
         }
 
 
-        public void print()
+        public void printPos()
         {
             Console.WriteLine("{3}\t{0}\t{1}\t{2}", pos.X, pos.Y, pos.Z, Convert.ToString(GetMortonPos(), 2).PadLeft(30, '0'));
         }

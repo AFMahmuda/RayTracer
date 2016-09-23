@@ -1,5 +1,6 @@
 ﻿using RayTracer.BVH;
 using RayTracer.Common;
+using RayTracer.Material;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace RayTracer.Tracer
 
             DateTime start = DateTime.Now;
             Console.WriteLine("Preparing Scene. Please Wait...");
- 
+
             Scene scene2 = new Scene();
             Scene scene3 = new Scene();
             Scene scene4 = new Scene();
@@ -55,7 +56,8 @@ namespace RayTracer.Tracer
             Task task5 = Task.Factory.StartNew(() => TraceThread(results[4], scene5, h / 2, w / 3, h, w * 2 / 3));
             Task task6 = Task.Factory.StartNew(() => TraceThread(results[5], scene6, h / 2, w * 2 / 3, h, w));
             Task.WaitAll(task1, task2, task3, task4, task5, task6);
-
+            //Console.WriteLine();
+            //showTree(scene.Bvh);
 
             using (Graphics finalResult = Graphics.FromImage(results[0]))
             {
@@ -70,9 +72,19 @@ namespace RayTracer.Tracer
             return results[0];
         }
 
-
+        void showTree(Container bin, int level = 1)
+        {
+            Console.Write("lv : " + level + " ");
+            ((SphereContainer)bin).ShowInformation();
+            foreach (Container item in bin.Childs)
+            {
+                showTree(item, level+1);
+            }
+        }
         void TraceThread(Bitmap result, Scene scene, int rowStart, int colStart, int rowEnd, int colEnd)
         {
+            new BVHBuilder().BuildBVH(scene);
+
             double total = (colEnd - colStart) * (rowEnd - rowStart);
             double count = 0;
             for (int currRow = rowStart; currRow < rowEnd; currRow++)
@@ -83,7 +95,9 @@ namespace RayTracer.Tracer
                     Point3 pixPosition = ViewPlane.Instance.GetNewLocation(currCol, currRow);
                     ray.Start = Camera.Instance.Position;
                     ray.Direction = new Vector3(ray.Start, pixPosition).Normalize();
-                    MyColor rayColor = ray.Trace(scene);
+
+                    ray.Trace(scene, scene.Bvh);
+                    MyColor rayColor = ray.GetColor(scene, scene.MaxDepth);
 
                     result.SetPixel(currCol, currRow, rayColor.ToColor());
 

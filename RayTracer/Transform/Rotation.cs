@@ -33,17 +33,17 @@ namespace RayTracer.Transformation
             double cz = Math.Cos(z);
             double sz = Math.Sin(z);
 
-            Matrix.SetValue(0, 0, cy *cz);
-            Matrix.SetValue(0, 1, cz*sx*sy-cx*sz);
-            Matrix.SetValue(0, 2, cx*cz*sy+sx*sz);
+            Matrix.SetValue(0, 0, cy * cz);
+            Matrix.SetValue(0, 1, cz * sx * sy - cx * sz);
+            Matrix.SetValue(0, 2, cx * cz * sy + sx * sz);
 
-            Matrix.SetValue(1, 0, cy*sz);
-            Matrix.SetValue(1, 1, cx*cz+sx*sy*sz);
-            Matrix.SetValue(1, 2, -cz*sx+cx*sy*sz);
+            Matrix.SetValue(1, 0, cy * sz);
+            Matrix.SetValue(1, 1, cx * cz + sx * sy * sz);
+            Matrix.SetValue(1, 2, -cz * sx + cx * sy * sz);
 
             Matrix.SetValue(2, 0, -sy);
-            Matrix.SetValue(2, 1, cy*sx);
-            Matrix.SetValue(2, 2, cx*cy);
+            Matrix.SetValue(2, 1, cy * sx);
+            Matrix.SetValue(2, 2, cx * cy);
 
             Matrix.SetValue(3, 3, 1f);
         }
