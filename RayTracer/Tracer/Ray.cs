@@ -83,7 +83,6 @@ namespace RayTracer.Tracer
                     //transform ray according to each shapes transformation
                     TransformInv(geometry.Trans);
 
-
                     if (geometry.IsIntersecting(this))
                         IntersectWith = geometry;
 
