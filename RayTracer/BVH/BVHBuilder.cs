@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace RayTracer.BVH
 {
-    class BVHBuilder
+    class BVHManager
     {
         public void BuildBVH(Scene scene)
         {
@@ -17,26 +17,13 @@ namespace RayTracer.BVH
 
             scene.Geometries = RadixSort.Sort(scene.Geometries);
 
+            List<Container> temp = new List<Container>();
 
-            //using (System.IO.StreamWriter file = new System.IO.StreamWriter("output.txt"))
-            //{
-            //    foreach (Geometry item in scene.Geometries)
-            //    {
-            //        string line =
-            //            Convert.ToString(item.GetMortonPos(), 2).PadLeft(30, '0') + "\t" +
-            //            item.Pos.X + "\t " +
-            //            item.Pos.Y + "\t " +
-            //            item.Pos.Z;
-            //        ;
-            //        file.WriteLine(line);
-            //    }
-            //}
-
-            List<SphereContainer> temp = new List<SphereContainer>();
+            ContainerFactory conFac = new ContainerFactory();
 
             foreach (var item in scene.Geometries)
             {
-                temp.Add(new SphereContainer(item));
+                temp.Add(conFac.CreateContainer(item,Container.TYPE.SPHERE));
             }
 
             while (temp.Count > 1)
@@ -44,35 +31,30 @@ namespace RayTracer.BVH
                 double[,] area = new double[temp.Count, temp.Count];
                 int small_I = -1;
                 int small_J = -1;
+                Container small_C = null;
                 double smallestVal = double.MaxValue;
                 for (int i = 0; i < temp.Count; i++)
                 {
                     for (int j = i + 1; j < temp.Count; j++)
                     {
-                        area[i, j] = merge(temp[i], temp[j]).area;
+                        Container tempCon = conFac.CombineContainer(temp[i], temp[j]);
+                        area[i, j] = tempCon.area;
                         if (area[i, j] < smallestVal)
                         {
                             smallestVal = area[i, j];
                             small_I = i;
                             small_J = j;
+                            small_C = tempCon;
                         }
                     }
                 }
-                temp.Add(new SphereContainer(temp[small_I], temp[small_J]));
-                SphereContainer delI = temp[small_I];
-                SphereContainer delJ = temp[small_J];
+                Container delI = temp[small_I];
+                Container delJ = temp[small_J];
+                temp.Add(small_C);
                 temp.Remove(delI);
                 temp.Remove(delJ);
             }
             scene.Bvh = temp[0];
         }
-
-
-        public Container merge(SphereContainer A, SphereContainer B)
-        {
-            return new SphereContainer(A, B);
-        }
-
-
     }
 }

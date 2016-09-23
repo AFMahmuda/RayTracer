@@ -17,13 +17,42 @@ namespace RayTracer.BVH
             geo = item;
             if (item.GetType() == typeof(Sphere))
             {
+
                 center = ((Sphere)item).center;
                 radius = ((Sphere)item).radius;
 
-                center = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(center), 1).Point;
-                radius = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(radius, 0, 0), 0).Magnitude;
-
             }
+            else //if (item.GetType() == typeof(Triangle))
+            {
+                Triangle tri = (Triangle)item;
+                Vector3 ab = new Vector3(tri.a, tri.b);
+                Vector3 bc = new Vector3(tri.b, tri.c);
+                Vector3 ac = new Vector3(tri.a, tri.c);
+
+                double d = 2 * ((ab * ab) * (ac * ac) - (ab * ac) * (ab * ac));
+                Point3 reference = tri.a;
+                double s = ((ab * ab) * (ac * ac) - (ac * ac) * (ab * ac)) / d;
+                double t = ((ac * ac) * (ab * ab) - (ab * ab) * (ab * ac)) / d;
+                if (s <= 0)
+                {
+                    center = (tri.a + tri.c) * .5;
+                }
+                else if (t <= 0)
+                {
+                    center = (tri.a + tri.b) * .5;
+                }
+                else if (s + t > 1)
+                {
+                    center = (tri.b + tri.c) * .5;
+                    reference = tri.b;
+                }
+                else center = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
+                radius = Math.Sqrt(new Vector3(reference, tri.c) * new Vector3(reference, tri.c));
+            }
+
+            center = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(center), 1).Point;
+            radius = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(radius, 0, 0), 0).Magnitude;
+            Type = TYPE.SPHERE;
         }
 
         public SphereContainer(SphereContainer a, SphereContainer b)
@@ -55,10 +84,9 @@ namespace RayTracer.BVH
             }
 
             area = 4 * Math.PI * Math.Pow(radius, 2);
-            //Console.Write("c1 : pos : " + a.center.X + " , " + a.center.Y + " , " + a.center.Z + "rad : " + a.radius + " \n" +
-            //                "c2 : pos : " + b.center.X + " , " + b.center.Y + " , " + b.center.Z + "rad : " + b.radius + " \n" +
-            //                "new: pos : " + center.X + " , " + center.Y + " , " + center.Z + "rad : " + radius + " \n"
-            //    );
+            Type = TYPE.SPHERE;
+
+            
         }
 
         public override bool IsIntersecting(Ray ray)

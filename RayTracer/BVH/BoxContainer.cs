@@ -1,5 +1,6 @@
 ﻿using System;
 using RayTracer.Common;
+using RayTracer.Shape;
 using RayTracer.Tracer;
 
 namespace RayTracer.BVH
@@ -9,6 +10,19 @@ namespace RayTracer.BVH
 
         Point3 min;
         Point3 max;
+        private BoxContainer a;
+        private BoxContainer b;
+
+        public BoxContainer(Geometry geo)
+        {
+            this.geo = geo;
+        }
+
+        public BoxContainer(BoxContainer a, BoxContainer b)
+        {
+            this.a = a;
+            this.b = b;
+        }
 
         public override bool IsIntersecting(Ray ray)
         {

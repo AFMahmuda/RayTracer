@@ -83,7 +83,7 @@ namespace RayTracer.Tracer
         }
         void TraceThread(Bitmap result, Scene scene, int rowStart, int colStart, int rowEnd, int colEnd)
         {
-            new BVHBuilder().BuildBVH(scene);
+            new BVHManager().BuildBVH(scene);
 
             double total = (colEnd - colStart) * (rowEnd - rowStart);
             double count = 0;

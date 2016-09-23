@@ -15,7 +15,6 @@ namespace RayTracer.Tracer
     public class Ray
     {
 
-
         public Ray()
         {
             IntersectDistance = double.MaxValue;
@@ -95,24 +94,7 @@ namespace RayTracer.Tracer
                         foreach (Container bin in Bvh.Childs)
                             Trace(scene, bin);
                     }
-                }
-
-                ////save original value
-                //Point3 tempStart = Utils.DeepClone(Start);
-                //Vector3 tempDir = Utils.DeepClone(Direction);
-                //foreach (var geometry in scene.Geometries)
-                //{
-                //    //transform ray according to each shapes transformation
-                //    TransformInv(geometry.Trans);
-
-                //    if (geometry.IsIntersecting(this))
-                //        IntersectWith = geometry;
-
-                //    //assign original value for start and direction by memory
-                //    Start = tempStart;
-                //    Direction = tempDir;
-                //    //Transform(geometry.Trans);
-                //}
+                }                
             }
             catch (Exception e)
             {

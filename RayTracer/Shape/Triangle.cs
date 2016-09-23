@@ -11,10 +11,9 @@ namespace RayTracer.Shape
     [Serializable]
     public class Triangle : Geometry
     {
-        private Point3 a;
-        private Point3 b;
-        private Point3 c;
-
+        public Point3 a;
+        public Point3 b;
+        public Point3 c;
 
 
         //precalculated vals
