@@ -16,7 +16,7 @@ namespace RayTracer.BVH
             BOX,
             SPHERE
         }
-        TYPE Type;
+        public TYPE Type;
 
         protected List<SphereContainer> childs = new List<SphereContainer>();
         protected Geometry geo = null;

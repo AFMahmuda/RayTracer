@@ -24,6 +24,7 @@ namespace RayTracer.BVH
                 radius = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(radius, 0, 0), 0).Magnitude;
 
             }
+            Type = TYPE.SPHERE;
         }
 
         public SphereContainer(SphereContainer a, SphereContainer b)
@@ -55,10 +56,7 @@ namespace RayTracer.BVH
             }
 
             area = 4 * Math.PI * Math.Pow(radius, 2);
-            //Console.Write("c1 : pos : " + a.center.X + " , " + a.center.Y + " , " + a.center.Z + "rad : " + a.radius + " \n" +
-            //                "c2 : pos : " + b.center.X + " , " + b.center.Y + " , " + b.center.Z + "rad : " + b.radius + " \n" +
-            //                "new: pos : " + center.X + " , " + center.Y + " , " + center.Z + "rad : " + radius + " \n"
-            //    );
+            Type = TYPE.SPHERE;
         }
 
         public override bool IsIntersecting(Ray ray)
