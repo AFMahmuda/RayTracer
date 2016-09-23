@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace RayTracer.BVH
 {
-    class BVHBuilder
+    class BVHManager
     {
         public void BuildBVH(Scene scene)
         {
@@ -16,21 +16,6 @@ namespace RayTracer.BVH
             }
 
             scene.Geometries = RadixSort.Sort(scene.Geometries);
-
-
-            //using (System.IO.StreamWriter file = new System.IO.StreamWriter("output.txt"))
-            //{
-            //    foreach (Geometry item in scene.Geometries)
-            //    {
-            //        string line =
-            //            Convert.ToString(item.GetMortonPos(), 2).PadLeft(30, '0') + "\t" +
-            //            item.Pos.X + "\t " +
-            //            item.Pos.Y + "\t " +
-            //            item.Pos.Z;
-            //        ;
-            //        file.WriteLine(line);
-            //    }
-            //}
 
             List<Container> temp = new List<Container>();
 
