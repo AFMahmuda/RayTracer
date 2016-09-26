@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace RayTracer.BVH
 {
+    [Serializable]
     public abstract class Container
     {
         public enum TYPE

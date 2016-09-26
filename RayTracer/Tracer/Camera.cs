@@ -9,7 +9,6 @@ namespace RayTracer.Tracer
     [Serializable]
     public class Camera
     {
-        //TO DO : make NOT singleton (due to multithreading)
         public static Camera Instance;
 
         public Camera()
@@ -18,10 +17,10 @@ namespace RayTracer.Tracer
 
         public Camera(Double[] parameter)
             : this(
-            new Point3(parameter[0], parameter[1], parameter[2]), //pos
-            new Point3(parameter[3], parameter[4], parameter[5]),
-            new Vector3(parameter[6], parameter[7], parameter[8]),
-            parameter[9]
+            new Point3(parameter[0], parameter[1], parameter[2]), //position point
+            new Point3(parameter[3], parameter[4], parameter[5]), //look at point
+            new Vector3(parameter[6], parameter[7], parameter[8]), // up dir
+            parameter[9] // field of view
             )
         { }
 

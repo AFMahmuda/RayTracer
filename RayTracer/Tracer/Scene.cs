@@ -45,7 +45,7 @@ namespace RayTracer.Tracer
             ParseCommand(scenefile);
         }
 
-        public void ParseCommand(String scenefile) 
+        public void ParseCommand(String scenefile)
         {
             SceneFile = scenefile;
             StreamReader filereader = new StreamReader(scenefile);
@@ -90,7 +90,9 @@ namespace RayTracer.Tracer
                     Size = new Size((int)param[0], (int)param[1]);
                     break;
                 case "camera":
+                    if (Camera.Instance != null) { break; }
                     Camera.Instance = new Camera(param);
+                    ViewPlane.Instance = new ViewPlane(Size.Width, Size.Height);
                     break;
                 case "maxdepth":
                     maxDepth = (int)param[0];
@@ -196,10 +198,10 @@ namespace RayTracer.Tracer
 
 
 
-        
+
         private void ApplyTransform(Geometry shape)
         {
-            shape.Trans= Utils.DeepClone(transforms.First());
+            shape.Trans = Utils.DeepClone(transforms.First());
         }
 
         private void ApplyMaterial(Geometry shape)
@@ -230,7 +232,7 @@ namespace RayTracer.Tracer
         public int MaxDepth
         { get { return maxDepth; } }
 
-        public String OutputFilename
+        public string OutputFilename
         { get; set; }
 
 
@@ -247,7 +249,7 @@ namespace RayTracer.Tracer
             Console.WriteLine("Total Objects : " + Geometries.Count);
             Console.WriteLine("Total Lights  : " + Lights.Count);
             Console.WriteLine("Max Bounce    : " + MaxDepth);
-            Console.WriteLine("Image Size    : " + Size.Width +" x " + Size.Height);
+            Console.WriteLine("Image Size    : " + Size.Width + " x " + Size.Height);
             Console.WriteLine("===================================================");
         }
     }

@@ -6,6 +6,7 @@ using System;
 
 namespace RayTracer.BVH
 {
+    [Serializable]
     public class SphereContainer : Container
     {
 

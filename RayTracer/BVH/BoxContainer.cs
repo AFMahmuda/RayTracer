@@ -5,7 +5,8 @@ using RayTracer.Tracer;
 
 namespace RayTracer.BVH
 {
-   public class BoxContainer : Container
+    [Serializable]
+    public class BoxContainer : Container
     {
 
         Point3 min;
