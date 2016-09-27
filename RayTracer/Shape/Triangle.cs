@@ -49,7 +49,6 @@ namespace RayTracer.Shape
 
             //for IsIntersect
             localNorm = Vector3.Cross(ac, ab).Normalize();
-            localNorm = MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
 
             dot_ab_ab = ab * ab;
             dot_ab_ac = ab * ac;
@@ -101,7 +100,7 @@ namespace RayTracer.Shape
 
         public override Vector3 GetNormal(Point3 point)
         {
-            return localNorm;
+            return MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
         }
 
         public override void UpdatePos()

@@ -95,9 +95,8 @@ namespace RayTracer.BVH
 
             Vector3 rayToSphere = new Vector3(ray.Start, center);
 
-            //sphere is behind cam
-            if (rayToSphere * ray.Direction <= 0)
-                return false;
+            //if (rayToSphere * ray.Direction <= 0)
+            //    return false;
 
             Double a = ray.Direction * ray.Direction;
             Double b = -2 * (rayToSphere * ray.Direction);

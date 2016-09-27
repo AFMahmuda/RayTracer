@@ -13,6 +13,7 @@ namespace RayTracer.Tracer
 
     public class TracerManager
     {
+        int tn = 6;
 
         public bool TraceScene(string sceneFile)
         {
@@ -21,55 +22,63 @@ namespace RayTracer.Tracer
             DateTime start = DateTime.Now;
             Console.WriteLine("Preparing Scene. Please Wait...");
 
-            Scene[] scene = new Scene[6];
-            Task[] sceneTask = new Task[5];
-            scene[0] = new Scene(sceneFile);
-
-            for (int i = 0; i < 5; i++)
-            {
-//                scene[i] = new Scene();
-                int j = i;
-                //                sceneTask[i] = Task.Factory.StartNew(() => scene[j].ParseCommand(sceneFile));
-                sceneTask[i] = Task.Factory.StartNew(() => scene[j+1] = Utils.DeepClone(scene[0]));
-            }
-            Task.WaitAll(sceneTask);
+            Scene[] scene = InitScenes(sceneFile);
             scene[0].ShowInformation();
 
             Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
 
-
+            Bitmap[] results = new Bitmap[tn];
             int h = ViewPlane.Instance.PixelHeight;
             int w = ViewPlane.Instance.PixelWidth;
 
-            Bitmap[] results = new Bitmap[6];
-            for (int i = 0; i < 6; i++)
-
+            for (int i = 0; i < tn; i++)
                 results[i] = new Bitmap(w, h);
-
             start = DateTime.Now;
             Console.WriteLine("Tracing...Please Wait...\n------------------------------");
 
             Task[] traceTask = new Task[6];
 
 
-            traceTask[0] = Task.Factory.StartNew(() => TraceThread(results[0], scene[0], 0, 0, h / 2, w / 3));
-            traceTask[1] = Task.Factory.StartNew(() => TraceThread(results[1], scene[1], 0, w / 3, h / 2, w * 2 / 3));
-            traceTask[2] = Task.Factory.StartNew(() => TraceThread(results[2], scene[2], 0, w * 2 / 3, h / 2, w));
-            traceTask[3] = Task.Factory.StartNew(() => TraceThread(results[3], scene[3], h / 2, 0, h, w / 3));
-            traceTask[4] = Task.Factory.StartNew(() => TraceThread(results[4], scene[4], h / 2, w / 3, h, w * 2 / 3));
-            traceTask[5] = Task.Factory.StartNew(() => TraceThread(results[5], scene[5], h / 2, w * 2 / 3, h, w));
+            int num = 0;
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    int ii = i;
+                    int jj = j;
+                    int n = num;
+
+                    traceTask[num] = Task.Factory.StartNew(() =>
+                        TraceThread(results[n], scene[n], ii * h / 2, jj * w / 3, (ii + 1) * h / 2, (jj + 1) * w / 3)
+                    );
+                    num++;
+                }
+
+            }
 
             Task.WaitAll(traceTask);
-            //Console.WriteLine();
-            //showTree(scene.Bvh);
-
+            Console.Write("\n");
 
             MergeAndSaveImage(results, scene[0].OutputFilename);
 
-            Console.WriteLine("\nFinised in :" + (DateTime.Now - start) + "\n");
-
+            Console.WriteLine("Finised in :" + (DateTime.Now - start) );
             return true;
+        }
 
+        Scene[] InitScenes(string sceneFile)
+        {
+
+            Scene[] scene = new Scene[tn];
+            Task[] sceneTask = new Task[tn - 1];
+            scene[0] = new Scene(sceneFile);
+
+            for (int i = 0; i < tn - 1; i++)
+            {
+                int j = i;
+                sceneTask[i] = Task.Factory.StartNew(() => scene[j + 1] = Utils.DeepClone(scene[0]));
+            }
+            Task.WaitAll(sceneTask);
+            return scene;
         }
 
         void MergeAndSaveImage(Bitmap[] result, string filename)
@@ -77,7 +86,7 @@ namespace RayTracer.Tracer
 
             using (Graphics finalResult = Graphics.FromImage(result[0]))
             {
-                for (int i = 1; i < 6; i++)
+                for (int i = 1; i < result.Length; i++)
                     finalResult.DrawImage(result[i], 0, 0);
             }
 
@@ -85,7 +94,7 @@ namespace RayTracer.Tracer
                 filename = "default.bmp";
             result[0].Save(filename);
 
-            Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename);
+            Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename+"\n");
         }
 
         void showTree(Container bin, int level = 1)
@@ -118,7 +127,6 @@ namespace RayTracer.Tracer
 
                     result.SetPixel(currCol, currRow, rayColor.ToColor());
 
-
                     //progress bar
                     if (++count >= total / 5.0)
                     {
@@ -127,7 +135,6 @@ namespace RayTracer.Tracer
                     }
                 }
             }
-
         }
     }
 }

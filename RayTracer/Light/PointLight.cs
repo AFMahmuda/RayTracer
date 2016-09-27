@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RayTracer.BVH;
 
 namespace RayTracer.Lighting
 {
@@ -32,28 +33,54 @@ namespace RayTracer.Lighting
             return new Vector3(point, Position);
         }
 
-        public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
+        //public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
+        //{
+        //    if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+        //        return false;
+
+        //    Ray shadowRay = new Ray(point, GetPointToLight(point));
+        //    foreach (var item in geometries)
+        //    {
+        //        if (item.Equals(geometry))
+        //            continue;
+
+        //        Point3 pos = Utils.DeepClone(shadowRay.Start);
+        //        Vector3 dir = Utils.DeepClone(shadowRay.Direction);
+
+        //        shadowRay.TransformInv(item.Trans);
+
+        //        if (item.IsIntersecting(shadowRay))
+        //            if (shadowRay.IntersectDistance < GetPointToLight(point).Magnitude)
+        //                return false;
+
+        //        shadowRay.Start = pos;
+        //        shadowRay.Direction = dir;
+        //    }
+
+        //    return true;
+        //}
+        public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
         {
-            if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+            Vector3 pointToLight = GetPointToLight(point);
+            if (pointToLight * geometry.GetNormal(point) < 0)
                 return false;
 
-            Ray shadowRay = new Ray(point, GetPointToLight(point));
-            foreach (var item in geometries)
+            Ray shadowRay = new Ray(point, pointToLight.Normalize());
+
+            if (bvh.IsIntersecting(shadowRay))
             {
-                if (item.Equals(geometry))
-                    continue;
-
-                Point3 pos = Utils.DeepClone(shadowRay.Start);
-                Vector3 dir = Utils.DeepClone(shadowRay.Direction);
-
-                shadowRay.TransformInv(item.Trans);
-
-                if (item.IsIntersecting(shadowRay))
-                    if (shadowRay.IntersectDistance < GetPointToLight(point).Magnitude)
-                        return false;
-                
-                shadowRay.Start = pos;
-                shadowRay.Direction = dir;
+                if (bvh.Geo != null)
+                {
+                    shadowRay.TransformInv(bvh.Geo.Trans);
+                    if (bvh.Geo.IsIntersecting(shadowRay))
+                        if (shadowRay.IntersectDistance < pointToLight.Magnitude)
+                            return false;
+                }
+                else
+                {
+                    foreach (Container bin in bvh.Childs)
+                        if (!IsEffective(point, geometry, bin)) return false;
+                }
             }
 
             return true;
@@ -71,6 +98,7 @@ namespace RayTracer.Lighting
                 attenuation.Quadratic * Math.Pow(d, 2));
 
         }
+
 
     }
 }

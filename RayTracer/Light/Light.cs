@@ -1,4 +1,5 @@
-﻿using RayTracer.Common;
+﻿using RayTracer.BVH;
+using RayTracer.Common;
 using RayTracer.Material;
 using RayTracer.Shape;
 using System;
@@ -15,7 +16,8 @@ namespace RayTracer.Lighting
         { get; set; }
 
         public abstract Vector3 GetPointToLight(Point3 point);
-        public abstract bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries);
+//        public abstract bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries);
+        public abstract bool IsEffective(Point3 point, Geometry geometry, Container bvh);
         public abstract Double GetAttValue(Point3 point, Attenuation attenuation);
 
     }

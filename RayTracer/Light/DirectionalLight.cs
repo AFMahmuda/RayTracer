@@ -4,6 +4,7 @@ using RayTracer.Shape;
 using RayTracer.Tracer;
 using System;
 using System.Collections.Generic;
+using RayTracer.BVH;
 
 namespace RayTracer.Lighting
 {
@@ -34,31 +35,34 @@ namespace RayTracer.Lighting
             return new Vector3(Direction.Point * -1);
         }
 
-        public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
-        {
-            //not needed. lights effective to both sides
-            //if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
-            //    return false;
+        //public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
+        //{
+        //    //not needed. lights effective to both sides
+        //    //if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+        //    //    return false;
 
-            Ray ray = new Ray(point, GetPointToLight(point));
-            foreach (var item in geometries)
-            {
-                ray.TransformInv(item.Trans);
-                if (item.IsIntersecting(ray))
-                    return false;
-                ray.Transform(item.Trans);
-            }
+        //    Ray ray = new Ray(point, GetPointToLight(point));
+        //    foreach (var item in geometries)
+        //    {
+        //        ray.TransformInv(item.Trans);
 
-            return true;
+        //        if (item.IsIntersecting(ray))
+        //            return false;
+        //        ray.Transform(item.Trans);
+        //    }
 
-        }
+        //    return true;
+
+        //}
 
         public override Double GetAttValue(Point3 point, Attenuation attenuation)
         {
             return 1;
         }
 
-
-
+        public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -192,12 +192,9 @@ namespace RayTracer.Tracer
             ApplyTransform(tri);
             ApplyMaterial(tri);
             ApplyAmbient(tri);
-
+            
             return tri;
         }
-
-
-
 
         private void ApplyTransform(Geometry shape)
         {

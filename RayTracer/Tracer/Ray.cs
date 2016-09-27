@@ -65,10 +65,6 @@ namespace RayTracer.Tracer
 
         public void Trace(Scene scene, Container Bvh)
         {
-
-            //test
-            //            return new MyColor();
-
             try
             {
                 if (Bvh.IsIntersecting(this))
@@ -104,14 +100,38 @@ namespace RayTracer.Tracer
 
         }
 
+        MyColor CalcColor(List<Light> effectiveLights, Attenuation attenuation)
+        {
 
+            MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
+            Vector3 normal = IntersectWith.GetNormal(HitPointMinus);
+
+            foreach (var light in effectiveLights)
+            {
+                Vector3 pointToLight = light.GetPointToLight(HitPointMinus);
+                Vector3 halfAngleToLight = ((Direction * -1.0) + pointToLight).Normalize();
+
+                Mat material = IntersectWith.Material;
+
+                double attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
+
+                result +=
+                    attenuationValue * light.Color *
+                    (
+                        material.Diffuse * (pointToLight.Normalize() * normal) +
+                        (material.Specular * Math.Pow(halfAngleToLight * normal, material.Shininess))
+                    );
+            }
+            return result;
+
+        }
         public MyColor GetColor(Scene scene, int bounce)
         {
             if (bounce <= 0 || IntersectWith == null)
                 return new MyColor();
             else
             {
-                List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Geometries);
+                List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Bvh);
                 MyColor color = CalcColor(effectiveLights, scene.Attenuation);
 
                 return color +
@@ -146,38 +166,14 @@ namespace RayTracer.Tracer
 
 
 
-        MyColor CalcColor(List<Light> effectiveLights, Attenuation attenuation)
-        {
+       
 
-            MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
-            Vector3 normal = IntersectWith.GetNormal(HitPointMinus);
-
-            foreach (var light in effectiveLights)
-            {
-                Vector3 pointToLight = light.GetPointToLight(HitPointMinus);
-                Vector3 halfAngleToLight = (Direction * -1f + pointToLight).Normalize();
-
-                Mat material = IntersectWith.Material;
-
-                double attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
-
-                result +=
-                    attenuationValue * light.Color *
-                    (
-                        material.Diffuse * (pointToLight.Normalize() * normal) +
-                        (material.Specular * Math.Pow(halfAngleToLight * normal, material.Shininess))
-                    );
-            }
-            return result;
-
-        }
-
-        List<Light> PopulateEffectiveLight(List<Light> allLights, List<Geometry> geometries)
+        List<Light> PopulateEffectiveLight(List<Light> allLights, Container bvh)
         {
             List<Light> result = new List<Light>();
             foreach (var light in allLights)
             {
-                if (light.IsEffective(HitPointMinus, IntersectWith, geometries))
+                if (light.IsEffective(HitPointMinus, IntersectWith, bvh))
                     result.Add(light);
             }
 

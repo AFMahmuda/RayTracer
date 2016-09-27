@@ -10,7 +10,9 @@ namespace RayTracer.BVH
     public class ContainerFactory
     {
         public ContainerFactory()
-        { }
+        {
+
+        }
 
         public Container CreateContainer(Geometry geo, Container.TYPE type=Container.TYPE.BOX)
         {
