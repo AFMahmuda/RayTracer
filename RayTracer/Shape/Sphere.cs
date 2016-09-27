@@ -60,7 +60,7 @@ namespace RayTracer.Shape
                 distance = (res1 * res2 < 0) ? Math.Max(res1, res2) : Math.Min(res1, res2);
                 if (ray.IsSmallerThanCurrent(distance, Trans))
                 {
-                    ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;
+                    ray.IntersectDistance = MyMat.Mul44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;
                     return true;
                 }
             }
@@ -71,14 +71,14 @@ namespace RayTracer.Shape
 
         public override Vector3 GetNormal(Point3 point)
         {
-            point = MyMatrix.Mult44x41(Trans.Matrix.Inverse, new Vector3(point), 1).Point;
+            point = MyMat.Mul44x41(Trans.Matrix.Inverse, new Vector3(point), 1).Point;
             Vector3 norm = new Vector3(center, point).Normalize();
             return norm;
         }
 
         public override void UpdatePos()
         {
-            pos = MyMatrix.Mult44x41(Trans.Matrix, new Vector3(center), 1).Point;
+            pos = MyMat.Mul44x41(Trans.Matrix, new Vector3(center), 1).Point;
 
             // todo : think a way to normalize position with ??? range
             pos.X /= (10) + .5;

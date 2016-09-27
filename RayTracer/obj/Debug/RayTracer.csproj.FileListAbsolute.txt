@@ -19,9 +19,9 @@ E:\5112100118\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
 E:\5112100118\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe
 E:\5112100118\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.pdb
 E:\5112100118\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.csprojResolveAssemblyReference.cache
-E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe.config
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.exe
-E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
+E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe.config
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.pdb
+E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.csprojResolveAssemblyReference.cache

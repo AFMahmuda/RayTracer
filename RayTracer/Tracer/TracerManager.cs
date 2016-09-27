@@ -13,19 +13,19 @@ namespace RayTracer.Tracer
 
     public class TracerManager
     {
-        int tn = 6;
+        //thread number
+        int tn = 4;
 
         public bool TraceScene(string sceneFile)
         {
-
-
             DateTime start = DateTime.Now;
             Console.WriteLine("Preparing Scene. Please Wait...");
 
+            //init scene[0] and copy to scene [1-(tn-1)]
             Scene[] scene = InitScenes(sceneFile);
             scene[0].ShowInformation();
 
-            Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
+            Console.WriteLine("DONE! " + (DateTime.Now - start));
 
             Bitmap[] results = new Bitmap[tn];
             int h = ViewPlane.Instance.PixelHeight;
@@ -34,24 +34,31 @@ namespace RayTracer.Tracer
             for (int i = 0; i < tn; i++)
                 results[i] = new Bitmap(w, h);
             start = DateTime.Now;
-            Console.WriteLine("Tracing...Please Wait...\n------------------------------");
-
-            Task[] traceTask = new Task[6];
-
-
-            int num = 0;
-            for (int i = 0; i < 2; i++)
+            Console.WriteLine("Tracing...Please Wait...\n");
+            for (int i = 0; i < tn*5; i++)
             {
-                for (int j = 0; j < 3; j++)
+                Console.Write("-");
+            }
+            Console.WriteLine();
+
+            Task[] traceTask = new Task[tn];
+
+            int vDiv = 2;
+            int hDiv = tn / vDiv;
+
+            int cnt = 0;
+            for (int i = 0; i < vDiv; i++)
+            {
+                for (int j = 0; j < hDiv; j++)
                 {
                     int ii = i;
                     int jj = j;
-                    int n = num;
+                    int n = cnt;
 
-                    traceTask[num] = Task.Factory.StartNew(() =>
-                        TraceThread(results[n], scene[n], ii * h / 2, jj * w / 3, (ii + 1) * h / 2, (jj + 1) * w / 3)
+                    traceTask[cnt] = Task.Factory.StartNew(() =>
+                        TraceThread(results[n], scene[n], ii * h / vDiv, jj * w / hDiv, (ii + 1) * h / vDiv, (jj + 1) * w / hDiv)
                     );
-                    num++;
+                    cnt++;
                 }
 
             }
@@ -60,14 +67,15 @@ namespace RayTracer.Tracer
             Console.Write("\n");
 
             MergeAndSaveImage(results, scene[0].OutputFilename);
+            Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + scene[0].OutputFilename + "\n");
 
-            Console.WriteLine("Finised in :" + (DateTime.Now - start) );
+            Console.WriteLine("Finised in :" + (DateTime.Now - start));
             return true;
         }
 
+        //init scene[0] and copy to scene [1-(tn-1)]
         Scene[] InitScenes(string sceneFile)
         {
-
             Scene[] scene = new Scene[tn];
             Task[] sceneTask = new Task[tn - 1];
             scene[0] = new Scene(sceneFile);
@@ -80,6 +88,8 @@ namespace RayTracer.Tracer
             Task.WaitAll(sceneTask);
             return scene;
         }
+
+
 
         void MergeAndSaveImage(Bitmap[] result, string filename)
         {
@@ -94,7 +104,6 @@ namespace RayTracer.Tracer
                 filename = "default.bmp";
             result[0].Save(filename);
 
-            Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename+"\n");
         }
 
         void showTree(Container bin, int level = 1)

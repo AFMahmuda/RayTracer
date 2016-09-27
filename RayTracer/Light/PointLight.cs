@@ -32,33 +32,7 @@ namespace RayTracer.Lighting
         {
             return new Vector3(point, Position);
         }
-
-        //public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
-        //{
-        //    if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
-        //        return false;
-
-        //    Ray shadowRay = new Ray(point, GetPointToLight(point));
-        //    foreach (var item in geometries)
-        //    {
-        //        if (item.Equals(geometry))
-        //            continue;
-
-        //        Point3 pos = Utils.DeepClone(shadowRay.Start);
-        //        Vector3 dir = Utils.DeepClone(shadowRay.Direction);
-
-        //        shadowRay.TransformInv(item.Trans);
-
-        //        if (item.IsIntersecting(shadowRay))
-        //            if (shadowRay.IntersectDistance < GetPointToLight(point).Magnitude)
-        //                return false;
-
-        //        shadowRay.Start = pos;
-        //        shadowRay.Direction = dir;
-        //    }
-
-        //    return true;
-        //}
+        
         public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
         {
             Vector3 pointToLight = GetPointToLight(point);

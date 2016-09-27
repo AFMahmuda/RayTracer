@@ -25,11 +25,8 @@ namespace RayTracer.Shape
                 }
         }
 
-        public Mat Material
-        {
-            get;
-            set;
-        }
+        public Mat Material;
+
         public abstract void UpdatePos();
         public abstract bool IsIntersecting(Ray ray);
         public abstract Vector3 GetNormal(Point3 point);

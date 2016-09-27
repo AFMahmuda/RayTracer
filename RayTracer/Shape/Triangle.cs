@@ -2,9 +2,6 @@
 using RayTracer.Tracer;
 using RayTracer.Transformation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RayTracer.Shape
 {
@@ -76,7 +73,7 @@ namespace RayTracer.Shape
                 if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
                     if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
-                        ray.IntersectDistance = MyMatrix.Mult44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
+                        ray.IntersectDistance = MyMat.Mul44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
                         return true;
                     }
             return false;
@@ -100,13 +97,13 @@ namespace RayTracer.Shape
 
         public override Vector3 GetNormal(Point3 point)
         {
-            return MyMatrix.Mult44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
+            return MyMat.Mul44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
         }
 
         public override void UpdatePos()
         {
             Vector3 temp = new Vector3(a + b + c) * (.33f);
-            pos = MyMatrix.Mult44x41(Trans.Matrix, temp, 1).Point;
+            pos = MyMat.Mul44x41(Trans.Matrix, temp, 1).Point;
             pos.X /= (10) + .5;
             pos.Y /= (10) + .5;
             pos.Z /= (10) + .5;

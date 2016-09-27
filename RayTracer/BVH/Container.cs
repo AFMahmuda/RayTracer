@@ -19,12 +19,12 @@ namespace RayTracer.BVH
         }
         public TYPE Type;
 
-        protected List<SphereContainer> childs = new List<SphereContainer>();
+        protected List<Container> childs = new List<Container>();
         protected Geometry geo = null;
         public double area;
 
         public abstract bool IsIntersecting(Ray ray);
         public Geometry Geo { get { return geo; } }
-        public List<SphereContainer> Childs { get { return childs; } }
+        public List<Container> Childs { get { return childs; } }
     }
 }

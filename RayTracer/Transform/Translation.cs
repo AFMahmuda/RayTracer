@@ -18,7 +18,7 @@ namespace RayTracer.Transformation
 
         public Translation(Point3 values)
         {
-            Matrix = new MyMatrix(4, 4);
+            Matrix = new MyMat(4, 4);
             Matrix = Matrix.I;
 
             Matrix.SetValue(0, 3, values.X);

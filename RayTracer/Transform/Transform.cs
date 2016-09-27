@@ -8,9 +8,9 @@ namespace RayTracer.Transformation
     public class Transform
     {
 
-        MyMatrix matrix;
+        MyMat matrix;
 
-        public MyMatrix Matrix
+        public MyMat Matrix
         {
             get { return matrix; }
             set { matrix = value; }

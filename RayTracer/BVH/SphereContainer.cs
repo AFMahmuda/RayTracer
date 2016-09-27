@@ -15,6 +15,7 @@ namespace RayTracer.BVH
 
         public SphereContainer(Geometry item)
         {
+            Type = TYPE.SPHERE;
             geo = item;
             if (item.GetType() == typeof(Sphere))
             {
@@ -51,14 +52,13 @@ namespace RayTracer.BVH
                 radius = Math.Sqrt(new Vector3(reference, tri.c) * new Vector3(reference, tri.c));
             }
 
-            center = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(center), 1).Point;
-            radius = MyMatrix.Mult44x41(item.Trans.Matrix, new Vector3(radius, 0, 0), 0).Magnitude;
-            Type = TYPE.SPHERE;
+            center = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(center), 1).Point;
+            radius = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(radius, 0, 0), 0).Magnitude;
         }
 
         public SphereContainer(SphereContainer a, SphereContainer b)
         {
-
+            Type = TYPE.SPHERE;
             childs.Add(a);
             childs.Add(b);
 
@@ -84,10 +84,7 @@ namespace RayTracer.BVH
                 center = a.center + (aToB.Normalize() * (radius - a.radius)).Point;
             }
 
-            area = 4 * Math.PI * Math.Pow(radius, 2);
-            Type = TYPE.SPHERE;
-
-            
+            area = 4 * Math.PI * Math.Pow(radius, 2);           
         }
 
         public override bool IsIntersecting(Ray ray)

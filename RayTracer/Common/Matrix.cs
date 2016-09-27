@@ -6,14 +6,14 @@ using System.Text;
 namespace RayTracer.Common
 {
     [Serializable]
-    public class MyMatrix
+    public class MyMat
     {
 
         int rowNumber;
         int colNumber;
         Double[,] value;
 
-        public MyMatrix(int row, int col)
+        public MyMat(int row, int col)
         {
             rowNumber = row;
             colNumber = col;
@@ -23,7 +23,7 @@ namespace RayTracer.Common
 
         }
 
-        public MyMatrix(int row, int col, Double[] val)
+        public MyMat(int row, int col, Double[] val)
             : this(row, col)
         {
             SetValue(val);
@@ -52,25 +52,25 @@ namespace RayTracer.Common
             return value[column, row];
         }
 
-        public MyMatrix GetRow(int row)
+        public MyMat GetRow(int row)
         {
-            MyMatrix result = new MyMatrix(1, colNumber);
+            MyMat result = new MyMat(1, colNumber);
             for (int i = 0; i < colNumber; i++)
                 result.SetValue(0, i, this.value[row, i]);
             return result;
         }
 
-        public MyMatrix GetCol(int col)
+        public MyMat GetCol(int col)
         {
-            MyMatrix result = new MyMatrix(rowNumber, 1);
+            MyMat result = new MyMat(rowNumber, 1);
             for (int i = 0; i < rowNumber; i++)
                 result.SetValue(i, 0, this.value[i, col]);
             return result;
         }
 
-        public static MyMatrix operator *(MyMatrix a, Double b)
+        public static MyMat operator *(MyMat a, Double b)
         {
-            MyMatrix result = new MyMatrix(a.colNumber, a.rowNumber);
+            MyMat result = new MyMat(a.colNumber, a.rowNumber);
 
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
@@ -83,8 +83,8 @@ namespace RayTracer.Common
 
 
         private bool haveIdentity;
-        private MyMatrix identity;
-        public MyMatrix I
+        private MyMat identity;
+        public MyMat I
         {
             get
             {
@@ -96,9 +96,9 @@ namespace RayTracer.Common
                 return identity;
             }
         }
-        private MyMatrix CreateIdentity()
+        private MyMat CreateIdentity()
         {
-            MyMatrix result = new MyMatrix(colNumber, rowNumber);
+            MyMat result = new MyMat(colNumber, rowNumber);
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
                     result.SetValue(row, col, (row == col) ? 1 : 0);
@@ -108,8 +108,8 @@ namespace RayTracer.Common
 
 
         bool haveInverse;
-        MyMatrix inverse;
-        public MyMatrix Inverse
+        MyMat inverse;
+        public MyMat Inverse
         {
             get
             {
@@ -122,7 +122,7 @@ namespace RayTracer.Common
             }
         }
 
-        MyMatrix CreateInverse()
+        MyMat CreateInverse()
         {
             Double s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
             Double s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
@@ -140,7 +140,7 @@ namespace RayTracer.Common
 
             Double invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
 
-            MyMatrix result = new MyMatrix(4, 4);
+            MyMat result = new MyMat(4, 4);
 
             result.SetValue(0, 0, (value[1, 1] * c5 - value[1, 2] * c4 + value[1, 3] * c3) * invdet);
             result.SetValue(0, 1, (-value[0, 1] * c5 + value[0, 2] * c4 - value[0, 3] * c3) * invdet);
@@ -165,7 +165,7 @@ namespace RayTracer.Common
             return result;
         }
 
-        public static Vector3 Mult44x41(MyMatrix matrix, Vector3 vector, int homogeneousValue)
+        public static Vector3 Mul44x41(MyMat matrix, Vector3 vector, int homogeneousValue)
         {
 
             Double[,] val = matrix.GetValue();
@@ -182,13 +182,13 @@ namespace RayTracer.Common
             return result;
         }
 
-        public static MyMatrix Mult44x44(MyMatrix matA, MyMatrix matB)
+        public static MyMat Mult44x44(MyMat matA, MyMat matB)
         {
-            MyMatrix res = new MyMatrix(4, 4);
+            MyMat res = new MyMat(4, 4);
 
             for (int col = 0; col < 4; col++)
             {
-                MyMatrix mat41 = Mult44x41(matA, matB.GetCol(col));
+                MyMat mat41 = Mult44x41(matA, matB.GetCol(col));
                 for (int row = 0; row < 4; row++)
                     res.SetValue(row, col, mat41.GetValue(row, 0));
             }
@@ -197,9 +197,9 @@ namespace RayTracer.Common
         }
 
 
-        public static MyMatrix Mult44x41(MyMatrix mat44, MyMatrix mat41)
+        public static MyMat Mult44x41(MyMat mat44, MyMat mat41)
         {
-            MyMatrix res = new MyMatrix(4, 1);
+            MyMat res = new MyMat(4, 1);
 
             for (int row = 0; row < 4; row++)
             {

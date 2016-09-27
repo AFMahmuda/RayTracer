@@ -15,7 +15,7 @@ namespace RayTracer.Lighting
 
         public DirectionalLight(Vector3 direction, MyColor color)
         {
-            Direction = direction;
+            Direction = direction.Normalize();
             Color = color;
 
         }
@@ -35,34 +35,35 @@ namespace RayTracer.Lighting
             return new Vector3(Direction.Point * -1);
         }
 
-        //public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
-        //{
-        //    //not needed. lights effective to both sides
-        //    //if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
-        //    //    return false;
+        public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
+        {
+            Ray shadowRay = new Ray(point, (Direction*-1));
+            if ((Direction*-1) * geometry.GetNormal(point) < 0)
+                return false;
+            if (bvh.IsIntersecting(shadowRay))
+            {
+                if (bvh.Geo != null)
+                {
+                    shadowRay.TransformInv(bvh.Geo.Trans);
+                    if (bvh.Geo.IsIntersecting(shadowRay))
+                            return false;
+                }
+                else
+                {
+                    foreach (Container bin in bvh.Childs)
+                        if (!IsEffective(point, geometry, bin)) return false;
+                }
+            }
 
-        //    Ray ray = new Ray(point, GetPointToLight(point));
-        //    foreach (var item in geometries)
-        //    {
-        //        ray.TransformInv(item.Trans);
+            return true;
+        }
+        
 
-        //        if (item.IsIntersecting(ray))
-        //            return false;
-        //        ray.Transform(item.Trans);
-        //    }
-
-        //    return true;
-
-        //}
-
-        public override Double GetAttValue(Point3 point, Attenuation attenuation)
+        public override double GetAttValue(Point3 point, Attenuation attenuation)
         {
             return 1;
         }
 
-        public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

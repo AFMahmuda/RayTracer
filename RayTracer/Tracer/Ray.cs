@@ -182,18 +182,18 @@ namespace RayTracer.Tracer
 
         public void Transform(Transform transform)
         {
-            Start = MyMatrix.Mult44x41(transform.Matrix, new Vector3(Start), 1).Point;
-            Direction = MyMatrix.Mult44x41(transform.Matrix, Direction, 0).Normalize();
+            Start = MyMat.Mul44x41(transform.Matrix, new Vector3(Start), 1).Point;
+            Direction = MyMat.Mul44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = MyMatrix.Mult44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Point;
-            Direction = MyMatrix.Mult44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
+            Start = MyMat.Mul44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Point;
+            Direction = MyMat.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
         public bool IsSmallerThanCurrent(Double distance, Transform trans)
         {
-            double newMagnitude = MyMatrix.Mult44x41(trans.Matrix, Direction * distance, 0).Magnitude;
+            double newMagnitude = MyMat.Mul44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
     }

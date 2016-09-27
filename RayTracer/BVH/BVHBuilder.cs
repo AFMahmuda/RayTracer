@@ -23,7 +23,7 @@ namespace RayTracer.BVH
 
             foreach (var item in scene.Geometries)
             {
-                temp.Add(conFac.CreateContainer(item,Container.TYPE.SPHERE));
+                temp.Add(conFac.CreateContainer(item,Container.TYPE.BOX));
             }
 
             while (temp.Count > 1)
