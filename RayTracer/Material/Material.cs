@@ -28,8 +28,8 @@ namespace RayTracer.Material
         { get; set; }
 
 
-        Double shininess;
-        public Double Shininess
+        float shininess;
+        public float Shininess
         {
             get
             {

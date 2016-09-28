@@ -1,7 +1,6 @@
 ﻿using RayTracer.Algorithm;
 using RayTracer.Shape;
 using RayTracer.Tracer;
-using System;
 using System.Collections.Generic;
 
 namespace RayTracer.BVH
@@ -28,11 +27,11 @@ namespace RayTracer.BVH
 
             while (temp.Count > 1)
             {
-                double[,] area = new double[temp.Count, temp.Count];
+                float[,] area = new float[temp.Count, temp.Count];
                 int small_I = -1;
                 int small_J = -1;
                 Container small_C = null;
-                double smallestVal = double.MaxValue;
+                float smallestVal = float.MaxValue;
                 for (int i = 0; i < temp.Count; i++)
                 {
                     for (int j = i + 1; j < temp.Count; j++)

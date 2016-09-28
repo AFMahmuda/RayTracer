@@ -13,16 +13,16 @@ namespace RayTracer.Shape
     {
 
         public Point3 center;
-        public double radius;
+        public float radius;
 
         public Sphere()
             : this(Point3.ZERO, 0f)
         { }
 
-        public Sphere(Double[] values)
+        public Sphere(float[] values)
             : this(new Point3(values[0], values[1], values[2]), values[3])
         { }
-        public Sphere(Point3 center, Double radius)
+        public Sphere(Point3 center, float radius)
         {
 
             this.center = center;
@@ -41,16 +41,16 @@ namespace RayTracer.Shape
             if (rayToSphere * ray.Direction <= 0)
                 return false;
 
-            Double a = ray.Direction * ray.Direction;
-            Double b = -2 * (rayToSphere * ray.Direction);
-            Double c = (rayToSphere * rayToSphere) - (radius * radius);
-            Double dd = (b * b) - (4 * a * c);
+            float a = ray.Direction * ray.Direction;
+            float b = -2 * (rayToSphere * ray.Direction);
+            float c = (rayToSphere * rayToSphere) - (radius * radius);
+            float dd = (b * b) - (4 * a * c);
 
             if (dd > 0)
             {
-                Double res1 = (-b + Math.Sqrt(dd)) / (2.0 * a);
-                Double res2 = (-b - Math.Sqrt(dd)) / (2.0 * a);
-                Double distance;
+                float res1 = (-b + (float)Math.Sqrt(dd)) / (2.0f * a);
+                float res2 = (-b - (float)Math.Sqrt(dd)) / (2.0f * a);
+                float distance;
 
                 // if both results are negative, then the sphere is behind our ray, 
                 // but we already checked that.
@@ -81,9 +81,9 @@ namespace RayTracer.Shape
             pos = MyMat.Mul44x41(Trans.Matrix, new Vector3(center), 1).Point;
 
             // todo : think a way to normalize position with ??? range
-            pos.X /= (10) + .5;
-            pos.Y /= (10) + .5;
-            pos.Z /= (10) + .5;
+            pos.X /= (10f) + .5f;
+            pos.Y /= (10f) + .5f;
+            pos.Z /= (10f) + .5f;
         }
     }
 }

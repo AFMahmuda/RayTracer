@@ -12,7 +12,7 @@ namespace RayTracer.Transformation
             : this(new Point3(1, 1, 1))
         { }
 
-        public Scaling(Double[] values)
+        public Scaling(float[] values)
             : this(new Point3(values))
         { }
 

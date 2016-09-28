@@ -9,7 +9,7 @@ namespace RayTracer.Common
     public class Point3
     {
 
-        public Point3(Double x, Double y, Double z)
+        public Point3(float x, float y, float z)
         {
             this.X = x;
             this.Y = y;
@@ -21,26 +21,26 @@ namespace RayTracer.Common
         {
         }
 
-        public Point3(Double[] parameter)
+        public Point3(float[] parameter)
             : this(parameter[0], parameter[1], parameter[2])
         {
         }
 
-        private Double x, y, z;
+        private float x, y, z;
 
-        public Double Z
+        public float Z
         {
             get { return z; }
             set { z = value; }
         }
 
-        public Double Y
+        public float Y
         {
             get { return y; }
             set { y = value; }
         }
 
-        public Double X
+        public float X
         {
             get { return x; }
             set { x = value; }
@@ -59,7 +59,7 @@ namespace RayTracer.Common
             return a + (b * -1f);
         }
 
-        public static Point3 operator *(Point3 a, Double scale)
+        public static Point3 operator *(Point3 a, float scale)
         {
             return new Point3(a.X * scale, a.Y * scale, a.Z * scale);
         }

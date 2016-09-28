@@ -19,13 +19,13 @@ namespace RayTracer.Shape
         private Vector3 ab;
         private Vector3 ac;
 
-        private Double dot_ab_ab;
-        private Double dot_ab_ac;
-        private Double dot_ac_ac;
-        private Double dot_ab_ap;
-        private Double dot_ac_ap;
+        private float dot_ab_ab;
+        private float dot_ab_ac;
+        private float dot_ac_ac;
+        private float dot_ab_ap;
+        private float dot_ac_ap;
 
-        private Double invDenom;
+        private float invDenom;
 
         public Triangle(Point3 a, Point3 b, Point3 c)
         {
@@ -51,7 +51,7 @@ namespace RayTracer.Shape
             dot_ab_ac = ab * ac;
             dot_ac_ac = ac * ac;
 
-            invDenom = 1.0 / (dot_ab_ab * dot_ac_ac - dot_ab_ac * dot_ab_ac);
+            invDenom = 1.0f / (dot_ab_ab * dot_ac_ac - dot_ab_ac * dot_ab_ac);
         }
 
         public override bool IsIntersecting(Ray ray)
@@ -62,7 +62,7 @@ namespace RayTracer.Shape
             /*
             relative to ray direction
             */
-            Double distanceToPlane = (
+            float distanceToPlane = (
                  (new Vector3(a) * localNorm) -
                  (new Vector3(ray.Start) * localNorm))
                 / (ray.Direction * localNorm);
@@ -88,8 +88,8 @@ namespace RayTracer.Shape
             dot_ab_ap = ab * ap;
             dot_ac_ap = ac * ap;
 
-            Double u = (dot_ac_ac * dot_ab_ap - dot_ab_ac * dot_ac_ap) * invDenom;
-            Double v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
+            float u = (dot_ac_ac * dot_ab_ap - dot_ab_ac * dot_ac_ap) * invDenom;
+            float v = (dot_ab_ab * dot_ac_ap - dot_ab_ac * dot_ab_ap) * invDenom;
 
             return (u >= 0) && (v >= 0) && (u + v <= 1);
         }
@@ -104,9 +104,9 @@ namespace RayTracer.Shape
         {
             Vector3 temp = new Vector3(a + b + c) * (.33f);
             pos = MyMat.Mul44x41(Trans.Matrix, temp, 1).Point;
-            pos.X /= (10) + .5;
-            pos.Y /= (10) + .5;
-            pos.Z /= (10) + .5;
+            pos.X /= (10) + .5f;
+            pos.Y /= (10) + .5f;
+            pos.Z /= (10) + .5f;
         }
     }
 }

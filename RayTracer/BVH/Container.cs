@@ -21,7 +21,7 @@ namespace RayTracer.BVH
 
         protected List<Container> childs = new List<Container>();
         protected Geometry geo = null;
-        public double area;
+        public float area;
 
         public abstract bool IsIntersecting(Ray ray);
         public Geometry Geo { get { return geo; } }

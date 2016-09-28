@@ -11,25 +11,25 @@ namespace RayTracer.Common
 
         int rowNumber;
         int colNumber;
-        Double[,] value;
+        float[,] value;
 
         public MyMat(int row, int col)
         {
             rowNumber = row;
             colNumber = col;
-            value = new Double[rowNumber, colNumber];
+            value = new float[rowNumber, colNumber];
             haveInverse = false;
             haveIdentity = false;
 
         }
 
-        public MyMat(int row, int col, Double[] val)
+        public MyMat(int row, int col, float[] val)
             : this(row, col)
         {
             SetValue(val);
         }
 
-        public void SetValue(Double[] value)
+        public void SetValue(float[] value)
         {
             if (value.Length == this.value.Length)
                 for (int row = 0; row < rowNumber; row++)
@@ -38,7 +38,7 @@ namespace RayTracer.Common
             haveInverse = false;
         }
 
-        public void SetValue(int row, int col, Double value)
+        public void SetValue(int row, int col, float value)
         {
             this.value[row, col] = value;
             haveInverse = false;
@@ -46,8 +46,8 @@ namespace RayTracer.Common
 
 
 
-        public Double[,] GetValue() { return value; }
-        public Double GetValue(int column, int row)
+        public float[,] GetValue() { return value; }
+        public float GetValue(int column, int row)
         {
             return value[column, row];
         }
@@ -68,14 +68,14 @@ namespace RayTracer.Common
             return result;
         }
 
-        public static MyMat operator *(MyMat a, Double b)
+        public static MyMat operator *(MyMat a, float b)
         {
             MyMat result = new MyMat(a.colNumber, a.rowNumber);
 
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
                 {
-                    Double val = a.GetValue(row, col) * b;
+                    float val = a.GetValue(row, col) * b;
                     result.SetValue(row, col, val);
                 }
             return result;
@@ -124,21 +124,21 @@ namespace RayTracer.Common
 
         MyMat CreateInverse()
         {
-            Double s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
-            Double s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
-            Double s2 = value[0, 0] * value[1, 3] - value[1, 0] * value[0, 3];
-            Double s3 = value[0, 1] * value[1, 2] - value[1, 1] * value[0, 2];
-            Double s4 = value[0, 1] * value[1, 3] - value[1, 1] * value[0, 3];
-            Double s5 = value[0, 2] * value[1, 3] - value[1, 2] * value[0, 3];
+            float s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
+            float s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
+            float s2 = value[0, 0] * value[1, 3] - value[1, 0] * value[0, 3];
+            float s3 = value[0, 1] * value[1, 2] - value[1, 1] * value[0, 2];
+            float s4 = value[0, 1] * value[1, 3] - value[1, 1] * value[0, 3];
+            float s5 = value[0, 2] * value[1, 3] - value[1, 2] * value[0, 3];
 
-            Double c5 = value[2, 2] * value[3, 3] - value[3, 2] * value[2, 3];
-            Double c4 = value[2, 1] * value[3, 3] - value[3, 1] * value[2, 3];
-            Double c3 = value[2, 1] * value[3, 2] - value[3, 1] * value[2, 2];
-            Double c2 = value[2, 0] * value[3, 3] - value[3, 0] * value[2, 3];
-            Double c1 = value[2, 0] * value[3, 2] - value[3, 0] * value[2, 2];
-            Double c0 = value[2, 0] * value[3, 1] - value[3, 0] * value[2, 1];
+            float c5 = value[2, 2] * value[3, 3] - value[3, 2] * value[2, 3];
+            float c4 = value[2, 1] * value[3, 3] - value[3, 1] * value[2, 3];
+            float c3 = value[2, 1] * value[3, 2] - value[3, 1] * value[2, 2];
+            float c2 = value[2, 0] * value[3, 3] - value[3, 0] * value[2, 3];
+            float c1 = value[2, 0] * value[3, 2] - value[3, 0] * value[2, 2];
+            float c0 = value[2, 0] * value[3, 1] - value[3, 0] * value[2, 1];
 
-            Double invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+            float invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
 
             MyMat result = new MyMat(4, 4);
 
@@ -168,14 +168,14 @@ namespace RayTracer.Common
         public static Vector3 Mul44x41(MyMat matrix, Vector3 vector, int homogeneousValue)
         {
 
-            Double[,] val = matrix.GetValue();
-            Double x = vector.Point.X;
-            Double y = vector.Point.Y;
-            Double z = vector.Point.Z;
+            float[,] val = matrix.GetValue();
+            float x = vector.Point.X;
+            float y = vector.Point.Y;
+            float z = vector.Point.Z;
 
-            Double newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
-            Double newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
-            Double newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
+            float newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
+            float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
+            float newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
 
             Vector3 result = new Vector3(newX, newY, newZ);
 
@@ -203,7 +203,7 @@ namespace RayTracer.Common
 
             for (int row = 0; row < 4; row++)
             {
-                Double val = 0;
+                float val = 0;
                 for (int col = 0; col < 4; col++)
                     val += mat44.GetValue(row, col) * mat41.GetValue(col, 0);
                 res.SetValue(row, 0, val);

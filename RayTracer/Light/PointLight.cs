@@ -20,7 +20,7 @@ namespace RayTracer.Lighting
             Color = color;
 
         }
-        public PointLight(Double[] param)
+        public PointLight(float[] param)
             : this(new Point3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
         {
         }
@@ -60,16 +60,16 @@ namespace RayTracer.Lighting
             return true;
         }
 
-        public override Double GetAttValue(Point3 point, Attenuation attenuation)
+        public override float GetAttValue(Point3 point, Attenuation attenuation)
         {
             if (!attenuation.Equals(new Attenuation()))
                 return 1f;
 
-            Double d = GetPointToLight(point).Magnitude;
+            float d = GetPointToLight(point).Magnitude;
             return 1f /
                 (attenuation.Constant +
                 attenuation.Linear * d +
-                attenuation.Quadratic * Math.Pow(d, 2));
+                attenuation.Quadratic * (float)Math.Pow(d, 2));
 
         }
 

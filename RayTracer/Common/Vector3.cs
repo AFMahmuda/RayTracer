@@ -9,7 +9,7 @@ namespace RayTracer.Common
     public class Vector3
     {
 
-        public Vector3(Double x, Double y, Double z)
+        public Vector3(float x, float y, float z)
         {
             Point = new Point3(x, y, z);
         }
@@ -35,9 +35,9 @@ namespace RayTracer.Common
         public Point3 Point
         { get; set; }
 
-        public Double Magnitude
+        public float Magnitude
         {
-            get { return Math.Sqrt((Point.X * Point.X) + (Point.Y * Point.Y) + (Point.Z * Point.Z)); }
+            get { return (float)Math.Sqrt((Point.X * Point.X) + (Point.Y * Point.Y) + (Point.Z * Point.Z)); }
         }
 
         public Vector3 Normalize()
@@ -46,16 +46,16 @@ namespace RayTracer.Common
         }
 
 
-        public static Double operator *(Vector3 a, Vector3 b)
+        public static float operator *(Vector3 a, Vector3 b)
         {
             Point3 newA = a.Point;
             Point3 newB = b.Point;
-            Double result = ((newA.X * newB.X) + (newA.Y * newB.Y) + (newA.Z * newB.Z));
+            float result = ((newA.X * newB.X) + (newA.Y * newB.Y) + (newA.Z * newB.Z));
 
             return result;
         }
 
-        public static Vector3 operator *(Vector3 vector, Double scalar)
+        public static Vector3 operator *(Vector3 vector, float scalar)
         {
             Vector3 result = new Vector3(vector.Point);
             result.Point.X *= scalar;
@@ -80,9 +80,9 @@ namespace RayTracer.Common
             return a + (b * -1);
         }
 
-        public static Vector3 operator /(Vector3 vector, Double scalar)
+        public static Vector3 operator /(Vector3 vector, float scalar)
         {
-            return vector * (1.0 / scalar);
+            return vector * (1.0f / scalar);
         }
 
         public static Vector3 Cross(Vector3 a, Vector3 b)

@@ -9,9 +9,8 @@ namespace RayTracer.BVH
     public class BoxContainer : Container
     {
 
-        Point3 min;
-        Point3 max;
-
+        private Point3 min;
+        private Point3 max;
 
         public BoxContainer(Geometry item)
         {
@@ -42,9 +41,6 @@ namespace RayTracer.BVH
                 Point3 a = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(tri.a), 1).Point;
                 Point3 b = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(tri.b), 1).Point;
                 Point3 c = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(tri.c), 1).Point;
-                //Point3 a =tri.a;
-                //Point3 b = tri.b;
-                //Point3 c =tri.c;
 
                 min = new Point3();
                 min.X = Math.Min(a.X, Math.Min(b.X, c.X));
@@ -56,8 +52,6 @@ namespace RayTracer.BVH
                 max.Y = Math.Max(a.Y, Math.Max(b.Y, c.Y));
                 max.Z = Math.Min(a.Z, Math.Min(b.Z, c.Z));
             }
-            //min = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(min), 1).Point;
-            //max = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(max), 1).Point;
         }
 
         public BoxContainer(BoxContainer a, BoxContainer b)
@@ -78,26 +72,26 @@ namespace RayTracer.BVH
 
             Point3 size = max - min;
 
-            area = 2.0 * (size.X * size.Y + size.X * (size.Z * -1) + size.X * (size.Z * -1));
+            area = 2f * (size.X * size.Y + size.X * (size.Z * -1) + size.X * (size.Z * -1));
 
         }
 
         public override bool IsIntersecting(Ray ray)
         {
-            double tmin = double.MinValue, tmax = double.MaxValue;
+            float tmin = float.MinValue, tmax = float.MaxValue;
 
             if (ray.Direction.Point.X != 0.0)
             {
-                double tx1 = (min.X - ray.Start.X) / ray.Direction.Point.X;
-                double tx2 = (max.X - ray.Start.X) / ray.Direction.Point.X;
+                float tx1 = (min.X - ray.Start.X) / ray.Direction.Point.X;
+                float tx2 = (max.X - ray.Start.X) / ray.Direction.Point.X;
 
                 tmin = Math.Max(tmin, Math.Min(tx1, tx2));
                 tmax = Math.Min(tmax, Math.Max(tx1, tx2));
             }
             if (ray.Direction.Point.Y != 0.0)
             {
-                double ty1 = (min.Y - ray.Start.Y) / ray.Direction.Point.Y;
-                double ty2 = (max.Y - ray.Start.Y) / ray.Direction.Point.Y;
+                float ty1 = (min.Y - ray.Start.Y) / ray.Direction.Point.Y;
+                float ty2 = (max.Y - ray.Start.Y) / ray.Direction.Point.Y;
 
                 tmin = Math.Max(tmin, Math.Min(ty1, ty2));
                 tmax = Math.Min(tmax, Math.Max(ty1, ty2));
@@ -105,8 +99,8 @@ namespace RayTracer.BVH
 
             if (ray.Direction.Point.Z != 0.0)
             {
-                double tz1 = (min.Z - ray.Start.Z) / ray.Direction.Point.Z;
-                double tz2 = (max.Z - ray.Start.Z) / ray.Direction.Point.Z;
+                float tz1 = (min.Z - ray.Start.Z) / ray.Direction.Point.Z;
+                float tz2 = (max.Z - ray.Start.Z) / ray.Direction.Point.Z;
 
                 tmin = Math.Max(tmin, Math.Min(tz1, tz2));
                 tmax = Math.Min(tmax, Math.Max(tz1, tz2));

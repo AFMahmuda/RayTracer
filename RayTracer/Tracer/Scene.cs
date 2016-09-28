@@ -33,7 +33,7 @@ namespace RayTracer.Tracer
             maxDepth = 5;
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
             material = new Mat();
-            ambient = new MyColor(.2, .2, .2);
+            ambient = new MyColor(.2f, .2f, .2f);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
         }
@@ -79,10 +79,10 @@ namespace RayTracer.Tracer
                 return;
             }
 
-            double[] param = new double[words.Length - 1];
+            float[] param = new float[words.Length - 1];
             for (int i = 0; i < param.Length; i++)
             {
-                param[i] = double.Parse(words[i + 1]);
+                param[i] = float.Parse(words[i + 1]);
             }
             switch (command)
             {
@@ -170,7 +170,7 @@ namespace RayTracer.Tracer
         }
 
 
-        Sphere CreateSphere(double[] param)
+        Sphere CreateSphere(float[] param)
         {
             Sphere sphere = new Sphere(param);
 
@@ -181,7 +181,7 @@ namespace RayTracer.Tracer
             return sphere;
         }
 
-        Triangle CrerateTriangle(double[] param)
+        Triangle CrerateTriangle(float[] param)
         {
             Point3 a = vertices[(int)param[0]];
             Point3 b = vertices[(int)param[1]];

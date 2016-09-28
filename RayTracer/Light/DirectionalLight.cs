@@ -19,7 +19,7 @@ namespace RayTracer.Lighting
             Color = color;
 
         }
-        public DirectionalLight(Double[] param)
+        public DirectionalLight(float[] param)
             : this(new Vector3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
         {
         }
@@ -59,7 +59,7 @@ namespace RayTracer.Lighting
         }
         
 
-        public override double GetAttValue(Point3 point, Attenuation attenuation)
+        public override float GetAttValue(Point3 point, Attenuation attenuation)
         {
             return 1;
         }

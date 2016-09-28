@@ -16,28 +16,28 @@ namespace RayTracer.Lighting
             quadratic = 0f;
         }
 
-        public Attenuation(Double[] param)
+        public Attenuation(float[] param)
         {
             constant = param[0];
             linear = param[1];
             quadratic = param[2];
 
         }
-        Double constant;
+        float constant;
 
-        public Double Constant
+        public float Constant
         {
             get { return constant; }
         }
-        Double linear;
+        float linear;
 
-        public Double Linear
+        public float Linear
         {
             get { return linear; }
         }
-        Double quadratic;
+        float quadratic;
 
-        public Double Quadratic
+        public float Quadratic
         {
             get { return quadratic; }
         }

@@ -12,7 +12,7 @@ namespace RayTracer.Transformation
             : this(Point3.ZERO)
         { }
 
-        public Translation(Double[] values)
+        public Translation(float[] values)
             : this(new Point3(values))
         { }
 

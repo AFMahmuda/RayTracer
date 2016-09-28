@@ -120,8 +120,8 @@ namespace RayTracer.Tracer
         {
             new BVHManager().BuildBVH(scene);
 
-            double total = (colEnd - colStart) * (rowEnd - rowStart);
-            double count = 0;
+            float total = (colEnd - colStart) * (rowEnd - rowStart);
+            float count = 0;
             for (int currRow = rowStart; currRow < rowEnd; currRow++)
             {
                 for (int currCol = colStart; currCol < colEnd; currCol++)
@@ -140,7 +140,7 @@ namespace RayTracer.Tracer
                     if (++count >= total / 5.0)
                     {
                         Console.Write("*");
-                        count = count - (total / 5.0);
+                        count = count - (total / 5.0f);
                     }
                 }
             }

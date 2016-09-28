@@ -28,7 +28,7 @@ namespace RayTracer.Algorithm
             int[] pref = new int[1 << r];
 
             // number of groups 
-            int groups = (int)Math.Ceiling((double)b / (double)r);
+            int groups = (int)Math.Ceiling((float)b / (float)r);
 
             // the mask to identify groups 
             int mask = (1 << r) - 1;
