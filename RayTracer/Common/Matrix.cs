@@ -6,24 +6,24 @@ using System.Text;
 namespace RayTracer.Common
 {
     [Serializable]
-    public class MyMat
+    public class Mattrix
     {
 
         int rowNumber;
         int colNumber;
-        float[,] value;
+        float[,] values;
 
-        public MyMat(int row, int col)
+        public Mattrix(int row, int col)
         {
             rowNumber = row;
             colNumber = col;
-            value = new float[rowNumber, colNumber];
+            values = new float[rowNumber, colNumber];
             haveInverse = false;
             haveIdentity = false;
 
         }
 
-        public MyMat(int row, int col, float[] val)
+        public Mattrix(int row, int col, float[] val)
             : this(row, col)
         {
             SetValue(val);
@@ -31,46 +31,46 @@ namespace RayTracer.Common
 
         public void SetValue(float[] value)
         {
-            if (value.Length == this.value.Length)
+            if (value.Length == this.values.Length)
                 for (int row = 0; row < rowNumber; row++)
                     for (int col = 0; col < colNumber; col++)
-                        this.value[row, col] = value[row * rowNumber + col];
+                        this.values[row, col] = value[row * rowNumber + col];
             haveInverse = false;
         }
 
         public void SetValue(int row, int col, float value)
         {
-            this.value[row, col] = value;
+            this.values[row, col] = value;
             haveInverse = false;
         }
 
 
 
-        public float[,] GetValue() { return value; }
+        public float[,] GetValue() { return values; }
         public float GetValue(int column, int row)
         {
-            return value[column, row];
+            return values[column, row];
         }
 
-        public MyMat GetRow(int row)
+        public Mattrix GetRow(int row)
         {
-            MyMat result = new MyMat(1, colNumber);
+            Mattrix result = new Mattrix(1, colNumber);
             for (int i = 0; i < colNumber; i++)
-                result.SetValue(0, i, this.value[row, i]);
+                result.SetValue(0, i, this.values[row, i]);
             return result;
         }
 
-        public MyMat GetCol(int col)
+        public Mattrix GetCol(int col)
         {
-            MyMat result = new MyMat(rowNumber, 1);
+            Mattrix result = new Mattrix(rowNumber, 1);
             for (int i = 0; i < rowNumber; i++)
-                result.SetValue(i, 0, this.value[i, col]);
+                result.SetValue(i, 0, this.values[i, col]);
             return result;
         }
 
-        public static MyMat operator *(MyMat a, float b)
+        public static Mattrix operator *(Mattrix a, float b)
         {
-            MyMat result = new MyMat(a.colNumber, a.rowNumber);
+            Mattrix result = new Mattrix(a.colNumber, a.rowNumber);
 
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
@@ -83,8 +83,8 @@ namespace RayTracer.Common
 
 
         private bool haveIdentity;
-        private MyMat identity;
-        public MyMat I
+        private Mattrix identity;
+        public Mattrix I
         {
             get
             {
@@ -96,9 +96,9 @@ namespace RayTracer.Common
                 return identity;
             }
         }
-        private MyMat CreateIdentity()
+        private Mattrix CreateIdentity()
         {
-            MyMat result = new MyMat(colNumber, rowNumber);
+            Mattrix result = new Mattrix(colNumber, rowNumber);
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
                     result.SetValue(row, col, (row == col) ? 1 : 0);
@@ -108,8 +108,8 @@ namespace RayTracer.Common
 
 
         bool haveInverse;
-        MyMat inverse;
-        public MyMat Inverse
+        Mattrix inverse;
+        public Mattrix Inverse
         {
             get
             {
@@ -122,50 +122,50 @@ namespace RayTracer.Common
             }
         }
 
-        MyMat CreateInverse()
+        Mattrix CreateInverse()
         {
-            float s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
-            float s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
-            float s2 = value[0, 0] * value[1, 3] - value[1, 0] * value[0, 3];
-            float s3 = value[0, 1] * value[1, 2] - value[1, 1] * value[0, 2];
-            float s4 = value[0, 1] * value[1, 3] - value[1, 1] * value[0, 3];
-            float s5 = value[0, 2] * value[1, 3] - value[1, 2] * value[0, 3];
+            float s0 = values[0, 0] * values[1, 1] - values[1, 0] * values[0, 1];
+            float s1 = values[0, 0] * values[1, 2] - values[1, 0] * values[0, 2];
+            float s2 = values[0, 0] * values[1, 3] - values[1, 0] * values[0, 3];
+            float s3 = values[0, 1] * values[1, 2] - values[1, 1] * values[0, 2];
+            float s4 = values[0, 1] * values[1, 3] - values[1, 1] * values[0, 3];
+            float s5 = values[0, 2] * values[1, 3] - values[1, 2] * values[0, 3];
 
-            float c5 = value[2, 2] * value[3, 3] - value[3, 2] * value[2, 3];
-            float c4 = value[2, 1] * value[3, 3] - value[3, 1] * value[2, 3];
-            float c3 = value[2, 1] * value[3, 2] - value[3, 1] * value[2, 2];
-            float c2 = value[2, 0] * value[3, 3] - value[3, 0] * value[2, 3];
-            float c1 = value[2, 0] * value[3, 2] - value[3, 0] * value[2, 2];
-            float c0 = value[2, 0] * value[3, 1] - value[3, 0] * value[2, 1];
+            float c5 = values[2, 2] * values[3, 3] - values[3, 2] * values[2, 3];
+            float c4 = values[2, 1] * values[3, 3] - values[3, 1] * values[2, 3];
+            float c3 = values[2, 1] * values[3, 2] - values[3, 1] * values[2, 2];
+            float c2 = values[2, 0] * values[3, 3] - values[3, 0] * values[2, 3];
+            float c1 = values[2, 0] * values[3, 2] - values[3, 0] * values[2, 2];
+            float c0 = values[2, 0] * values[3, 1] - values[3, 0] * values[2, 1];
 
             float invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
 
-            MyMat result = new MyMat(4, 4);
+            Mattrix result = new Mattrix(4, 4);
 
-            result.SetValue(0, 0, (value[1, 1] * c5 - value[1, 2] * c4 + value[1, 3] * c3) * invdet);
-            result.SetValue(0, 1, (-value[0, 1] * c5 + value[0, 2] * c4 - value[0, 3] * c3) * invdet);
-            result.SetValue(0, 2, (value[3, 1] * s5 - value[3, 2] * s4 + value[3, 3] * s3) * invdet);
-            result.SetValue(0, 3, (-value[2, 1] * s5 + value[2, 2] * s4 - value[2, 3] * s3) * invdet);
+            result.SetValue(0, 0, (values[1, 1] * c5 - values[1, 2] * c4 + values[1, 3] * c3) * invdet);
+            result.SetValue(0, 1, (-values[0, 1] * c5 + values[0, 2] * c4 - values[0, 3] * c3) * invdet);
+            result.SetValue(0, 2, (values[3, 1] * s5 - values[3, 2] * s4 + values[3, 3] * s3) * invdet);
+            result.SetValue(0, 3, (-values[2, 1] * s5 + values[2, 2] * s4 - values[2, 3] * s3) * invdet);
 
-            result.SetValue(1, 0, (-value[1, 0] * c5 + value[1, 2] * c2 - value[1, 3] * c1) * invdet);
-            result.SetValue(1, 1, (value[0, 0] * c5 - value[0, 2] * c2 + value[0, 3] * c1) * invdet);
-            result.SetValue(1, 2, (-value[3, 0] * s5 + value[3, 2] * s2 - value[3, 3] * s1) * invdet);
-            result.SetValue(1, 3, (value[2, 0] * s5 - value[2, 2] * s2 + value[2, 3] * s1) * invdet);
+            result.SetValue(1, 0, (-values[1, 0] * c5 + values[1, 2] * c2 - values[1, 3] * c1) * invdet);
+            result.SetValue(1, 1, (values[0, 0] * c5 - values[0, 2] * c2 + values[0, 3] * c1) * invdet);
+            result.SetValue(1, 2, (-values[3, 0] * s5 + values[3, 2] * s2 - values[3, 3] * s1) * invdet);
+            result.SetValue(1, 3, (values[2, 0] * s5 - values[2, 2] * s2 + values[2, 3] * s1) * invdet);
 
-            result.SetValue(2, 0, (value[1, 0] * c4 - value[1, 1] * c2 + value[1, 3] * c0) * invdet);
-            result.SetValue(2, 1, (-value[0, 0] * c4 + value[0, 1] * c2 - value[0, 3] * c0) * invdet);
-            result.SetValue(2, 2, (value[3, 0] * s4 - value[3, 1] * s2 + value[3, 3] * s0) * invdet);
-            result.SetValue(2, 3, (-value[2, 0] * s4 + value[2, 1] * s2 - value[2, 3] * s0) * invdet);
+            result.SetValue(2, 0, (values[1, 0] * c4 - values[1, 1] * c2 + values[1, 3] * c0) * invdet);
+            result.SetValue(2, 1, (-values[0, 0] * c4 + values[0, 1] * c2 - values[0, 3] * c0) * invdet);
+            result.SetValue(2, 2, (values[3, 0] * s4 - values[3, 1] * s2 + values[3, 3] * s0) * invdet);
+            result.SetValue(2, 3, (-values[2, 0] * s4 + values[2, 1] * s2 - values[2, 3] * s0) * invdet);
 
-            result.SetValue(3, 0, (-value[1, 0] * c3 + value[1, 1] * c1 - value[1, 2] * c0) * invdet);
-            result.SetValue(3, 1, (value[0, 0] * c3 - value[0, 1] * c1 + value[0, 2] * c0) * invdet);
-            result.SetValue(3, 2, (-value[3, 0] * s3 + value[3, 1] * s1 - value[3, 2] * s0) * invdet);
-            result.SetValue(3, 3, (value[2, 0] * s3 - value[2, 1] * s1 + value[2, 2] * s0) * invdet);
+            result.SetValue(3, 0, (-values[1, 0] * c3 + values[1, 1] * c1 - values[1, 2] * c0) * invdet);
+            result.SetValue(3, 1, (values[0, 0] * c3 - values[0, 1] * c1 + values[0, 2] * c0) * invdet);
+            result.SetValue(3, 2, (-values[3, 0] * s3 + values[3, 1] * s1 - values[3, 2] * s0) * invdet);
+            result.SetValue(3, 3, (values[2, 0] * s3 - values[2, 1] * s1 + values[2, 2] * s0) * invdet);
 
             return result;
         }
 
-        public static Vector3 Mul44x41(MyMat matrix, Vector3 vector, int homogeneousValue)
+        public static Vec3 Mul44x41(Mattrix matrix, Vec3 vector, int homogeneousValue)
         {
 
             float[,] val = matrix.GetValue();
@@ -177,18 +177,18 @@ namespace RayTracer.Common
             float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
             float newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
 
-            Vector3 result = new Vector3(newX, newY, newZ);
+            Vec3 result = new Vec3(newX, newY, newZ);
 
             return result;
         }
 
-        public static MyMat Mult44x44(MyMat matA, MyMat matB)
+        public static Mattrix Mul44x44(Mattrix matA, Mattrix matB)
         {
-            MyMat res = new MyMat(4, 4);
+            Mattrix res = new Mattrix(4, 4);
 
             for (int col = 0; col < 4; col++)
             {
-                MyMat mat41 = Mult44x41(matA, matB.GetCol(col));
+                Mattrix mat41 = Mul44x41(matA, matB.GetCol(col));
                 for (int row = 0; row < 4; row++)
                     res.SetValue(row, col, mat41.GetValue(row, 0));
             }
@@ -197,9 +197,9 @@ namespace RayTracer.Common
         }
 
 
-        public static MyMat Mult44x41(MyMat mat44, MyMat mat41)
+        public static Mattrix Mul44x41(Mattrix mat44, Mattrix mat41)
         {
-            MyMat res = new MyMat(4, 1);
+            Mattrix res = new Mattrix(4, 1);
 
             for (int row = 0; row < 4; row++)
             {

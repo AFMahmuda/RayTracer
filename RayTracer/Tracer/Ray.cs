@@ -22,7 +22,7 @@ namespace RayTracer.Tracer
             Type = TYPE.RAY;
         }
 
-        public Ray(Point3 start, Vector3 direction)
+        public Ray(Point3 start, Vec3 direction)
             : this()
         {
             Start = start;
@@ -32,7 +32,7 @@ namespace RayTracer.Tracer
         public Point3 Start
         { get; set; }
 
-        public Vector3 Direction
+        public Vec3 Direction
         { get; set; }
 
         public float IntersectDistance
@@ -72,7 +72,7 @@ namespace RayTracer.Tracer
                     if (Bvh.Geo != null)
                     {
                         Point3 tempStart = Utils.DeepClone(Start);
-                        Vector3 tempDir = Utils.DeepClone(Direction);
+                        Vec3 tempDir = Utils.DeepClone(Direction);
 
                         //transform ray according to each shapes transformation
                         TransformInv(Bvh.Geo.Trans);
@@ -104,14 +104,14 @@ namespace RayTracer.Tracer
         {
 
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
-            Vector3 normal = IntersectWith.GetNormal(HitPointMinus);
+            Vec3 normal = IntersectWith.GetNormal(HitPointMinus);
 
             foreach (var light in effectiveLights)
             {
-                Vector3 pointToLight = light.GetPointToLight(HitPointMinus);
-                Vector3 halfAngleToLight = ((Direction * -1.0f) + pointToLight).Normalize();
+                Vec3 pointToLight = light.GetPointToLight(HitPointMinus);
+                Vec3 halfAngleToLight = ((Direction * -1.0f) + pointToLight).Normalize();
 
-                Mat material = IntersectWith.Material;
+                Material.Mat material = IntersectWith.Material;
 
                 float attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
 
@@ -143,7 +143,7 @@ namespace RayTracer.Tracer
         {
             if (Type != TYPE.REFRACTION)
             {
-                Vector3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0f * (Direction * IntersectWith.GetNormal(HitPointMinus)));
+                Vec3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0f * (Direction * IntersectWith.GetNormal(HitPointMinus)));
                 Ray reflectRay = new Ray(HitPointMinus, rreflectDir);
                 //reflectRay.Type = TYPE.REFLECTION;
                 reflectRay.Trace(scene, scene.Bvh);
@@ -182,18 +182,18 @@ namespace RayTracer.Tracer
 
         public void Transform(Transform transform)
         {
-            Start = MyMat.Mul44x41(transform.Matrix, new Vector3(Start), 1).Point;
-            Direction = MyMat.Mul44x41(transform.Matrix, Direction, 0).Normalize();
+            Start = Common.Mattrix.Mul44x41(transform.Matrix, new Vec3(Start), 1).Point;
+            Direction = Common.Mattrix.Mul44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = MyMat.Mul44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Point;
-            Direction = MyMat.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
+            Start = Common.Mattrix.Mul44x41(transform.Matrix.Inverse, new Vec3(Start), 1).Point;
+            Direction = Common.Mattrix.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
         public bool IsSmallerThanCurrent(float distance, Transform trans)
         {
-            float newMagnitude = MyMat.Mul44x41(trans.Matrix, Direction * distance, 0).Magnitude;
+            float newMagnitude = Common.Mattrix.Mul44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
     }

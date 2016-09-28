@@ -32,14 +32,12 @@
       <Field Name="dot_ab_ap" Hidden="true" />
       <Field Name="dot_ac_ac" Hidden="true" />
       <Field Name="dot_ac_ap" Hidden="true" />
-      <Field Name="hasNormal" Hidden="true" />
       <Field Name="invDenom" Hidden="true" />
       <Field Name="localNorm" Hidden="true" />
-      <Field Name="triNormal" Hidden="true" />
       <Method Name="UpdatePos" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAgAQAAAAACAAAAAgAAAAAAEAAKAAACgASAACACAAAA=</HashCode>
+      <HashCode>AAgAQAAAAACAAAAAgAAAAAAEAAKAAACgASAACAAAAAA=</HashCode>
       <FileName>Shape\Triangle.cs</FileName>
     </TypeIdentifier>
   </Class>

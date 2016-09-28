@@ -15,7 +15,7 @@ namespace RayTracer.Lighting
         public MyColor Color
         { get; set; }
 
-        public abstract Vector3 GetPointToLight(Point3 point);
+        public abstract Vec3 GetPointToLight(Point3 point);
 //        public abstract bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries);
         public abstract bool IsEffective(Point3 point, Geometry geometry, Container bvh);
         public abstract float GetAttValue(Point3 point, Attenuation attenuation);

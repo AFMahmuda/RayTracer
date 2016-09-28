@@ -29,7 +29,7 @@ namespace RayTracer.Shape
 
         public abstract void UpdatePos();
         public abstract bool IsIntersecting(Ray ray);
-        public abstract Vector3 GetNormal(Point3 point);
+        public abstract Vec3 GetNormal(Point3 point);
         public MyColor Ambient { get; set; }
 
         //source : https://devblogs.nvidia.com/parallelforall/thinking-parallel-part-iii-tree-construction-gpu/

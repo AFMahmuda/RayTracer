@@ -30,17 +30,17 @@ namespace RayTracer.BVH
                 max.X += sphere.radius;
                 max.Y += sphere.radius;
                 max.Z -= sphere.radius;
-                min = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(min), 1).Point;
-                max = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(max), 1).Point;
+                min = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(min), 1).Point;
+                max = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(max), 1).Point;
             }
 
             else //if (item.GetType() == typeof(Triangle))
             {
                 Triangle tri = (Triangle)item;
 
-                Point3 a = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(tri.a), 1).Point;
-                Point3 b = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(tri.b), 1).Point;
-                Point3 c = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(tri.c), 1).Point;
+                Point3 a = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.a), 1).Point;
+                Point3 b = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.b), 1).Point;
+                Point3 c = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.c), 1).Point;
 
                 min = new Point3();
                 min.X = Math.Min(a.X, Math.Min(b.X, c.X));

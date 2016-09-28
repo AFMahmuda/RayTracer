@@ -8,7 +8,6 @@ namespace RayTracer.Common
     [Serializable]
     public class Point3
     {
-
         public Point3(float x, float y, float z)
         {
             this.X = x;

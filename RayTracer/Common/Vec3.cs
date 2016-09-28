@@ -6,29 +6,29 @@ using System.Text;
 namespace RayTracer.Common
 {
     [Serializable]
-    public class Vector3
+    public class Vec3
     {
 
-        public Vector3(float x, float y, float z)
+        public Vec3(float x, float y, float z)
         {
             Point = new Point3(x, y, z);
         }
 
-        public Vector3(Point3 point)
+        public Vec3(Point3 point)
         {
             //point is a reference! we only need value.
             Point = point * 1;
         }
 
-        public Vector3(Point3 start, Point3 end)
+        public Vec3(Point3 start, Point3 end)
         {
             this.Point = end - start;
         }
 
-        public static Vector3 UP { get { return new Vector3(0, 1, 0); } }
-        public static Vector3 RIGHT { get { return new Vector3(1, 0, 0); } }
-        public static Vector3 DOWN { get { return UP * -1; } }
-        public static Vector3 LEFT { get { return RIGHT * -1; } }
+        public static Vec3 UP { get { return new Vec3(0, 1, 0); } }
+        public static Vec3 RIGHT { get { return new Vec3(1, 0, 0); } }
+        public static Vec3 DOWN { get { return UP * -1; } }
+        public static Vec3 LEFT { get { return RIGHT * -1; } }
 
 
 
@@ -40,13 +40,13 @@ namespace RayTracer.Common
             get { return (float)Math.Sqrt((Point.X * Point.X) + (Point.Y * Point.Y) + (Point.Z * Point.Z)); }
         }
 
-        public Vector3 Normalize()
+        public Vec3 Normalize()
         {
             return this / Magnitude;
         }
 
 
-        public static float operator *(Vector3 a, Vector3 b)
+        public static float operator *(Vec3 a, Vec3 b)
         {
             Point3 newA = a.Point;
             Point3 newB = b.Point;
@@ -55,41 +55,41 @@ namespace RayTracer.Common
             return result;
         }
 
-        public static Vector3 operator *(Vector3 vector, float scalar)
+        public static Vec3 operator *(Vec3 vector, float scalar)
         {
-            Vector3 result = new Vector3(vector.Point);
+            Vec3 result = new Vec3(vector.Point);
             result.Point.X *= scalar;
             result.Point.Y *= scalar;
             result.Point.Z *= scalar;
             return result;
         }
 
-        public static Vector3 operator +(Vector3 a, Vector3 b)
+        public static Vec3 operator +(Vec3 a, Vec3 b)
         {
 
 
-            Vector3 newA = a * 1;
-            Vector3 newB = b * 1;
-            Vector3 result = new Vector3(newA.Point + newB.Point);
+            Vec3 newA = a * 1;
+            Vec3 newB = b * 1;
+            Vec3 result = new Vec3(newA.Point + newB.Point);
             return result;
 
         }
 
-        public static Vector3 operator -(Vector3 a, Vector3 b)
+        public static Vec3 operator -(Vec3 a, Vec3 b)
         {
             return a + (b * -1);
         }
 
-        public static Vector3 operator /(Vector3 vector, float scalar)
+        public static Vec3 operator /(Vec3 vector, float scalar)
         {
             return vector * (1.0f / scalar);
         }
 
-        public static Vector3 Cross(Vector3 a, Vector3 b)
+        public static Vec3 Cross(Vec3 a, Vec3 b)
         {
             Point3 A = a.Point;
             Point3 B = b.Point;
-            return new Vector3(
+            return new Vec3(
                 A.Y * B.Z - A.Z * B.Y,
                 (A.X * B.Z - A.Z * B.X) * -1,
                 A.X * B.Y - A.Y * B.X

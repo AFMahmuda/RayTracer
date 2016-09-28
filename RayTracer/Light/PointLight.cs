@@ -28,14 +28,14 @@ namespace RayTracer.Lighting
         public Point3 Position
         { get; set; }
 
-        public override Vector3 GetPointToLight(Point3 point)
+        public override Vec3 GetPointToLight(Point3 point)
         {
-            return new Vector3(point, Position);
+            return new Vec3(point, Position);
         }
         
         public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
         {
-            Vector3 pointToLight = GetPointToLight(point);
+            Vec3 pointToLight = GetPointToLight(point);
             if (pointToLight * geometry.GetNormal(point) < 0)
                 return false;
 

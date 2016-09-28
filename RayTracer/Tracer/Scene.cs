@@ -24,7 +24,7 @@ namespace RayTracer.Tracer
         private List<Light> lights = new List<Light>();
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
-        private Mat material;
+        private Material.Mat material;
         public Container Bvh;
 
         public Scene()
@@ -32,7 +32,7 @@ namespace RayTracer.Tracer
             Size = new Size();
             maxDepth = 5;
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
-            material = new Mat();
+            material = new Material.Mat();
             ambient = new MyColor(.2f, .2f, .2f);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
@@ -126,13 +126,13 @@ namespace RayTracer.Tracer
                     transforms.RemoveFirst();
                     break;
                 case "translate":
-                    transforms.First().Matrix = MyMat.Mult44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
+                    transforms.First().Matrix = Common.Mattrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
                     break;
                 case "scale":
-                    transforms.First().Matrix = MyMat.Mult44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
+                    transforms.First().Matrix = Common.Mattrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
                     break;
                 case "rotate":
-                    transforms.First().Matrix = MyMat.Mult44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
+                    transforms.First().Matrix = Common.Mattrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
                     break;
 
                 //material

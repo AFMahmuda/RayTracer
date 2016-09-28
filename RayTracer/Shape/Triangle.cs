@@ -14,10 +14,10 @@ namespace RayTracer.Shape
 
 
         //precalculated vals
-        private Vector3 localNorm;
+        private Vec3 localNorm;
 
-        private Vector3 ab;
-        private Vector3 ac;
+        private Vec3 ab;
+        private Vec3 ac;
 
         private float dot_ab_ab;
         private float dot_ab_ac;
@@ -41,11 +41,11 @@ namespace RayTracer.Shape
         {
 
             //for IsInsideTriangle
-            ab = new Vector3(a, b);
-            ac = new Vector3(a, c);
+            ab = new Vec3(a, b);
+            ac = new Vec3(a, c);
 
             //for IsIntersect
-            localNorm = Vector3.Cross(ac, ab).Normalize();
+            localNorm = Vec3.Cross(ac, ab).Normalize();
 
             dot_ab_ab = ab * ab;
             dot_ab_ac = ab * ac;
@@ -63,8 +63,8 @@ namespace RayTracer.Shape
             relative to ray direction
             */
             float distanceToPlane = (
-                 (new Vector3(a) * localNorm) -
-                 (new Vector3(ray.Start) * localNorm))
+                 (new Vec3(a) * localNorm) -
+                 (new Vec3(ray.Start) * localNorm))
                 / (ray.Direction * localNorm);
             /*
             dist < 0 = behind cam
@@ -73,7 +73,7 @@ namespace RayTracer.Shape
                 if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
                     if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane).Point))
                     {
-                        ray.IntersectDistance = MyMat.Mul44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
+                        ray.IntersectDistance = Mattrix.Mul44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
                         return true;
                     }
             return false;
@@ -83,7 +83,7 @@ namespace RayTracer.Shape
 
         bool IsInsideTriangle(Point3 point)
         {
-            Vector3 ap = new Vector3(point - a);
+            Vec3 ap = new Vec3(point - a);
 
             dot_ab_ap = ab * ap;
             dot_ac_ap = ac * ap;
@@ -95,15 +95,15 @@ namespace RayTracer.Shape
         }
 
 
-        public override Vector3 GetNormal(Point3 point)
+        public override Vec3 GetNormal(Point3 point)
         {
-            return MyMat.Mul44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
+            return Mattrix.Mul44x41(Trans.Matrix.Inverse, localNorm, 0).Normalize();
         }
 
         public override void UpdatePos()
         {
-            Vector3 temp = new Vector3(a + b + c) * (.33f);
-            pos = MyMat.Mul44x41(Trans.Matrix, temp, 1).Point;
+            Vec3 temp = new Vec3(a + b + c) * (.33f);
+            pos = Mattrix.Mul44x41(Trans.Matrix, temp, 1).Point;
             pos.X /= (10) + .5f;
             pos.Y /= (10) + .5f;
             pos.Z /= (10) + .5f;

@@ -1,31 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="RayTracer.BVH.BVHBuilder">
-    <Position X="1.5" Y="0.5" Width="1.5" />
+  <Class Name="RayTracer.BVH.BVHManager">
+    <Position X="1.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>BVH\BVHBuilder.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.BVH.SphereContainer">
-    <Position X="7.25" Y="2.75" Width="1.5" />
+    <Position X="5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAAAAACAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAgAAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>BVH\SphereContainer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.BVH.Container">
-    <Position X="5" Y="0.5" Width="1.5" />
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="RayTracer.BVH.Container.TYPE">
+        <TypeIdentifier>
+          <NewMemberFileName>BVH\Container.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAgACAQAAAAAIAAAAAAAAAAAAAAAE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAIBAgACAQAAAAAAAAAAAAQAAAAAAAAE=</HashCode>
       <FileName>BVH\Container.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayTracer.BVH.BoxContainer">
-    <Position X="4.5" Y="3.25" Width="1.5" />
+    <Position X="6.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAQAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>BVH\BoxContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.BVH.ContainerFactory">
+    <Position X="1.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>BVH\ContainerFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

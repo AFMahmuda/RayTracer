@@ -106,15 +106,6 @@ namespace RayTracer.Tracer
 
         }
 
-        void showTree(Container bin, int level = 1)
-        {
-            Console.Write("lv : " + level + " ");
-            ((SphereContainer)bin).ShowInformation();
-            foreach (Container item in bin.Childs)
-            {
-                showTree(item, level + 1);
-            }
-        }
 
         void TraceThread(Bitmap result, Scene scene, int rowStart, int colStart, int rowEnd, int colEnd)
         {
@@ -129,7 +120,7 @@ namespace RayTracer.Tracer
                     Ray ray = new Ray();
                     Point3 pixPosition = ViewPlane.Instance.GetNewLocation(currCol, currRow);
                     ray.Start = Camera.Instance.Position;
-                    ray.Direction = new Vector3(ray.Start, pixPosition).Normalize();
+                    ray.Direction = new Vec3(ray.Start, pixPosition).Normalize();
 
                     ray.Trace(scene, scene.Bvh);
                     MyColor rayColor = ray.GetColor(scene, scene.MaxDepth);

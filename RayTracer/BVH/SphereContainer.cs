@@ -27,9 +27,9 @@ namespace RayTracer.BVH
             else //if (item.GetType() == typeof(Triangle))
             {
                 Triangle tri = (Triangle)item;
-                Vector3 ab = new Vector3(tri.a, tri.b);
-                Vector3 bc = new Vector3(tri.b, tri.c);
-                Vector3 ac = new Vector3(tri.a, tri.c);
+                Vec3 ab = new Vec3(tri.a, tri.b);
+                Vec3 bc = new Vec3(tri.b, tri.c);
+                Vec3 ac = new Vec3(tri.a, tri.c);
 
                 float d = 2 * ((ab * ab) * (ac * ac) - (ab * ac) * (ab * ac));
                 Point3 reference = tri.a;
@@ -49,11 +49,11 @@ namespace RayTracer.BVH
                     reference = tri.b;
                 }
                 else center = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
-                radius = (float)Math.Sqrt(new Vector3(reference, tri.c) * new Vector3(reference, tri.c));
+                radius = (float)Math.Sqrt(new Vec3(reference, tri.c) * new Vec3(reference, tri.c));
             }
 
-            center = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(center), 1).Point;
-            radius = MyMat.Mul44x41(item.Trans.Matrix, new Vector3(radius, 0, 0), 0).Magnitude;
+            center = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(center), 1).Point;
+            radius = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(radius, 0, 0), 0).Magnitude;
         }
 
         public SphereContainer(SphereContainer a, SphereContainer b)
@@ -62,7 +62,7 @@ namespace RayTracer.BVH
             childs.Add(a);
             childs.Add(b);
 
-            Vector3 aToB = new Vector3(a.center, b.center);
+            Vec3 aToB = new Vec3(a.center, b.center);
             float aToBLength = aToB.Magnitude;
 
             if (aToB.Magnitude == 0)
@@ -90,7 +90,7 @@ namespace RayTracer.BVH
         public override bool IsIntersecting(Ray ray)
         {
 
-            Vector3 rayToSphere = new Vector3(ray.Start, center);
+            Vec3 rayToSphere = new Vec3(ray.Start, center);
 
             float a = ray.Direction * ray.Direction;
             float b = -2 * (rayToSphere * ray.Direction);
@@ -98,11 +98,6 @@ namespace RayTracer.BVH
             float dd = (b * b) - (4 * a * c);
 
             return (dd > 0);
-        }
-
-        internal void ShowInformation()
-        {
-            Console.WriteLine("pos : " + center.X + " , " + center.Y + " , " + center.Z + " rad : " + radius);
         }
     }
 }

@@ -13,26 +13,26 @@ namespace RayTracer.Lighting
     {
 
 
-        public DirectionalLight(Vector3 direction, MyColor color)
+        public DirectionalLight(Vec3 direction, MyColor color)
         {
             Direction = direction.Normalize();
             Color = color;
 
         }
         public DirectionalLight(float[] param)
-            : this(new Vector3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
+            : this(new Vec3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
         {
         }
 
-        public Vector3 Direction
+        public Vec3 Direction
         {
             get;
             set;
         }
 
-        public override Vector3 GetPointToLight(Point3 point)
+        public override Vec3 GetPointToLight(Point3 point)
         {
-            return new Vector3(Direction.Point * -1);
+            return new Vec3(Direction.Point * -1);
         }
 
         public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)

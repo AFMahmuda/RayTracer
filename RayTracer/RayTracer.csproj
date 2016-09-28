@@ -74,13 +74,14 @@
     <Compile Include="Shape\Sphere.cs" />
     <Compile Include="Transform\Transform.cs" />
     <Compile Include="Shape\Triangle.cs" />
-    <Compile Include="Common\Vector3.cs" />
+    <Compile Include="Common\Vec3.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Tracer\ViewPlane.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="BVH\CD_BVH.cd" />
+    <None Include="Common\CD_Types.cd" />
     <None Include="Shape\CD_Shape.cd" />
     <None Include="Tracer\CD_Tracer.cd" />
     <None Include="Transform\CD_Transform.cd" />

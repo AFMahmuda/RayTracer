@@ -35,7 +35,7 @@ namespace RayTracer.Shape
         {
 
 
-            Vector3 rayToSphere = new Vector3(ray.Start, center);
+            Vec3 rayToSphere = new Vec3(ray.Start, center);
 
             //sphere is behind ray
             if (rayToSphere * ray.Direction <= 0)
@@ -60,7 +60,7 @@ namespace RayTracer.Shape
                 distance = (res1 * res2 < 0) ? Math.Max(res1, res2) : Math.Min(res1, res2);
                 if (ray.IsSmallerThanCurrent(distance, Trans))
                 {
-                    ray.IntersectDistance = MyMat.Mul44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;
+                    ray.IntersectDistance = Mattrix.Mul44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;
                     return true;
                 }
             }
@@ -69,16 +69,16 @@ namespace RayTracer.Shape
 
         }
 
-        public override Vector3 GetNormal(Point3 point)
+        public override Vec3 GetNormal(Point3 point)
         {
-            point = MyMat.Mul44x41(Trans.Matrix.Inverse, new Vector3(point), 1).Point;
-            Vector3 norm = new Vector3(center, point).Normalize();
+            point = Mattrix.Mul44x41(Trans.Matrix.Inverse, new Vec3(point), 1).Point;
+            Vec3 norm = new Vec3(center, point).Normalize();
             return norm;
         }
 
         public override void UpdatePos()
         {
-            pos = MyMat.Mul44x41(Trans.Matrix, new Vector3(center), 1).Point;
+            pos = Mattrix.Mul44x41(Trans.Matrix, new Vec3(center), 1).Point;
 
             // todo : think a way to normalize position with ??? range
             pos.X /= (10f) + .5f;

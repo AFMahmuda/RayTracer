@@ -19,7 +19,7 @@ namespace RayTracer.Transformation
 
         public Rotation(Point3 values, float angle)
         {
-            Matrix = new MyMat(4, 4);
+            Matrix = new Mattrix(4, 4);
 
             float rad = (angle) * (float) Math.PI / 180.0f;
 

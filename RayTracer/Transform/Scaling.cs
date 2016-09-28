@@ -18,7 +18,7 @@ namespace RayTracer.Transformation
 
         public Scaling(Point3 values)
         {
-            Matrix = new MyMat(4, 4);
+            Matrix = new Mattrix(4, 4);
 
             Matrix.SetValue(0, 0, values.X);
             Matrix.SetValue(1, 1, values.Y);

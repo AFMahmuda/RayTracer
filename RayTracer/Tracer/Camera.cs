@@ -12,30 +12,30 @@ namespace RayTracer.Tracer
         public static Camera Instance;
 
         public Camera()
-            : this(Point3.ZERO, Point3.ZERO, Vector3.UP, 30f)
+            : this(Point3.ZERO, Point3.ZERO, Vec3.UP, 30f)
         { }
 
         public Camera(float[] parameter)
             : this(
             new Point3(parameter[0], parameter[1], parameter[2]), //position point
             new Point3(parameter[3], parameter[4], parameter[5]), //look at point
-            new Vector3(parameter[6], parameter[7], parameter[8]), // up dir
+            new Vec3(parameter[6], parameter[7], parameter[8]), // up dir
             parameter[9] // field of view
             )
         { }
 
 
 
-        public Camera(Point3 position, Point3 lookAt, Vector3 up, float fov)
+        public Camera(Point3 position, Point3 lookAt, Vec3 up, float fov)
         {
             this.Position = position;
             this.LookAt = lookAt;
             this.Up = up;
             FieldOfView = fov;
 
-            W = (new Vector3(LookAt - Position)).Normalize();
-            U = Vector3.Cross(Up, W).Normalize();
-            V = Vector3.Cross(W, U);
+            W = (new Vec3(LookAt - Position)).Normalize();
+            U = Vec3.Cross(Up, W).Normalize();
+            V = Vec3.Cross(W, U);
 
             Instance = this;
         }
@@ -68,24 +68,24 @@ namespace RayTracer.Tracer
 
 
 
-        private Vector3 u;
+        private Vec3 u;
 
 
-        public Vector3 U
+        public Vec3 U
         {
             get { return u; }
             set { u = value; }
         }
 
-        private Vector3 v;
-        public Vector3 V
+        private Vec3 v;
+        public Vec3 V
         {
             get { return v; }
             set { v = value; }
         }
-        private Vector3 w;
+        private Vec3 w;
 
-        public Vector3 W
+        public Vec3 W
         {
             get { return w; }
             set { w = value; }
@@ -109,8 +109,8 @@ namespace RayTracer.Tracer
                     fieldOfView = value;
             }
         }
-        private Vector3 up;
-        public Vector3 Up
+        private Vec3 up;
+        public Vec3 Up
         {
             get { return up; }
             set { up = value; }
