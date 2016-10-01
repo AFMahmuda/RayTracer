@@ -1,7 +1,10 @@
 ﻿using RayTracer.Algorithm;
 using RayTracer.Shape;
 using RayTracer.Tracer;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RayTracer.BVH
 {
@@ -18,7 +21,7 @@ namespace RayTracer.BVH
             foreach (var item in scene.Geometries)
                 temp.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
 
-            //temp = BuildTree(scene.Geometries);
+            //            temp = BuildTree(scene.Geometries);
 
             temp = CombineCluster(temp, 1);
             scene.Bvh = temp[0];
@@ -40,6 +43,7 @@ namespace RayTracer.BVH
             int pivot = getPivot(primitives);
             List<Geometry> left = primitives.GetRange(0, pivot); // pivot included in left
             List<Geometry> right = primitives.GetRange(pivot + 1, primitives.Count - pivot);
+
             bins.AddRange(BuildTree(left));
             bins.AddRange(BuildTree(right));
 
@@ -55,6 +59,18 @@ namespace RayTracer.BVH
         //list partition function
         int getPivot(List<Geometry> primitives)
         {
+
+
+            for (int i = 0; i < 30; i++)
+            {
+                for (int j = 1; j < primitives.Count; j++)
+                {
+                    BitArray last = primitives[j].mortonBit;
+                    BitArray curr = primitives[j - 1].mortonBit;
+                    if (last[i] != curr[i])
+                        return j;
+                }
+            }
             return primitives.Count / 2;
         }
 
@@ -68,8 +84,8 @@ namespace RayTracer.BVH
             while (bins.Count > n)
             {
                 float bestDist = float.MaxValue;
-                Container left =null;
-                Container right =null;
+                Container left = null;
+                Container right = null;
 
                 foreach (Container item in bins)
                 {
