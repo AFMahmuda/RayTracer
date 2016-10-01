@@ -30,8 +30,23 @@ namespace RayTracer.BVH
                 max.X += sphere.radius;
                 max.Y += sphere.radius;
                 max.Z -= sphere.radius;
+
+
                 min = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(min), 1).Point;
                 max = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(max), 1).Point;
+                //Point3 newMin = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(min), 1).Point;
+                //Point3 newMax = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(max), 1).Point;
+
+                //min.X = Math.Min(min.X, Math.Min(newMin.X, newMax.X));
+                //min.Y = Math.Min(min.Y, Math.Min(newMin.Y, newMax.Y));
+                //min.Z = Math.Max(min.Z, Math.Min(newMin.Z, newMax.Z));
+
+                //max.X = Math.Max(max.X, Math.Min(newMax.X, newMax.X));
+                //max.Y = Math.Max(max.Y, Math.Min(newMax.Y, newMax.Y));
+                //max.Z = Math.Min(max.Z, Math.Min(newMax.Z, newMax.Z));
+
+                //TO DO : transformation for sphere in box bin
+
             }
 
             else //if (item.GetType() == typeof(Triangle))
