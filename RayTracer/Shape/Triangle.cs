@@ -104,9 +104,9 @@ namespace RayTracer.Shape
         {
             Vec3 temp = new Vec3(a + b + c) * (.33f);
             pos = Mattrix.Mul44x41(Trans.Matrix, temp, 1).Point;
-            pos.X /= (10) + .5f;
-            pos.Y /= (10) + .5f;
-            pos.Z /= (10) + .5f;
+            pos.X = pos.X / 100f + .5f;
+            pos.Y = pos.Y / 100f + .5f;
+            pos.Z = pos.Z / 100f + .5f;
         }
     }
 }

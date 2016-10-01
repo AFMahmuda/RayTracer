@@ -81,9 +81,9 @@ namespace RayTracer.Shape
             pos = Mattrix.Mul44x41(Trans.Matrix, new Vec3(center), 1).Point;
 
             // todo : think a way to normalize position with ??? range
-            pos.X /= (10f) + .5f;
-            pos.Y /= (10f) + .5f;
-            pos.Z /= (10f) + .5f;
+            pos.X = pos.X / 100f + .5f;
+            pos.Y = pos.Y / 100f + .5f;
+            pos.Z = pos.Z / 100f + .5f;
         }
     }
 }
