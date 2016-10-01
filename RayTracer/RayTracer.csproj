@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithm\Clustering.cs" />
     <Compile Include="Algorithm\RadixSort.cs" />
     <Compile Include="BVH\BoxContainer.cs" />
     <Compile Include="BVH\BVHBuilder.cs" />

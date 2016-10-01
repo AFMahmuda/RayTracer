@@ -10,50 +10,92 @@ namespace RayTracer.BVH
         public void BuildBVH(Scene scene)
         {
             foreach (Geometry item in scene.Geometries)
-            {
                 item.GetMortonPos();
-            }
 
             scene.Geometries = RadixSort.Sort(scene.Geometries);
 
             List<Container> temp = new List<Container>();
-
-            ContainerFactory conFac = new ContainerFactory();
-
             foreach (var item in scene.Geometries)
-            {
-                temp.Add(conFac.CreateContainer(item,Container.TYPE.BOX));
-            }
+                temp.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
 
-            while (temp.Count > 1)
-            {
-                float[,] area = new float[temp.Count, temp.Count];
-                int small_I = -1;
-                int small_J = -1;
-                Container small_C = null;
-                float smallestVal = float.MaxValue;
-                for (int i = 0; i < temp.Count; i++)
-                {
-                    for (int j = i + 1; j < temp.Count; j++)
-                    {
-                        Container tempCon = conFac.CombineContainer(temp[i], temp[j]);
-                        area[i, j] = tempCon.area;
-                        if (area[i, j] < smallestVal)
-                        {
-                            smallestVal = area[i, j];
-                            small_I = i;
-                            small_J = j;
-                            small_C = tempCon;
-                        }
-                    }
-                }
-                Container delI = temp[small_I];
-                Container delJ = temp[small_J];
-                temp.Add(small_C);
-                temp.Remove(delI);
-                temp.Remove(delJ);
-            }
+            //temp = BuildTree(scene.Geometries);
+
+            temp = CombineCluster(temp, 1);
             scene.Bvh = temp[0];
         }
+
+
+        int threshold = 4; //4 or 20
+        List<Container> BuildTree(List<Geometry> primitives)
+        {
+            List<Container> bins = new List<Container>();
+            if (primitives.Count > threshold)
+            {
+                foreach (Geometry item in primitives)
+                    bins.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
+                return CombineCluster(bins, f(threshold));
+            }
+
+
+            int pivot = getPivot(primitives);
+            List<Geometry> left = primitives.GetRange(0, pivot); // pivot included in left
+            List<Geometry> right = primitives.GetRange(pivot + 1, primitives.Count - pivot);
+            bins.AddRange(BuildTree(left));
+            bins.AddRange(BuildTree(right));
+
+            return CombineCluster(bins, f(primitives.Count));
+        }
+
+        //cluster reduction function
+        int f(int n)
+        {
+            return n / 2;
+        }
+
+        //list partition function
+        int getPivot(List<Geometry> primitives)
+        {
+            return primitives.Count / 2;
+        }
+
+        List<Container> CombineCluster(List<Container> bins, int n)
+        {
+            foreach (Container item in bins)
+            {
+                item.FindBestMatch(bins);
+            }
+
+            while (bins.Count > n)
+            {
+                float bestDist = float.MaxValue;
+                Container left =null;
+                Container right =null;
+
+                foreach (Container item in bins)
+                {
+                    if (item.areaWithClosest < bestDist)
+                    {
+                        bestDist = item.areaWithClosest;
+                        left = item;
+                        right = item.closest;
+                    }
+                }
+
+                Container newBin = ContainerFactory.Instance.CombineContainer(left, right);
+                bins.Remove(left);
+                bins.Remove(right);
+                bins.Add(newBin);
+
+                newBin.FindBestMatch(bins);
+                foreach (Container item in bins)
+                {
+                    if (item.closest == left || item.closest == right)
+                        item.FindBestMatch(bins);
+                }
+            }
+            return bins;
+        }
     }
+
+
 }

@@ -26,5 +26,30 @@ namespace RayTracer.BVH
         public abstract bool IsIntersecting(Ray ray);
         public Geometry Geo { get { return geo; } }
         public List<Container> Childs { get { return childs; } }
+
+        public float areaWithClosest = float.MaxValue;
+        public Container closest = null;
+
+        public void FindBestMatch(List<Container> bins)
+        {
+            float bestDist = float.MaxValue;
+            Container bestmatch = null;
+            foreach (Container item in bins)
+            {
+                if (item == this)
+                    continue;
+                Container newBin = ContainerFactory.Instance.CombineContainer(this, item);
+                if (newBin.area < bestDist)
+                {
+                    bestDist = newBin.area;
+                    bestmatch = item;
+                }
+            }
+            closest = bestmatch;
+            areaWithClosest = bestDist;
+        }
+
     }
+
+
 }

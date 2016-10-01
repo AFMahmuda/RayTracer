@@ -10,11 +10,11 @@ namespace RayTracer.Algorithm
     class RadixSort
     {
         //TaskCompletionSource : https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Radix_sort
-        public static List<Geometry> Sort(List<Geometry> a)
+        public static List<Geometry> Sort(List<Geometry> items)
         {
 
             // our helper array 
-            Geometry[] t = new Geometry[a.Count];
+            Geometry[] t = new Geometry[items.Count];
 
             // number of bits our group will be long 
             int r = 8; // try to set this also to 2, 8 or 16 to see if it is quicker or not 
@@ -41,8 +41,8 @@ namespace RayTracer.Algorithm
                     count[j] = 0;
 
                 // counting elements of the c-th group 
-                for (int i = 0; i < a.Count; i++)
-                    count[(a[i].GetMortonPos() >> shift) & mask]++;
+                for (int i = 0; i < items.Count; i++)
+                    count[(items[i].GetMortonPos() >> shift) & mask]++;
 
                 // calculating prefixes 
                 pref[0] = 0;
@@ -50,14 +50,14 @@ namespace RayTracer.Algorithm
                     pref[i] = pref[i - 1] + count[i - 1];
 
                 // from a[] to t[] elements ordered by c-th group 
-                for (int i = 0; i < a.Count; i++)
-                    t[pref[(a[i].GetMortonPos() >> shift) & mask]++] = a[i];
+                for (int i = 0; i < items.Count; i++)
+                    t[pref[(items[i].GetMortonPos() >> shift) & mask]++] = items[i];
 
                 // a[]=t[] and start again until the last group 
-                a = t.ToList();
+                items = t.ToList();
             }
             // a is sorted 
-            return a;
+            return items;
         }
     }
 }

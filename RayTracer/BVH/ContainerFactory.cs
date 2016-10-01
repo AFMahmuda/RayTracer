@@ -9,12 +9,24 @@ namespace RayTracer.BVH
 {
     public class ContainerFactory
     {
-        public ContainerFactory()
+        static ContainerFactory instance = null;
+        public static ContainerFactory Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new ContainerFactory();
+                return instance;
+            }
+
+        }
+
+        ContainerFactory()
         {
 
         }
 
-        public Container CreateContainer(Geometry geo, Container.TYPE type=Container.TYPE.BOX)
+        public Container CreateContainer(Geometry geo, Container.TYPE type = Container.TYPE.BOX)
         {
             if (type == Container.TYPE.SPHERE)
                 return new SphereContainer(geo);
@@ -31,6 +43,8 @@ namespace RayTracer.BVH
             else //if (a.Type == Container.TYPE.BOX)
                 return new BoxContainer((BoxContainer)a, (BoxContainer)b);
         }
+
+        
 
     }
 }
