@@ -22,7 +22,6 @@ namespace RayTracer.BVH
             //    temp.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
 
             temp = BuildTree(scene.Geometries);
-
             temp = CombineCluster(temp, 1);
             scene.Bvh = temp[0];
         }
@@ -41,8 +40,8 @@ namespace RayTracer.BVH
 
 
             int pivot = getPivot(primitives);
-            List<Geometry> left = primitives.GetRange(0, pivot); // pivot included in left
-            List<Geometry> right = primitives.GetRange(pivot, primitives.Count - pivot);
+            List<Geometry> left = primitives.GetRange(0, pivot); 
+            List<Geometry> right = primitives.GetRange(pivot, primitives.Count - pivot); // pivot included in right
 
             bins.AddRange(BuildTree(left));
             bins.AddRange(BuildTree(right));

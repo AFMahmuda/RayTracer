@@ -2,6 +2,7 @@
 using RayTracer.Common;
 using RayTracer.Shape;
 using RayTracer.Tracer;
+using System.Collections.Generic;
 
 namespace RayTracer.BVH
 {
@@ -9,8 +10,8 @@ namespace RayTracer.BVH
     public class BoxContainer : Container
     {
 
-        private Point3 min;
-        private Point3 max;
+        private Point3 min = new Point3(float.MaxValue, float.MaxValue, float.MinValue);
+        private Point3 max = new Point3(float.MinValue, float.MinValue, float.MaxValue);
 
         public BoxContainer(Geometry item)
         {
@@ -32,20 +33,22 @@ namespace RayTracer.BVH
                 max.Z -= sphere.radius;
 
 
-                min = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(min), 1).Point;
-                max = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(max), 1).Point;
-                //Point3 newMin = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(min), 1).Point;
-                //Point3 newMax = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(max), 1).Point;
 
-                //min.X = Math.Min(min.X, Math.Min(newMin.X, newMax.X));
-                //min.Y = Math.Min(min.Y, Math.Min(newMin.Y, newMax.Y));
-                //min.Z = Math.Max(min.Z, Math.Min(newMin.Z, newMax.Z));
+                Point3[] p = new Point3[8];
 
-                //max.X = Math.Max(max.X, Math.Min(newMax.X, newMax.X));
-                //max.Y = Math.Max(max.Y, Math.Min(newMax.Y, newMax.Y));
-                //max.Z = Math.Min(max.Z, Math.Min(newMax.Z, newMax.Z));
+                p[0] = (new Point3(min.X, min.Y, min.Z));
+                p[1] = (new Point3(min.X, min.Y, max.Z));
+                p[2] = (new Point3(min.X, max.Y, min.Z));
+                p[3] = (new Point3(min.X, max.Y, max.Z));
+                p[4] = (new Point3(max.X, min.Y, min.Z));
+                p[5] = (new Point3(max.X, min.Y, max.Z));
+                p[6] = (new Point3(max.X, max.Y, min.Z));
+                p[7] = (new Point3(max.X, max.Y, max.Z));
 
-                //TO DO : transformation for sphere in box bin
+                for (int i = 0; i < p.Length; i++)
+                    p[i] = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1).Point;
+
+                SetMinMax(p);
 
             }
 
@@ -57,15 +60,7 @@ namespace RayTracer.BVH
                 Point3 b = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.b), 1).Point;
                 Point3 c = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.c), 1).Point;
 
-                min = new Point3();
-                min.X = Math.Min(a.X, Math.Min(b.X, c.X));
-                min.Y = Math.Min(a.Y, Math.Min(b.Y, c.Y));
-                min.Z = Math.Max(a.Z, Math.Max(b.Z, c.Z));
-
-                max = new Point3();
-                max.X = Math.Max(a.X, Math.Max(b.X, c.X));
-                max.Y = Math.Max(a.Y, Math.Max(b.Y, c.Y));
-                max.Z = Math.Min(a.Z, Math.Min(b.Z, c.Z));
+                SetMinMax(new Point3[] { a, b, c });
             }
         }
 
@@ -84,7 +79,6 @@ namespace RayTracer.BVH
             max.X = Math.Max(a.max.X, b.max.X);
             max.Y = Math.Max(a.max.Y, b.max.Y);
             max.Z = Math.Min(a.max.Z, b.max.Z);
-
             Point3 size = max - min;
 
             area = 2f * (size.X * size.Y + size.X * (size.Z * -1) + size.X * (size.Z * -1));
@@ -125,5 +119,18 @@ namespace RayTracer.BVH
 
         }
 
+        void SetMinMax(Point3[] points)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                min.X = Math.Min(min.X, points[i].X);
+                min.Y = Math.Min(min.Y, points[i].Y);
+                min.Z = Math.Max(min.Z, points[i].Z);
+
+                max.X = Math.Max(max.X, points[i].X);
+                max.Y = Math.Max(max.Y, points[i].Y);
+                max.Z = Math.Min(max.Z, points[i].Z);
+            }
+        }
     }
 }
