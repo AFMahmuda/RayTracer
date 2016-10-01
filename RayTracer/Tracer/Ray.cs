@@ -111,7 +111,7 @@ namespace RayTracer.Tracer
                 Vec3 pointToLight = light.GetPointToLight(HitPointMinus);
                 Vec3 halfAngleToLight = ((Direction * -1.0f) + pointToLight).Normalize();
 
-                Material.Mat material = IntersectWith.Material;
+                Mat material = IntersectWith.Material;
 
                 float attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
 
@@ -143,9 +143,10 @@ namespace RayTracer.Tracer
         {
             if (Type != TYPE.REFRACTION)
             {
-                Vec3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0f * (Direction * IntersectWith.GetNormal(HitPointMinus)));
+//                Vec3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0f * (Direction * IntersectWith.GetNormal(RealHitPoint)));
+                Vec3 rreflectDir = Direction + (IntersectWith.GetNormal(RealHitPoint) * 2.0f * -(IntersectWith.GetNormal(RealHitPoint)* Direction ));
                 Ray reflectRay = new Ray(HitPointMinus, rreflectDir);
-                //reflectRay.Type = TYPE.REFLECTION;
+                reflectRay.Type = TYPE.REFLECTION;
                 reflectRay.Trace(scene, scene.Bvh);
                 return IntersectWith.Material.Specular * reflectRay.GetColor(scene,bounce);
             }

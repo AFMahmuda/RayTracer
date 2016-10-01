@@ -32,7 +32,7 @@ namespace RayTracer.BVH
         List<Container> BuildTree(List<Geometry> primitives)
         {
             List<Container> bins = new List<Container>();
-            if (primitives.Count > threshold)
+            if (primitives.Count < threshold)
             {
                 foreach (Geometry item in primitives)
                     bins.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
@@ -42,7 +42,7 @@ namespace RayTracer.BVH
 
             int pivot = getPivot(primitives);
             List<Geometry> left = primitives.GetRange(0, pivot); // pivot included in left
-            List<Geometry> right = primitives.GetRange(pivot + 1, primitives.Count - pivot);
+            List<Geometry> right = primitives.GetRange(pivot, primitives.Count - pivot);
 
             bins.AddRange(BuildTree(left));
             bins.AddRange(BuildTree(right));
