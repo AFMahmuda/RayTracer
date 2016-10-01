@@ -18,10 +18,10 @@ namespace RayTracer.BVH
             scene.Geometries = RadixSort.Sort(scene.Geometries);
 
             List<Container> temp = new List<Container>();
-            foreach (var item in scene.Geometries)
-                temp.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
+            //foreach (var item in scene.Geometries)
+            //    temp.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
 
-            //            temp = BuildTree(scene.Geometries);
+            temp = BuildTree(scene.Geometries);
 
             temp = CombineCluster(temp, 1);
             scene.Bvh = temp[0];
