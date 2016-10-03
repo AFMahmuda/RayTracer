@@ -1,5 +1,4 @@
 ﻿using RayTracer.Common;
-using RayTracer.Shape;
 using System;
 
 namespace RayTracer.Tracer
@@ -38,7 +37,7 @@ namespace RayTracer.Tracer
 
 
             worldHeight = 2.0f * (float)Math.Tan((Camera.Instance.FieldOfView / 2f) * (float)Math.PI / 180.0f);
-            worldWidth = worldHeight * (float)((float)pixelWidth / (float)PixelHeight);
+            worldWidth = worldHeight * (pixelWidth / (float)PixelHeight);
 
             PreCalculate();
 
@@ -76,16 +75,14 @@ namespace RayTracer.Tracer
             return newLocation;
         }
 
-        public Point3 GetNewLocation(int col, int row, float col2, float row2)
+        public Point3 GetNewLocation(int col, int row, float colOffset, float rowOffset)
         {
-
             Point3 newLocation =
                 upperLeft
-                + unitRight * (col + .5f + col2)
-                + unitDown * (row + .5f + row2);
+                + unitRight * (col + .5f + colOffset)
+                + unitDown * (row + .5f + rowOffset);
             return newLocation;
         }
-
 
         public void ShowInformation()
         {

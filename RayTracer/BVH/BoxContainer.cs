@@ -2,7 +2,6 @@
 using RayTracer.Common;
 using RayTracer.Shape;
 using RayTracer.Tracer;
-using System.Collections.Generic;
 
 namespace RayTracer.BVH
 {
@@ -32,6 +31,12 @@ namespace RayTracer.BVH
                 max.Y += sphere.radius;
                 max.Z += sphere.radius;
 
+                for (int i = 0; i < 3; i++)
+                {
+                    min.Vals[i] -= sphere.radius;
+                    max.Vals[i] += sphere.radius;
+                }
+
                 Point3[] p = new Point3[8];
 
                 p[0] = (new Point3(min.X, min.Y, min.Z));
@@ -42,12 +47,6 @@ namespace RayTracer.BVH
                 p[5] = (new Point3(max.X, min.Y, max.Z));
                 p[6] = (new Point3(max.X, max.Y, min.Z));
                 p[7] = (new Point3(max.X, max.Y, max.Z));
-
-
-                //Point3[] p = new Point3[2];
-
-                //p[0] = (new Point3(min.X, min.Y, min.Z));
-                //p[1] = (new Point3(max.X, max.Y, max.Z));
 
                 for (int i = 0; i < p.Length; i++)
                     p[i] = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1).Point;
@@ -80,16 +79,6 @@ namespace RayTracer.BVH
                 min.Vals[i] = Math.Min(a.min.Vals[i], b.min.Vals[i]);
                 max.Vals[i] = Math.Max(a.max.Vals[i], b.max.Vals[i]);
             }
-            //min = new Point3();
-            //min.X = Math.Min(a.min.X, b.min.X);
-            //min.Y = Math.Min(a.min.Y, b.min.Y);
-            //min.Z = Math.Min(a.min.Z, b.min.Z);
-
-            //max = new Point3();
-            //max.X = Math.Max(a.max.X, b.max.X);
-            //max.Y = Math.Max(a.max.Y, b.max.Y);
-            //max.Z = Math.Max(a.max.Z, b.max.Z);
-
             Point3 size = max - min;
 
             area = 2f * (size.X * size.Y + size.X * (size.Z) + size.Y * (size.Z));
@@ -100,47 +89,33 @@ namespace RayTracer.BVH
         {
             float tmin = float.MinValue, tmax = float.MaxValue;
 
-            if (ray.Direction.Point.X != 0.0)
+            for (int i = 0; i < 3; i++)
             {
-                float tx1 = (min.X - ray.Start.X) / ray.Direction.Point.X;
-                float tx2 = (max.X - ray.Start.X) / ray.Direction.Point.X;
+                if (ray.Direction.Point.Vals[i] != 0f)
+                {
+                    float invTemp = 1f / ray.Direction.Point.Vals[i];
+                    float tx1 = (min.Vals[i] - ray.Start.Vals[i]) * invTemp;
+                    float tx2 = (max.Vals[i] - ray.Start.Vals[i]) * invTemp;
 
-                tmin = Math.Max(tmin, Math.Min(tx1, tx2));
-                tmax = Math.Min(tmax, Math.Max(tx1, tx2));
+                    tmin = Math.Max(tmin, Math.Min(tx1, tx2));
+                    tmax = Math.Min(tmax, Math.Max(tx1, tx2));
+                }
             }
-            if (ray.Direction.Point.Y != 0.0)
-            {
-                float ty1 = (min.Y - ray.Start.Y) / ray.Direction.Point.Y;
-                float ty2 = (max.Y - ray.Start.Y) / ray.Direction.Point.Y;
-
-                tmin = Math.Max(tmin, Math.Min(ty1, ty2));
-                tmax = Math.Min(tmax, Math.Max(ty1, ty2));
-            }
-
-            if (ray.Direction.Point.Z != 0.0)
-            {
-                float tz1 = (min.Z - ray.Start.Z) / ray.Direction.Point.Z;
-                float tz2 = (max.Z - ray.Start.Z) / ray.Direction.Point.Z;
-
-                tmin = Math.Max(tmin, Math.Min(tz1, tz2));
-                tmax = Math.Min(tmax, Math.Max(tz1, tz2));
-            }
-
+            
             return tmax >= tmin;
 
         }
 
         void SetMinMax(Point3[] points)
         {
+            min = new Point3(float.MaxValue, float.MaxValue, float.MaxValue);
+            max = new Point3(float.MinValue, float.MinValue, float.MinValue);
             for (int i = 0; i < points.Length; i++)
-            {
-
                 for (int j = 0; j < 3; j++)
                 {
                     min.Vals[j] = Math.Min(min.Vals[j], points[i].Vals[j]);
                     max.Vals[j] = Math.Max(max.Vals[j], points[i].Vals[j]);
                 }
-            }
         }
     }
 }

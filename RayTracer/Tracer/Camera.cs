@@ -1,8 +1,5 @@
 ﻿using RayTracer.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RayTracer.Tracer
 {
@@ -28,9 +25,9 @@ namespace RayTracer.Tracer
 
         public Camera(Point3 position, Point3 lookAt, Vec3 up, float fov)
         {
-            this.Position = position;
-            this.LookAt = lookAt;
-            this.Up = up;
+            Position = position;
+            LookAt = lookAt;
+            Up = up;
             FieldOfView = fov;
 
             W = (new Vec3(LookAt - Position)).Normalize();
@@ -66,33 +63,17 @@ namespace RayTracer.Tracer
             Console.WriteLine("===================================================");
         }
 
-
-
-        private Vec3 u;
-
-
         public Vec3 U
-        {
-            get { return u; }
-            set { u = value; }
-        }
+        { get; set; }
 
-        private Vec3 v;
+
         public Vec3 V
-        {
-            get { return v; }
-            set { v = value; }
-        }
-        private Vec3 w;
+        { get; set; }
+
 
         public Vec3 W
-        {
-            get { return w; }
-            set { w = value; }
-        }
+        { get; set; }
 
-        private Point3 position;
-        private Point3 lookAt;
 
         private float fieldOfView;
 
@@ -109,24 +90,16 @@ namespace RayTracer.Tracer
                     fieldOfView = value;
             }
         }
-        private Vec3 up;
         public Vec3 Up
-        {
-            get { return up; }
-            set { up = value; }
-        }
+        { get; set; }
+
 
         public Point3 Position
-        {
-            get { return position; }
-            set { position = value; }
-        }
+        { get; set; }
+
 
         public Point3 LookAt
-        {
-            get { return lookAt; }
-            set { lookAt = value; }
-        }
+        { get; set; }
 
     }
 }

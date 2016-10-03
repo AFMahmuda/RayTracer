@@ -1,7 +1,6 @@
 ﻿using RayTracer.Common;
 using RayTracer.Shape;
 using RayTracer.Tracer;
-using RayTracer.Transformation;
 using System;
 
 namespace RayTracer.BVH

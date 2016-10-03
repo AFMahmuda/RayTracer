@@ -14,82 +14,92 @@ namespace RayTracer.Tracer
     public class TracerManager
     {
         //thread number
-        int tn = 6;
+        int tn = 4;
 
         public bool TraceScene(string sceneFile)
         {
-            DateTime start = DateTime.Now;
-            Console.WriteLine("Preparing Scene. Please Wait...");
 
-            //init scene[0] and copy to scene [1-(tn-1)]
-            Scene[] scene = InitScenes(sceneFile);
-            scene[0].ShowInformation();
+            //init scene[0] and copy to scene [1 to (tn-1)]
+            Scene[] scenes = initScene(sceneFile);
+            
+            BuildBVH(scenes);
 
-            Console.WriteLine("DONE! " + (DateTime.Now - start));
+            Bitmap[] results = Trace(scenes);
 
+            MergeAndSaveImage(results, scenes[0].OutputFilename);
+
+            return true;
+        }
+
+        Bitmap[] Trace(Scene[] scenes)
+        {
             Bitmap[] results = new Bitmap[tn];
             int h = ViewPlane.Instance.PixelHeight;
             int w = ViewPlane.Instance.PixelWidth;
-
             for (int i = 0; i < tn; i++)
                 results[i] = new Bitmap(w, h);
-            start = DateTime.Now;
-            Console.WriteLine("Tracing...Please Wait...\n");
-            for (int i = 0; i < tn*5; i++)
-            {
-                Console.Write("-");
-            }
+
+            DateTime start = DateTime.Now;
+            Console.WriteLine("Tracing...Please Wait...");
+            for (int i = 0; i < tn * 5; i++) Console.Write("-");
             Console.WriteLine();
 
             Task[] traceTask = new Task[tn];
-
             int vDiv = 2;
             int hDiv = tn / vDiv;
-
             int cnt = 0;
             for (int i = 0; i < vDiv; i++)
-            {
                 for (int j = 0; j < hDiv; j++)
                 {
-                    int ii = i;
-                    int jj = j;
-                    int n = cnt;
-
+                    int row = i, col = j, n = cnt;
                     traceTask[cnt] = Task.Factory.StartNew(() =>
-                        TraceThread(results[n], scene[n], ii * h / vDiv, jj * w / hDiv, (ii + 1) * h / vDiv, (jj + 1) * w / hDiv)
+                        TraceThread(results[n], scenes[n], row * h / vDiv, col * w / hDiv, (row + 1) * h / vDiv, (col + 1) * w / hDiv)
                     );
                     cnt++;
                 }
 
-            }
-
             Task.WaitAll(traceTask);
             Console.Write("\n");
-
-            MergeAndSaveImage(results, scene[0].OutputFilename);
-            Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + scene[0].OutputFilename + "\n");
-
-            Console.WriteLine("Finised in :" + (DateTime.Now - start));
-            return true;
+            Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
+            return results;
         }
 
         //init scene[0] and copy to scene [1-(tn-1)]
-        Scene[] InitScenes(string sceneFile)
+        Scene[] initScene(string sceneFile)
         {
-            Scene[] scene = new Scene[tn];
+            DateTime start = DateTime.Now;
+            Console.WriteLine("Preparing Scene. Please Wait...");
+
+            Scene[] scenes = new Scene[tn];
             Task[] sceneTask = new Task[tn - 1];
-            scene[0] = new Scene(sceneFile);
+            scenes[0] = new Scene(sceneFile);
 
             for (int i = 0; i < tn - 1; i++)
             {
                 int j = i;
-                sceneTask[i] = Task.Factory.StartNew(() => scene[j + 1] = Utils.DeepClone(scene[0]));
+                sceneTask[i] = Task.Factory.StartNew(() => scenes[j + 1] = Utils.DeepClone(scenes[0]));
             }
             Task.WaitAll(sceneTask);
-            return scene;
+            Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
+
+            scenes[0].ShowInformation();
+            return scenes;
         }
 
-
+        void BuildBVH(Scene[] scenes)
+        {
+            DateTime start = DateTime.Now;
+            Console.WriteLine("Building BVH. Please Wait...");
+            new BVHManager().BuildBVH(scenes[0]);
+            Task[] bvhThread = new Task[tn - 1];
+            for (int i = 0; i < tn - 1; i++)
+            {
+                int j = i;
+                bvhThread[i] = Task.Factory.StartNew(() => scenes[j + 1].Bvh = Utils.DeepClone(scenes[0].Bvh));
+            }
+            Task.WaitAll(bvhThread);
+            Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
+        }
 
         void MergeAndSaveImage(Bitmap[] result, string filename)
         {
@@ -103,14 +113,12 @@ namespace RayTracer.Tracer
             if (filename.Equals(""))
                 filename = "default.bmp";
             result[0].Save(filename);
-
+            Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename + "\n");
         }
 
 
         void TraceThread(Bitmap result, Scene scene, int rowStart, int colStart, int rowEnd, int colEnd)
         {
-            new BVHManager().BuildBVH(scene);
-
             float total = (colEnd - colStart) * (rowEnd - rowStart);
             float count = 0;
             for (int currRow = rowStart; currRow < rowEnd; currRow++)

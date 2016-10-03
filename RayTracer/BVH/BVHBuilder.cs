@@ -1,15 +1,23 @@
 ﻿using RayTracer.Algorithm;
 using RayTracer.Shape;
 using RayTracer.Tracer;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace RayTracer.BVH
 {
     class BVHManager
     {
+        bool isAAC;
+        Container.TYPE type;
+
+        public BVHManager(Container.TYPE _type = Container.TYPE.BOX, bool _isAAC = true)
+        {
+            type = _type;
+            isAAC = _isAAC;
+        }
+
+
         public void BuildBVH(Scene scene)
         {
             foreach (Geometry item in scene.Geometries)
@@ -18,10 +26,12 @@ namespace RayTracer.BVH
             scene.Geometries = RadixSort.Sort(scene.Geometries);
 
             List<Container> temp = new List<Container>();
-            //foreach (var item in scene.Geometries)
-            //    temp.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
+            if (!isAAC)
+                foreach (var item in scene.Geometries)
+                    temp.Add(ContainerFactory.Instance.CreateContainer(item, type));
+            else
+                temp = BuildTree(scene.Geometries);
 
-            temp = BuildTree(scene.Geometries);
             temp = CombineCluster(temp, 1);
             scene.Bvh = temp[0];
         }
@@ -34,13 +44,13 @@ namespace RayTracer.BVH
             if (primitives.Count < threshold)
             {
                 foreach (Geometry item in primitives)
-                    bins.Add(ContainerFactory.Instance.CreateContainer(item, Container.TYPE.BOX));
+                    bins.Add(ContainerFactory.Instance.CreateContainer(item, type));
                 return CombineCluster(bins, f(threshold));
             }
 
 
             int pivot = getPivot(primitives);
-            List<Geometry> left = primitives.GetRange(0, pivot); 
+            List<Geometry> left = primitives.GetRange(0, pivot);
             List<Geometry> right = primitives.GetRange(pivot, primitives.Count - pivot); // pivot included in right
 
             bins.AddRange(BuildTree(left));
@@ -49,38 +59,50 @@ namespace RayTracer.BVH
             return CombineCluster(bins, f(primitives.Count));
         }
 
-        //cluster reduction function
+        /*cluster reduction function
+         * n -> number of input clusters
+         * f(n) -> number of max output cluster
+        */
+
         int f(int n)
         {
             return n / 2;
         }
 
-        //list partition function
-        int getPivot(List<Geometry> primitives)
+        /*list partition function, 
+         * pivot is the frst bit 'flip'
+         * ex : [0] 00000111
+         *      [1] 00001000
+         *      [2] 00001000
+         *      [3] 00100000
+         *      pivot -> 3 (flipped on third element)
+        */
+        int getPivot(List<Geometry> geo)
         {
-
-
             for (int i = 0; i < 30; i++)
             {
-                for (int j = 1; j < primitives.Count; j++)
+                for (int j = 1; j < geo.Count; j++)
                 {
-                    BitArray last = primitives[j].mortonBit;
-                    BitArray curr = primitives[j - 1].mortonBit;
+                    BitArray last = geo[j].mortonBit;
+                    BitArray curr = geo[j - 1].mortonBit;
                     if (last[i] != curr[i])
                         return j;
                 }
             }
-            return primitives.Count / 2;
+            return geo.Count / 2;
         }
 
-        List<Container> CombineCluster(List<Container> bins, int n)
+
+        //combine bins cluster to [limit] cluster
+        List<Container> CombineCluster(List<Container> bins, int limit)
         {
+            
             foreach (Container item in bins)
             {
                 item.FindBestMatch(bins);
             }
 
-            while (bins.Count > n)
+            while (bins.Count > limit)
             {
                 float bestDist = float.MaxValue;
                 Container left = null;
@@ -111,6 +133,4 @@ namespace RayTracer.BVH
             return bins;
         }
     }
-
-
 }

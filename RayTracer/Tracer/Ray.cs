@@ -5,9 +5,6 @@ using RayTracer.Material;
 using RayTracer.Transformation;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using RayTracer.BVH;
 
 namespace RayTracer.Tracer
@@ -80,17 +77,17 @@ namespace RayTracer.Tracer
                         if (Bvh.Geo.IsIntersecting(this))
                             IntersectWith = Bvh.Geo;
 
-                        //assign original value for start and direction by memory
+                        //assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
                         Start = tempStart;
                         Direction = tempDir;
-                        //Transform(geometry.Trans);
+
                     }
                     else
                     {
                         foreach (Container bin in Bvh.Childs)
                             Trace(scene, bin);
                     }
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -135,39 +132,74 @@ namespace RayTracer.Tracer
                 MyColor color = CalcColor(effectiveLights, scene.Attenuation);
 
                 return color +
-                    CalcReflection(scene, bounce - 1);
-                    //CalcRefraction(scene, bounce - 1) ;
+                       CalcReflection(scene, bounce - 1) +
+                       CalcRefraction(scene, bounce - 1);
             }
         }
         MyColor CalcReflection(Scene scene, int bounce)
         {
             if (Type != TYPE.REFRACTION)
             {
-//                Vec3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0f * (Direction * IntersectWith.GetNormal(RealHitPoint)));
-                Vec3 rreflectDir = Direction + (IntersectWith.GetNormal(RealHitPoint) * 2.0f * -(IntersectWith.GetNormal(RealHitPoint)* Direction ));
-                Ray reflectRay = new Ray(HitPointMinus, rreflectDir);
+                Vec3 newDir = Direction + (IntersectWith.GetNormal(RealHitPoint) * 2.0f * -(IntersectWith.GetNormal(RealHitPoint) * Direction));
+                Ray reflectRay = new Ray(HitPointMinus, newDir);
                 reflectRay.Type = TYPE.REFLECTION;
                 reflectRay.Trace(scene, scene.Bvh);
-                return IntersectWith.Material.Specular * reflectRay.GetColor(scene,bounce);
+                return IntersectWith.Material.Specular * reflectRay.GetColor(scene, bounce);
             }
             else return new MyColor();
         }
 
-        //        MyColor CalcRefraction(Scene scene, int bounce)
-        //        {
-        //            if (IntersectWith.GetType() == typeof(Sphere))
-        //            {
-        //                Vector3 refDir = Direction;
-        //                Ray refRay = new Ray(HitPointPlus, refDir);
-        ////              refRay.Type = TYPE.REFRACTION;
-        //                return (refRay.Trace(scene, bounce));
-        //            }
-        //            else return new MyColor();
-        //        }
+        MyColor CalcRefraction(Scene scene, int bounce)
+        {
+            if (IntersectWith.GetType() == typeof(Sphere))
+            {
+                float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
+                Vec3 normal;
+                float n1, n2, n;
+
+                if (cosI > 0)
+                {
+                    n1 = 1.25F;
+                    n2 = 1;
+                    normal = IntersectWith.GetNormal(RealHitPoint) * -1;
+                }
+                else
+                {
+                    n1 = 1;
+                    n2 = 1.25F;
+                    normal = IntersectWith.GetNormal(RealHitPoint);
+                    cosI = -cosI;
+                }
+                n = n1 / n2;
+                float sinT2 = n * n * (1f - cosI * cosI);
+                float cosT = (float)Math.Sqrt(1f - sinT2);
 
 
 
-       
+                float rn = (n1 * cosI - n2 * cosT) / (n1 * cosI + n2 * cosT);
+                float rt = (n2 * cosI - n1 * cosT) / (n2 * cosI + n2 * cosT);
+                rn *= rn;
+                rt *= rt;
+                float refl = (rn + rt) * .5f;
+                float trans = 1f - refl;
+
+                if (cosT * cosT < 0)
+                {
+                    return new MyColor();
+                }
+
+
+
+
+
+                Vec3 newDir = Direction * n + normal * (n * cosI - cosT);
+                Ray refractRay = new Ray(HitPointPlus, newDir);
+                refractRay.Type = TYPE.REFRACTION;
+                refractRay.Trace(scene, scene.Bvh);
+                return (refractRay.GetColor(scene, bounce));
+            }
+            else return new MyColor();
+        }
 
         List<Light> PopulateEffectiveLight(List<Light> allLights, Container bvh)
         {
@@ -183,18 +215,18 @@ namespace RayTracer.Tracer
 
         public void Transform(Transform transform)
         {
-            Start = Common.Mattrix.Mul44x41(transform.Matrix, new Vec3(Start), 1).Point;
-            Direction = Common.Mattrix.Mul44x41(transform.Matrix, Direction, 0).Normalize();
+            Start = Mattrix.Mul44x41(transform.Matrix, new Vec3(Start), 1).Point;
+            Direction = Mattrix.Mul44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = Common.Mattrix.Mul44x41(transform.Matrix.Inverse, new Vec3(Start), 1).Point;
-            Direction = Common.Mattrix.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
+            Start = Mattrix.Mul44x41(transform.Matrix.Inverse, new Vec3(Start), 1).Point;
+            Direction = Mattrix.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
         public bool IsSmallerThanCurrent(float distance, Transform trans)
         {
-            float newMagnitude = Common.Mattrix.Mul44x41(trans.Matrix, Direction * distance, 0).Magnitude;
+            float newMagnitude = Mattrix.Mul44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
     }
