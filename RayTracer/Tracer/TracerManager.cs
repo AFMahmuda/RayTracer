@@ -14,7 +14,7 @@ namespace RayTracer.Tracer
     public class TracerManager
     {
         //thread number
-        int tn = 4;
+        int tn = 6;
 
         public bool TraceScene(string sceneFile)
         {

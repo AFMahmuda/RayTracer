@@ -19,13 +19,13 @@ namespace RayTracer.BVH
         }
         public TYPE Type;
 
-        protected List<Container> childs = new List<Container>();
+        protected Container[] childs = new Container[2];
         protected Geometry geo = null;
         public float area;
 
         public abstract bool IsIntersecting(Ray ray);
         public Geometry Geo { get { return geo; } }
-        public List<Container> Childs { get { return childs; } }
+        public Container[] Childs { get { return childs; } }
 
         public float areaWithClosest = float.MaxValue;
         public Container closest = null;

@@ -58,19 +58,16 @@ namespace RayTracer.Common
         public static Vec3 operator *(Vec3 vector, float scalar)
         {
             Vec3 result = new Vec3(vector.Point);
-            result.Point.X *= scalar;
-            result.Point.Y *= scalar;
-            result.Point.Z *= scalar;
+            for (int i = 0; i < 3; i++)
+            {
+                result.Point.Vals[i] *= scalar;
+            }
             return result;
         }
 
         public static Vec3 operator +(Vec3 a, Vec3 b)
-        {
-
-
-            Vec3 newA = a * 1;
-            Vec3 newB = b * 1;
-            Vec3 result = new Vec3(newA.Point + newB.Point);
+        {            
+            Vec3 result = new Vec3(a.Point + b.Point);
             return result;
 
         }

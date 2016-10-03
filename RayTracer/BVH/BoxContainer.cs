@@ -10,8 +10,8 @@ namespace RayTracer.BVH
     public class BoxContainer : Container
     {
 
-        private Point3 min = new Point3(float.MaxValue, float.MaxValue, float.MinValue);
-        private Point3 max = new Point3(float.MinValue, float.MinValue, float.MaxValue);
+        private Point3 min = new Point3(float.MaxValue, float.MaxValue, float.MaxValue);
+        private Point3 max = new Point3(float.MinValue, float.MinValue, float.MinValue);
 
         public BoxContainer(Geometry item)
         {
@@ -24,15 +24,13 @@ namespace RayTracer.BVH
                 min = Utils.DeepClone(sphere.center);
                 min.X -= sphere.radius;
                 min.Y -= sphere.radius;
-                min.Z += sphere.radius;
+                min.Z -= sphere.radius;
 
 
                 max = Utils.DeepClone(sphere.center);
                 max.X += sphere.radius;
                 max.Y += sphere.radius;
-                max.Z -= sphere.radius;
-
-
+                max.Z += sphere.radius;
 
                 Point3[] p = new Point3[8];
 
@@ -44,6 +42,12 @@ namespace RayTracer.BVH
                 p[5] = (new Point3(max.X, min.Y, max.Z));
                 p[6] = (new Point3(max.X, max.Y, min.Z));
                 p[7] = (new Point3(max.X, max.Y, max.Z));
+
+
+                //Point3[] p = new Point3[2];
+
+                //p[0] = (new Point3(min.X, min.Y, min.Z));
+                //p[1] = (new Point3(max.X, max.Y, max.Z));
 
                 for (int i = 0; i < p.Length; i++)
                     p[i] = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1).Point;
@@ -67,21 +71,28 @@ namespace RayTracer.BVH
         public BoxContainer(BoxContainer a, BoxContainer b)
         {
             Type = TYPE.BOX;
-            childs.Add(a);
-            childs.Add(b);
+            childs[0] = a;
+            childs[1] = b;
 
-            min = new Point3();
-            min.X = Math.Min(a.min.X, b.min.X);
-            min.Y = Math.Min(a.min.Y, b.min.Y);
-            min.Z = Math.Max(a.min.Z, b.min.Z);
 
-            max = new Point3();
-            max.X = Math.Max(a.max.X, b.max.X);
-            max.Y = Math.Max(a.max.Y, b.max.Y);
-            max.Z = Math.Min(a.max.Z, b.max.Z);
+            for (int i = 0; i < 3; i++)
+            {
+                min.Vals[i] = Math.Min(a.min.Vals[i], b.min.Vals[i]);
+                max.Vals[i] = Math.Max(a.max.Vals[i], b.max.Vals[i]);
+            }
+            //min = new Point3();
+            //min.X = Math.Min(a.min.X, b.min.X);
+            //min.Y = Math.Min(a.min.Y, b.min.Y);
+            //min.Z = Math.Min(a.min.Z, b.min.Z);
+
+            //max = new Point3();
+            //max.X = Math.Max(a.max.X, b.max.X);
+            //max.Y = Math.Max(a.max.Y, b.max.Y);
+            //max.Z = Math.Max(a.max.Z, b.max.Z);
+
             Point3 size = max - min;
 
-            area = 2f * (size.X * size.Y + size.X * (size.Z * -1) + size.X * (size.Z * -1));
+            area = 2f * (size.X * size.Y + size.X * (size.Z) + size.Y * (size.Z));
 
         }
 
@@ -123,13 +134,12 @@ namespace RayTracer.BVH
         {
             for (int i = 0; i < points.Length; i++)
             {
-                min.X = Math.Min(min.X, points[i].X);
-                min.Y = Math.Min(min.Y, points[i].Y);
-                min.Z = Math.Max(min.Z, points[i].Z);
 
-                max.X = Math.Max(max.X, points[i].X);
-                max.Y = Math.Max(max.Y, points[i].Y);
-                max.Z = Math.Min(max.Z, points[i].Z);
+                for (int j = 0; j < 3; j++)
+                {
+                    min.Vals[j] = Math.Min(min.Vals[j], points[i].Vals[j]);
+                    max.Vals[j] = Math.Max(max.Vals[j], points[i].Vals[j]);
+                }
             }
         }
     }

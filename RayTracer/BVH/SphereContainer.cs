@@ -59,8 +59,8 @@ namespace RayTracer.BVH
         public SphereContainer(SphereContainer a, SphereContainer b)
         {
             Type = TYPE.SPHERE;
-            childs.Add(a);
-            childs.Add(b);
+            childs[0]=a;
+            childs[1]=b;
 
             Vec3 aToB = new Vec3(a.center, b.center);
             float aToBLength = aToB.Magnitude;
