@@ -2,9 +2,6 @@
 using RayTracer.Tracer;
 using RayTracer.Transformation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RayTracer.Shape
 {
@@ -38,8 +35,8 @@ namespace RayTracer.Shape
             Vec3 rayToSphere = new Vec3(ray.Start, center);
 
             //sphere is behind ray
-            if (rayToSphere * ray.Direction <= 0)
-                return false;
+            //if (rayToSphere * ray.Direction <= 0)
+            //    return false;
 
             float a = ray.Direction * ray.Direction;
             float b = -2 * (rayToSphere * ray.Direction);
@@ -54,10 +51,11 @@ namespace RayTracer.Shape
 
                 // if both results are negative, then the sphere is behind our ray, 
                 // but we already checked that.
-                //if (res1 < 0 && res2 < 0)
-                //    return false;
-                //else
+                if (res1 < 0 && res2 < 0)
+                    return false;
+
                 distance = (res1 * res2 < 0) ? Math.Max(res1, res2) : Math.Min(res1, res2);
+
                 if (ray.IsSmallerThanCurrent(distance, Trans))
                 {
                     ray.IntersectDistance = Mattrix.Mul44x41(Trans.Matrix, ray.Direction * distance, 0).Magnitude;

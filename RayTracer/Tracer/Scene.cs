@@ -17,14 +17,12 @@ namespace RayTracer.Tracer
     [Serializable]
     public class Scene
     {
-
-
         private List<Geometry> geometries = new List<Geometry>();
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
         private List<Light> lights = new List<Light>();
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
-        private Material.Mat material;
+        private Mat material;
         public Container Bvh;
 
         public Scene()
@@ -108,15 +106,14 @@ namespace RayTracer.Tracer
 
                 //geometry
                 case "tri":
-                    Triangle tri = CrerateTriangle(param);
+                    Geometry tri = CreateShape(Geometry.TYPE.TRIANGLE, param);
                     Geometries.Add(tri);
                     break;
 
                 case "sphere":
-                    Sphere sphere = CreateSphere(param);
+                    Geometry sphere = CreateShape(Geometry.TYPE.SPHERE, param);
                     Geometries.Add(sphere);
                     break;
-
 
                 //transforms 
                 case "pushTransform":
@@ -126,13 +123,13 @@ namespace RayTracer.Tracer
                     transforms.RemoveFirst();
                     break;
                 case "translate":
-                    transforms.First().Matrix = Common.Mattrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
+                    transforms.First().Matrix = Mattrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
                     break;
                 case "scale":
-                    transforms.First().Matrix = Common.Mattrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
+                    transforms.First().Matrix = Mattrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
                     break;
                 case "rotate":
-                    transforms.First().Matrix = Common.Mattrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
+                    transforms.First().Matrix = Mattrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
                     break;
 
                 //material
@@ -170,18 +167,38 @@ namespace RayTracer.Tracer
         }
 
 
+        Geometry CreateShape(Geometry.TYPE type, float[] param)
+        {
+            Geometry geo;
+            if (type == Geometry.TYPE.SPHERE)
+            {
+                geo = CreateSphere(param);
+            }
+            else //if (type == Geometry.TYPE.TRIANGLE)
+            {
+                geo = CreateTriangle(param);
+            }
+            ApplyTransform(geo);
+            ApplyMaterial(geo);
+            ApplyAmbient(geo);
+
+            if (type == Geometry.TYPE.SPHERE)
+            {
+                geo.Material.RefractIndex = 1.25f;
+                geo.Material.RefractValue = 1f;
+            }
+
+            return geo;
+        }
+
         Sphere CreateSphere(float[] param)
         {
             Sphere sphere = new Sphere(param);
 
-            ApplyTransform(sphere);
-            ApplyMaterial(sphere);
-            ApplyAmbient(sphere);
-
             return sphere;
         }
 
-        Triangle CrerateTriangle(float[] param)
+        Triangle CreateTriangle(float[] param)
         {
             Point3 a = vertices[(int)param[0]];
             Point3 b = vertices[(int)param[1]];
@@ -189,10 +206,6 @@ namespace RayTracer.Tracer
 
             Triangle tri = new Triangle(a, b, c);
 
-            ApplyTransform(tri);
-            ApplyMaterial(tri);
-            ApplyAmbient(tri);
-            
             return tri;
         }
 

@@ -102,7 +102,11 @@ namespace RayTracer.Tracer
 
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
             Vec3 normal = IntersectWith.GetNormal(HitPointMinus);
-
+            float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
+            if (cosI > 0)
+            {
+                normal *= -1f;
+            }
             foreach (var light in effectiveLights)
             {
                 Vec3 pointToLight = light.GetPointToLight(HitPointMinus);
@@ -138,40 +142,45 @@ namespace RayTracer.Tracer
         }
         MyColor CalcReflection(Scene scene, int bounce)
         {
-            if (Type != TYPE.REFRACTION)
-            {
-                Vec3 newDir = Direction + (IntersectWith.GetNormal(RealHitPoint) * 2.0f * -(IntersectWith.GetNormal(RealHitPoint) * Direction));
-                Ray reflectRay = new Ray(HitPointMinus, newDir);
-                reflectRay.Type = TYPE.REFLECTION;
-                reflectRay.Trace(scene, scene.Bvh);
-                return IntersectWith.Material.Specular * reflectRay.GetColor(scene, bounce);
-            }
-            else return new MyColor();
+            float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
+            Vec3 normal = IntersectWith.GetNormal(RealHitPoint);
+            //if (cosI < 0)
+            //{
+            //    normal *= -1f;
+            //}
+
+
+            Vec3 newDir = Direction + (normal * 2.0f * -(normal * Direction));
+            Ray reflectRay = new Ray(HitPointMinus, newDir);
+            reflectRay.Type = TYPE.REFLECTION;
+            reflectRay.Trace(scene, scene.Bvh);
+            return IntersectWith.Material.Specular * reflectRay.GetColor(scene, bounce);
+
         }
 
         MyColor CalcRefraction(Scene scene, int bounce)
         {
-            if (IntersectWith.GetType() == typeof(Sphere))
+            if (IntersectWith.Material.RefractValue != 0)
             {
                 float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
                 Vec3 normal;
                 float n1, n2, n;
-
+                normal = IntersectWith.GetNormal(RealHitPoint);
                 if (cosI > 0)
                 {
-                    n1 = 1.25F;
+                    n1 = IntersectWith.Material.RefractIndex;
                     n2 = 1;
-                    normal = IntersectWith.GetNormal(RealHitPoint) * -1;
+                    normal *= -1f;
                 }
                 else
                 {
                     n1 = 1;
-                    n2 = 1.25F;
-                    normal = IntersectWith.GetNormal(RealHitPoint);
+                    n2 = IntersectWith.Material.RefractIndex;
                     cosI = -cosI;
                 }
                 n = n1 / n2;
                 float sinT2 = n * n * (1f - cosI * cosI);
+                float cosT2 = (1f - sinT2);
                 float cosT = (float)Math.Sqrt(1f - sinT2);
 
 
@@ -183,20 +192,17 @@ namespace RayTracer.Tracer
                 float refl = (rn + rt) * .5f;
                 float trans = 1f - refl;
 
-                if (cosT * cosT < 0)
+                if (cosT2 < 0)
                 {
-                    return new MyColor();
+                    //return new MyColor();
+                    return (1f - IntersectWith.Material.RefractValue) * CalcReflection(scene, bounce - 1);
                 }
-
-
-
-
 
                 Vec3 newDir = Direction * n + normal * (n * cosI - cosT);
                 Ray refractRay = new Ray(HitPointPlus, newDir);
                 refractRay.Type = TYPE.REFRACTION;
                 refractRay.Trace(scene, scene.Bvh);
-                return (refractRay.GetColor(scene, bounce));
+                return IntersectWith.Material.RefractValue * (refractRay.GetColor(scene, bounce));
             }
             else return new MyColor();
         }
@@ -206,7 +212,7 @@ namespace RayTracer.Tracer
             List<Light> result = new List<Light>();
             foreach (var light in allLights)
             {
-                if (light.IsEffective(HitPointMinus, IntersectWith, bvh))
+                if (light.IsEffective(HitPointMinus, bvh))
                     result.Add(light);
             }
 

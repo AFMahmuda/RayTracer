@@ -35,11 +35,9 @@ namespace RayTracer.Lighting
             return new Vec3(Direction.Point * -1);
         }
 
-        public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
+        public override bool IsEffective(Point3 point, Container bvh)
         {
             Ray shadowRay = new Ray(point, (Direction*-1));
-            if ((Direction*-1) * geometry.GetNormal(point) < 0)
-                return false;
             if (bvh.IsIntersecting(shadowRay))
             {
                 if (bvh.Geo != null)
@@ -51,7 +49,7 @@ namespace RayTracer.Lighting
                 else
                 {
                     foreach (Container bin in bvh.Childs)
-                        if (!IsEffective(point, geometry, bin)) return false;
+                        if (!IsEffective(point, bin)) return false;
                 }
             }
 

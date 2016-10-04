@@ -1,11 +1,7 @@
 ﻿using RayTracer.Common;
 using RayTracer.Material;
-using RayTracer.Shape;
 using RayTracer.Tracer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RayTracer.BVH;
 
 namespace RayTracer.Lighting
@@ -33,11 +29,9 @@ namespace RayTracer.Lighting
             return new Vec3(point, Position);
         }
         
-        public override bool IsEffective(Point3 point, Geometry geometry, Container bvh)
+        public override bool IsEffective(Point3 point,  Container bvh)
         {
             Vec3 pointToLight = GetPointToLight(point);
-            if (pointToLight * geometry.GetNormal(point) < 0)
-                return false;
 
             Ray shadowRay = new Ray(point, pointToLight.Normalize());
 
@@ -53,7 +47,7 @@ namespace RayTracer.Lighting
                 else
                 {
                     foreach (Container bin in bvh.Childs)
-                        if (!IsEffective(point, geometry, bin)) return false;
+                        if (!IsEffective(point, bin)) return false;
                 }
             }
 

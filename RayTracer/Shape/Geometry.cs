@@ -10,6 +10,15 @@ namespace RayTracer.Shape
     [Serializable]
     public abstract class Geometry
     {
+        public enum TYPE
+        {
+            SPHERE,
+            TRIANGLE
+        }
+
+        public TYPE type;
+
+
         protected Point3 pos;
         protected bool hasMorton;
         protected uint mortonCode;
