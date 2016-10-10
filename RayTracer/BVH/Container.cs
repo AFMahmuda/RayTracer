@@ -27,15 +27,15 @@ namespace RayTracer.BVH
         {
             float bestDist = float.MaxValue;
             Container bestmatch = null;
-            foreach (Container item in bins)
+            for (int i = 0; i < bins.Count; i++)
             {
-                if (item == this)
+                if (bins[i] == this)
                     continue;
-                Container newBin = ContainerFactory.Instance.CombineContainer(this, item);
+                Container newBin = ContainerFactory.Instance.CombineContainer(this, bins[i]);
                 if (newBin.area < bestDist)
                 {
                     bestDist = newBin.area;
-                    bestmatch = item;
+                    bestmatch = bins[i];
                 }
             }
             closest = bestmatch;

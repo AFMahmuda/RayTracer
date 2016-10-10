@@ -84,8 +84,11 @@ namespace RayTracer.Tracer
                     }
                     else
                     {
-                        foreach (Container bin in Bvh.Childs)
-                            Trace(scene, bin);
+                        for (int i = 0; i < Bvh.Childs.Length; i++)
+                        {
+                            Trace(scene, Bvh.Childs[i]);
+                        }
+
                     }
                 }
             }
@@ -107,8 +110,10 @@ namespace RayTracer.Tracer
             {
                 normal *= -1f;
             }
-            foreach (var light in effectiveLights)
+
+            for (int i = 0; i < effectiveLights.Count; i++)
             {
+                Light light = effectiveLights[i];
                 Vec3 pointToLight = light.GetPointToLight(HitPointMinus);
                 Vec3 halfAngleToLight = ((Direction * -1.0f) + pointToLight).Normalize();
 
@@ -210,10 +215,10 @@ namespace RayTracer.Tracer
         List<Light> PopulateEffectiveLight(List<Light> allLights, Container bvh)
         {
             List<Light> result = new List<Light>();
-            foreach (var light in allLights)
+            for (int i = 0; i < allLights.Count; i++)
             {
-                if (light.IsEffective(HitPointMinus, bvh))
-                    result.Add(light);
+                if (allLights[i].IsEffective(HitPointMinus, bvh))
+                    result.Add(allLights[i]);
             }
 
             return result;

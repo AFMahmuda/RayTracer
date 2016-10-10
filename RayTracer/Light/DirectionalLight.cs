@@ -48,8 +48,12 @@ namespace RayTracer.Lighting
                 }
                 else
                 {
-                    foreach (Container bin in bvh.Childs)
-                        if (!IsEffective(point, bin)) return false;
+                    for (int i = 0; i < bvh.Childs.Length; i++)
+                    {
+                        if (!IsEffective(point, bvh.Childs[i]))
+                            return false;
+                    }
+
                 }
             }
 

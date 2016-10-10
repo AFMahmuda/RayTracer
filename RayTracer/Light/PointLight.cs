@@ -28,8 +28,8 @@ namespace RayTracer.Lighting
         {
             return new Vec3(point, Position);
         }
-        
-        public override bool IsEffective(Point3 point,  Container bvh)
+
+        public override bool IsEffective(Point3 point, Container bvh)
         {
             Vec3 pointToLight = GetPointToLight(point);
 
@@ -46,8 +46,8 @@ namespace RayTracer.Lighting
                 }
                 else
                 {
-                    foreach (Container bin in bvh.Childs)
-                        if (!IsEffective(point, bin)) return false;
+                    for (int i = 0; i < bvh.Childs.Length; i++)
+                        if (!IsEffective(point, bvh.Childs[i])) return false;
                 }
             }
 

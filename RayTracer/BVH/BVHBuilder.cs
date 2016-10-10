@@ -20,15 +20,21 @@ namespace RayTracer.BVH
 
         public void BuildBVH(Scene scene)
         {
-            foreach (Geometry item in scene.Geometries)
-                item.GetMortonPos();
+
+            for (int i = 0; i < scene.Geometries.Count; i++)
+            {
+                scene.Geometries[i].GetMortonPos();
+            }
 
             scene.Geometries = RadixSort.Sort(scene.Geometries);
 
             List<Container> temp = new List<Container>();
             if (!isAAC)
-                foreach (var item in scene.Geometries)
-                    temp.Add(ContainerFactory.Instance.CreateContainer(item, type));
+                for (int i = 0; i < scene.Geometries.Count; i++)
+                {
+                    temp.Add(ContainerFactory.Instance.CreateContainer(scene.Geometries[i], type));
+
+                }
             else
                 temp = BuildTree(scene.Geometries);
 
@@ -43,8 +49,11 @@ namespace RayTracer.BVH
             List<Container> bins = new List<Container>();
             if (primitives.Count < threshold)
             {
-                foreach (Geometry item in primitives)
-                    bins.Add(ContainerFactory.Instance.CreateContainer(item, type));
+                for (int i = 0; i < primitives.Count; i++)
+                {
+                    bins.Add(ContainerFactory.Instance.CreateContainer(primitives[i], type));
+                }
+
                 return CombineCluster(bins, f(threshold));
             }
 
@@ -96,10 +105,11 @@ namespace RayTracer.BVH
         //combine bins cluster to [limit] cluster
         List<Container> CombineCluster(List<Container> bins, int limit)
         {
-            
-            foreach (Container item in bins)
+
+            for (int i = 0; i < bins.Count; i++)
             {
-                item.FindBestMatch(bins);
+
+                bins[i].FindBestMatch(bins);
             }
 
             while (bins.Count > limit)
@@ -108,15 +118,16 @@ namespace RayTracer.BVH
                 Container left = null;
                 Container right = null;
 
-                foreach (Container item in bins)
+                for (int i = 0; i < bins.Count; i++)
                 {
-                    if (item.areaWithClosest < bestDist)
+                    if (bins[i].areaWithClosest < bestDist)
                     {
-                        bestDist = item.areaWithClosest;
-                        left = item;
-                        right = item.closest;
+                        bestDist = bins[i].areaWithClosest;
+                        left = bins[i];
+                        right = bins[i].closest;
                     }
                 }
+
 
                 Container newBin = ContainerFactory.Instance.CombineContainer(left, right);
                 bins.Remove(left);
@@ -124,10 +135,10 @@ namespace RayTracer.BVH
                 bins.Add(newBin);
 
                 newBin.FindBestMatch(bins);
-                foreach (Container item in bins)
+                for (int i = 0; i < bins.Count; i++)
                 {
-                    if (item.closest == left || item.closest == right)
-                        item.FindBestMatch(bins);
+                    if (bins[i].closest == left || bins[i].closest == right)
+                        bins[i].FindBestMatch(bins);
                 }
             }
             return bins;
