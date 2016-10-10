@@ -9,10 +9,7 @@ namespace RayTracer.BVH
     public abstract class Container
     {
         public enum TYPE
-        {
-            BOX,
-            SPHERE
-        }
+        { BOX, SPHERE }
         public TYPE Type;
 
         protected Container[] childs = new Container[2];
@@ -44,8 +41,5 @@ namespace RayTracer.BVH
             closest = bestmatch;
             areaWithClosest = bestDist;
         }
-
     }
-
-
 }

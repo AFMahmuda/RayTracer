@@ -9,8 +9,8 @@ namespace RayTracer.BVH
     public class SphereContainer : Container
     {
 
-        public Point3 center;
-        public float radius;
+        public Point3 c; //center
+        public float r; //radius
 
         public SphereContainer(Geometry item)
         {
@@ -19,8 +19,8 @@ namespace RayTracer.BVH
             if (item.GetType() == typeof(Sphere))
             {
 
-                center = ((Sphere)item).center;
-                radius = ((Sphere)item).radius;
+                c = ((Sphere)item).c;
+                r = ((Sphere)item).r;
 
             }
             else //if (item.GetType() == typeof(Triangle))
@@ -36,23 +36,23 @@ namespace RayTracer.BVH
                 float t = ((ac * ac) * (ab * ab) - (ab * ab) * (ab * ac)) / d;
                 if (s <= 0)
                 {
-                    center = (tri.a + tri.c) * .5f;
+                    c = (tri.a + tri.c) * .5f;
                 }
                 else if (t <= 0)
                 {
-                    center = (tri.a + tri.b) * .5f;
+                    c = (tri.a + tri.b) * .5f;
                 }
                 else if (s + t > 1)
                 {
-                    center = (tri.b + tri.c) * .5f;
+                    c = (tri.b + tri.c) * .5f;
                     reference = tri.b;
                 }
-                else center = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
-                radius = (float)Math.Sqrt(new Vec3(reference, tri.c) * new Vec3(reference, tri.c));
+                else c = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
+                r = (float)Math.Sqrt(new Vec3(reference, tri.c) * new Vec3(reference, tri.c));
             }
 
-            center = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(center), 1);
-            radius = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(radius, 0, 0), 0).Magnitude;
+            c = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(c), 1);
+            r = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(r, 0, 0), 0).Magnitude;
         }
 
         public SphereContainer(SphereContainer a, SphereContainer b)
@@ -61,39 +61,39 @@ namespace RayTracer.BVH
             childs[0]=a;
             childs[1]=b;
 
-            Vec3 aToB = new Vec3(a.center, b.center);
+            Vec3 aToB = new Vec3(a.c, b.c);
             float aToBLength = aToB.Magnitude;
 
             if (aToB.Magnitude == 0)
             {
-                radius = Math.Max(a.radius, b.radius);
-                center = a.center;
+                r = Math.Max(a.r, b.r);
+                c = a.c;
             }
 
-            else if (aToBLength + a.radius + b.radius < a.radius * 2 ||
-                aToB.Magnitude + a.radius + b.radius < b.radius * 2)
+            else if (aToBLength + a.r + b.r < a.r * 2 ||
+                aToB.Magnitude + a.r + b.r < b.r * 2)
             {
-                radius = Math.Max(a.radius, b.radius);
-                center = (a.radius > b.radius) ? a.center : b.center;
+                r = Math.Max(a.r, b.r);
+                c = (a.r > b.r) ? a.c : b.c;
             }
 
             else
             {
-                radius = (a.radius + b.radius + aToB.Magnitude) * .5f;
-                center = a.center + (aToB.Normalize() * (radius - a.radius));
+                r = (a.r + b.r + aToB.Magnitude) * .5f;
+                c = a.c + (aToB.Normalize() * (r - a.r));
             }
 
-            area = 4f * (float)Math.PI * (float)Math.Pow(radius, 2);           
+            area = 4f * (float)Math.PI * (float)Math.Pow(r, 2);           
         }
 
         public override bool IsIntersecting(Ray ray)
         {
 
-            Vec3 rayToSphere = new Vec3(ray.Start, center);
+            Vec3 rayToSphere = new Vec3(ray.Start, this.c);
 
             float a = ray.Direction * ray.Direction;
             float b = -2 * (rayToSphere * ray.Direction);
-            float c = (rayToSphere * rayToSphere) - (radius * radius);
+            float c = (rayToSphere * rayToSphere) - (r * r);
             float dd = (b * b) - (4 * a * c);
 
             return (dd > 0);

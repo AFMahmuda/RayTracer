@@ -20,21 +20,21 @@ namespace RayTracer.BVH
             if (item.GetType() == typeof(Sphere))
             {
                 Sphere sphere = (Sphere)item;
-                min = Utils.DeepClone(sphere.center);
-                min.X -= sphere.radius;
-                min.Y -= sphere.radius;
-                min.Z -= sphere.radius;
+                min = Utils.DeepClone(sphere.c);
+                min.X -= sphere.r;
+                min.Y -= sphere.r;
+                min.Z -= sphere.r;
 
 
-                max = Utils.DeepClone(sphere.center);
-                max.X += sphere.radius;
-                max.Y += sphere.radius;
-                max.Z += sphere.radius;
+                max = Utils.DeepClone(sphere.c);
+                max.X += sphere.r;
+                max.Y += sphere.r;
+                max.Z += sphere.r;
 
                 for (int i = 0; i < 3; i++)
                 {
-                    min[i] -= sphere.radius;
-                    max[i] += sphere.radius;
+                    min[i] -= sphere.r;
+                    max[i] += sphere.r;
                 }
 
                 Point3[] p = new Point3[8];
