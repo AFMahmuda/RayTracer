@@ -199,11 +199,11 @@ namespace RayTracer.Tracer
             ApplyMaterial(geo);
             ApplyAmbient(geo);
 
-            if (type == Geometry.TYPE.SPHERE)
-            {
-                geo.Material.RefractIndex = 1.25f;
-                geo.Material.RefractValue = 1f;
-            }
+            //if (type == Geometry.TYPE.SPHERE)
+            //{
+            //    geo.Material.RefractIndex = 1.25f;
+            //    geo.Material.RefractValue = 1f;
+            //}
 
             return geo;
         }
