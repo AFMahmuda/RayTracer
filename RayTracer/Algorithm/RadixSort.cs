@@ -2,19 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Algorithm
 {
     class RadixSort
     {
         //TaskCompletionSource : https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Radix_sort
-        public static List<Geometry> Sort(List<Geometry> items)
+        public static Geometry[] Sort(Geometry[] items)
         {
 
             // our helper array 
-            Geometry[] t = new Geometry[items.Count];
+            Geometry[] t = new Geometry[items.Length];
 
             // number of bits our group will be long 
             int r = 8; // try to set this also to 2, 8 or 16 to see if it is quicker or not 
@@ -41,7 +39,7 @@ namespace RayTracer.Algorithm
                     count[j] = 0;
 
                 // counting elements of the c-th group 
-                for (int i = 0; i < items.Count; i++)
+                for (int i = 0; i < items.Length; i++)
                     count[(items[i].GetMortonPos() >> shift) & mask]++;
 
                 // calculating prefixes 
@@ -50,11 +48,12 @@ namespace RayTracer.Algorithm
                     pref[i] = pref[i - 1] + count[i - 1];
 
                 // from a[] to t[] elements ordered by c-th group 
-                for (int i = 0; i < items.Count; i++)
+                for (int i = 0; i < items.Length; i++)
                     t[pref[(items[i].GetMortonPos() >> shift) & mask]++] = items[i];
 
                 // a[]=t[] and start again until the last group 
-                items = t.ToList();
+
+                //items = t.ToList();
             }
             // a is sorted 
             return items;

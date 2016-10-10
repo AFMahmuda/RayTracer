@@ -3,6 +3,7 @@ using RayTracer.Shape;
 using RayTracer.Tracer;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RayTracer.BVH
 {
@@ -21,16 +22,16 @@ namespace RayTracer.BVH
         public void BuildBVH(Scene scene)
         {
 
-            for (int i = 0; i < scene.Geometries.Count; i++)
+            for (int i = 0; i < scene.Geometries.Length; i++)
             {
                 scene.Geometries[i].GetMortonPos();
             }
 
-            scene.Geometries = RadixSort.Sort(scene.Geometries);
+            scene.Geometries = RadixSort.Sort(scene.Geometries.ToArray());
 
             List<Container> temp = new List<Container>();
             if (!isAAC)
-                for (int i = 0; i < scene.Geometries.Count; i++)
+                for (int i = 0; i < scene.Geometries.Length; i++)
                 {
                     temp.Add(ContainerFactory.Instance.CreateContainer(scene.Geometries[i], type));
 
@@ -44,12 +45,12 @@ namespace RayTracer.BVH
 
 
         int threshold = 4; //4 or 20
-        List<Container> BuildTree(List<Geometry> primitives)
+        List<Container> BuildTree(Geometry[] primitives)
         {
             List<Container> bins = new List<Container>();
-            if (primitives.Count < threshold)
+            if (primitives.Length < threshold)
             {
-                for (int i = 0; i < primitives.Count; i++)
+                for (int i = 0; i < primitives.Length; i++)
                 {
                     bins.Add(ContainerFactory.Instance.CreateContainer(primitives[i], type));
                 }
@@ -59,13 +60,14 @@ namespace RayTracer.BVH
 
 
             int pivot = getPivot(primitives);
-            List<Geometry> left = primitives.GetRange(0, pivot);
-            List<Geometry> right = primitives.GetRange(pivot, primitives.Count - pivot); // pivot included in right
+            Geometry[] left = primitives.Take(pivot-1).ToArray();
+            
+            Geometry[] right = primitives.Skip(pivot-1).ToArray(); // pivot included in right
 
             bins.AddRange(BuildTree(left));
             bins.AddRange(BuildTree(right));
 
-            return CombineCluster(bins, f(primitives.Count));
+            return CombineCluster(bins, f(primitives.Length));
         }
 
         /*cluster reduction function
@@ -86,11 +88,11 @@ namespace RayTracer.BVH
          *      [3] 00100000
          *      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
         */
-        int getPivot(List<Geometry> geo)
+        int getPivot(Geometry[] geo)
         {
             for (int i = 0; i < 30; i++)
             {
-                for (int j = 1; j < geo.Count; j++)
+                for (int j = 1; j < geo.Length; j++)
                 {
                     BitArray last = geo[j].mortonBit;
                     BitArray curr = geo[j - 1].mortonBit;
@@ -98,7 +100,7 @@ namespace RayTracer.BVH
                         return j;
                 }
             }
-            return geo.Count / 2;
+            return geo.Length / 2;
         }
 
 

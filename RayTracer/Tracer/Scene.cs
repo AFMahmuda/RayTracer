@@ -17,9 +17,9 @@ namespace RayTracer.Tracer
     [Serializable]
     public class Scene
     {
-        private List<Geometry> geometries = new List<Geometry>();
+        private Geometry[] geometries;
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
-        private List<Light> lights = new List<Light>();
+        private Light[] lights;
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
         private Mat material;
@@ -30,7 +30,7 @@ namespace RayTracer.Tracer
             Size = new Size();
             maxDepth = 5;
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
-            material = new Material.Mat();
+            material = new Mat();
             ambient = new MyColor(.2f, .2f, .2f);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
@@ -50,9 +50,24 @@ namespace RayTracer.Tracer
             string command;
             while ((command = filereader.ReadLine()) != null)
                 ExecuteCommand(command);
+
+            ConvertToArray();
+
+
             filereader.Close();
         }
 
+        private void ConvertToArray()
+        {
+            lights = tempLights.ToArray();
+            geometries = tempGeos.ToArray();
+            tempGeos.Clear();
+            tempLights.Clear();
+            transforms.Clear();
+            vertices.Clear();
+            transforms.Clear();
+
+        }
 
         string CleanCommand(string command)
         {
@@ -61,7 +76,9 @@ namespace RayTracer.Tracer
             return command;
         }
 
-        public void ExecuteCommand(String fullcommand)
+        List<Light> tempLights = new List<Light>();
+        List<Geometry> tempGeos = new List<Geometry>();
+        public void ExecuteCommand(string fullcommand)
         {
 
             if (fullcommand.Contains('#'))
@@ -107,12 +124,12 @@ namespace RayTracer.Tracer
                 //geometry
                 case "tri":
                     Geometry tri = CreateShape(Geometry.TYPE.TRIANGLE, param);
-                    Geometries.Add(tri);
+                    tempGeos.Add(tri);
                     break;
 
                 case "sphere":
                     Geometry sphere = CreateShape(Geometry.TYPE.SPHERE, param);
-                    Geometries.Add(sphere);
+                    tempGeos.Add(sphere);
                     break;
 
                 //transforms 
@@ -155,10 +172,10 @@ namespace RayTracer.Tracer
                     ambient = new MyColor(param);
                     break;
                 case "directional":
-                    Lights.Add(new DirectionalLight(param));
+                    tempLights.Add(new DirectionalLight(param));
                     break;
                 case "point":
-                    Lights.Add(new PointLight(param));
+                    tempLights.Add(new PointLight(param));
                     break;
 
                 default:
@@ -225,18 +242,16 @@ namespace RayTracer.Tracer
         }
 
 
-        public List<Geometry> Geometries
+        public Geometry[] Geometries
         {
             get { return geometries; }
             set { geometries = value; }
         }
 
-        public List<Light> Lights
+        public Light[] Lights
         {
             get { return lights; }
         }
-
-
 
         int maxDepth;
         public int MaxDepth
@@ -256,8 +271,8 @@ namespace RayTracer.Tracer
         {
             Console.WriteLine("=======Scene Information===========================");
             //Camera.ShowInformation();
-            Console.WriteLine("Total Objects : " + Geometries.Count);
-            Console.WriteLine("Total Lights  : " + Lights.Count);
+            Console.WriteLine("Total Objects : " + Geometries.Length);
+            Console.WriteLine("Total Lights  : " + Lights.Length);
             Console.WriteLine("Max Bounce    : " + MaxDepth);
             Console.WriteLine("Image Size    : " + Size.Width + " x " + Size.Height);
             Console.WriteLine("===================================================");

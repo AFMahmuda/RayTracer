@@ -212,10 +212,10 @@ namespace RayTracer.Tracer
             else return new MyColor();
         }
 
-        List<Light> PopulateEffectiveLight(List<Light> allLights, Container bvh)
+        List<Light> PopulateEffectiveLight(Light[] allLights, Container bvh)
         {
             List<Light> result = new List<Light>();
-            for (int i = 0; i < allLights.Count; i++)
+            for (int i = 0; i < allLights.Length; i++)
             {
                 if (allLights[i].IsEffective(HitPointMinus, bvh))
                     result.Add(allLights[i]);
