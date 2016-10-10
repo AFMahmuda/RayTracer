@@ -52,7 +52,7 @@ namespace RayTracer.Tracer
 
             DateTime start = DateTime.Now;
             Console.WriteLine("Tracing...Please Wait...");
-            for (int i = 0; i < tn * 5; i++) Console.Write("-");
+             for (int i = 0; i < tn * 5; i++) Console.Write("-");
             Console.WriteLine();
 
             Task[] traceTask = new Task[tn];
@@ -64,7 +64,7 @@ namespace RayTracer.Tracer
                 {
                     int row = i, col = j, n = cnt;
                     traceTask[cnt] = Task.Factory.StartNew(() =>
-                        TraceThread(results[n], scenes[n], row * h / vDiv, col * w / hDiv, (row + 1) * h / vDiv, (col + 1) * w / hDiv)
+                        TraceThread(results[n], scenes[0], row * h / vDiv, col * w / hDiv, (row + 1) * h / vDiv, (col + 1) * w / hDiv)
                     );
                     cnt++;
                 }
@@ -84,12 +84,12 @@ namespace RayTracer.Tracer
             Task[] sceneTask = new Task[tn - 1];
             scenes[0] = new Scene(sceneFile);
 
-            for (int i = 0; i < tn - 1; i++)
-            {
-                int j = i;
-                sceneTask[i] = Task.Factory.StartNew(() => scenes[j + 1] = Utils.DeepClone(scenes[0]));
-            }
-            Task.WaitAll(sceneTask);
+            //for (int i = 0; i < tn - 1; i++)
+            //{
+            //    int j = i;
+            //    sceneTask[i] = Task.Factory.StartNew(() => scenes[j + 1] = Utils.DeepClone(scenes[0]));
+            //}
+            //Task.WaitAll(sceneTask);
             Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
 
             scenes[0].ShowInformation();
@@ -102,12 +102,12 @@ namespace RayTracer.Tracer
             Console.WriteLine("Building BVH. Please Wait...");
             new BVHManager(type, isAAC).BuildBVH(scenes[0]);
             Task[] bvhThread = new Task[tn - 1];
-            for (int i = 0; i < tn - 1; i++)
-            {
-                int j = i;
-                bvhThread[i] = Task.Factory.StartNew(() => scenes[j + 1].Bvh = Utils.DeepClone(scenes[0].Bvh));
-            }
-            Task.WaitAll(bvhThread);
+            //for (int i = 0; i < tn - 1; i++)
+            //{
+            //    int j = i;
+            //    bvhThread[i] = Task.Factory.StartNew(() => scenes[j + 1].Bvh = Utils.DeepClone(scenes[0].Bvh));
+            //}
+            //Task.WaitAll(bvhThread);
             Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
         }
 

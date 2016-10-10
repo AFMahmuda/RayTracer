@@ -53,30 +53,33 @@ namespace RayTracer.Shape
 
             invDenom = 1.0f / (dot_ab_ab * dot_ac_ac - dot_ab_ac * dot_ab_ac);
         }
-
+        private Object _lock = new Object();
         public override bool IsIntersecting(Ray ray)
         {
-            //parallel -> return false
-            if (ray.Direction * localNorm == 0)
+            lock (_lock)
+            {
+                //parallel -> return false
+                if (ray.Direction * localNorm == 0)
+                    return false;
+                /*
+                relative to ray direction
+                */
+                float distanceToPlane = (
+                     (new Vec3(a) * localNorm) -
+                     (new Vec3(ray.Start) * localNorm))
+                    / (ray.Direction * localNorm);
+                /*
+                dist < 0 = behind cam
+                */
+                if (distanceToPlane > 0)
+                    if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
+                        if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane)))
+                        {
+                            ray.IntersectDistance = Matrix.Mul44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
+                            return true;
+                        }
                 return false;
-            /*
-            relative to ray direction
-            */
-            float distanceToPlane = (
-                 (new Vec3(a) * localNorm) -
-                 (new Vec3(ray.Start) * localNorm))
-                / (ray.Direction * localNorm);
-            /*
-            dist < 0 = behind cam
-            */
-            if (distanceToPlane > 0)
-                if (ray.IsSmallerThanCurrent(distanceToPlane, Trans))
-                    if (IsInsideTriangle(ray.Start + (ray.Direction * distanceToPlane)))
-                    {
-                        ray.IntersectDistance = Matrix.Mul44x41(Trans.Matrix, ray.Direction * distanceToPlane, 0).Magnitude;
-                        return true;
-                    }
-            return false;
+            }
 
         }
 
