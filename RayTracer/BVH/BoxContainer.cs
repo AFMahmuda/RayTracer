@@ -49,7 +49,7 @@ namespace RayTracer.BVH
                 p[7] = (new Point3(max.X, max.Y, max.Z));
 
                 for (int i = 0; i < p.Length; i++)
-                    p[i] = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1);
+                    p[i] = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1);
 
                 SetMinMax(p);
 
@@ -59,9 +59,9 @@ namespace RayTracer.BVH
             {
                 Triangle tri = (Triangle)item;
 
-                Point3 a = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.a), 1);
-                Point3 b = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.b), 1);
-                Point3 c = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.c), 1);
+                Point3 a = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.a), 1);
+                Point3 b = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.b), 1);
+                Point3 c = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.c), 1);
 
                 SetMinMax(new Point3[] { a, b, c });
             }

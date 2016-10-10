@@ -8,9 +8,9 @@ namespace RayTracer.Transformation
     public class Transform
     {
 
-        Mattrix matrix;
+        Matrix matrix;
 
-        public Mattrix Matrix
+        public Matrix Matrix
         {
             get { return matrix; }
             set { matrix = value; }
@@ -24,14 +24,14 @@ namespace RayTracer.Transformation
             for (int row = 0; row < 4; row++)
             {
                 for (int col = 0; col < 4; col++)
-                    Console.Write(Matrix.GetValue(row, col) + "\t");
+                    Console.Write(Matrix[row, col] + "\t");
                 Console.WriteLine();
             }
             Console.WriteLine("inverse");
             for (int row = 0; row < 4; row++)
             {
                 for (int col = 0; col < 4; col++)
-                    Console.Write(Matrix.Inverse.GetValue(row, col) + "\t");
+                    Console.Write(Matrix.Inverse[row, col] + "\t");
                 Console.WriteLine();
             }
 

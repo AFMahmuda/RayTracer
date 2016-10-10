@@ -51,8 +51,8 @@ namespace RayTracer.BVH
                 radius = (float)Math.Sqrt(new Vec3(reference, tri.c) * new Vec3(reference, tri.c));
             }
 
-            center = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(center), 1);
-            radius = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(radius, 0, 0), 0).Magnitude;
+            center = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(center), 1);
+            radius = Matrix.Mul44x41(item.Trans.Matrix, new Vec3(radius, 0, 0), 0).Magnitude;
         }
 
         public SphereContainer(SphereContainer a, SphereContainer b)

@@ -123,13 +123,13 @@ namespace RayTracer.Tracer
                     transforms.RemoveFirst();
                     break;
                 case "translate":
-                    transforms.First().Matrix = Mattrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
+                    transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
                     break;
                 case "scale":
-                    transforms.First().Matrix = Mattrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
+                    transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
                     break;
                 case "rotate":
-                    transforms.First().Matrix = Mattrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
+                    transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
                     break;
 
                 //material
