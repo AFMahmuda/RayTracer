@@ -75,7 +75,7 @@ namespace RayTracer.BVH
          *      [1] 00001000
          *      [2] 00001000
          *      [3] 00100000
-         *      pivot -> 3 (flipped on third element)
+         *      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
         */
         int getPivot(List<Geometry> geo)
         {

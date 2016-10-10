@@ -48,16 +48,16 @@ namespace RayTracer.Tracer
 
         Point3 HitPointMinus
         {
-            get { return Start + (Direction * (IntersectDistance * (.999f))).Point; }
+            get { return Start + (Direction * (IntersectDistance * (.999f))); }
         }
 
         Point3 HitPointPlus
         {
-            get { return Start + (Direction * (IntersectDistance * (1.001f))).Point; }
+            get { return Start + (Direction * (IntersectDistance * (1.001f))); }
         }
         Point3 RealHitPoint
         {
-            get { return Start + (Direction * (IntersectDistance)).Point; }
+            get { return Start + (Direction * (IntersectDistance)); }
         }
 
         public void Trace(Scene scene, Container Bvh)
@@ -221,13 +221,13 @@ namespace RayTracer.Tracer
 
         public void Transform(Transform transform)
         {
-            Start = Mattrix.Mul44x41(transform.Matrix, new Vec3(Start), 1).Point;
+            Start = Mattrix.Mul44x41(transform.Matrix, new Vec3(Start), 1);
             Direction = Mattrix.Mul44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = Mattrix.Mul44x41(transform.Matrix.Inverse, new Vec3(Start), 1).Point;
+            Start = Mattrix.Mul44x41(transform.Matrix.Inverse, new Vec3(Start), 1);
             Direction = Mattrix.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
         public bool IsSmallerThanCurrent(float distance, Transform trans)

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RayTracer.Common
 {
@@ -10,10 +7,7 @@ namespace RayTracer.Common
     {
         public Point3(float x, float y, float z)
         {
-            vals = new float[3];
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
+            vals = new float[] { x, y, z };
         }
 
         public Point3()
@@ -24,8 +18,25 @@ namespace RayTracer.Common
             : this(parameter[0], parameter[1], parameter[2])
         { }
 
-        private float[] vals;
+        public Point3(Point3 point)
+            : this(point[0], point[1], point[2])
+        { }
 
+        public static Point3 ZERO { get { return new Point3(0, 0, 0); } }
+
+
+        protected float[] vals;
+        public float this[int i]
+        {
+            get
+            {
+                return vals[i];
+            }
+            set
+            {
+                vals[i] = value;
+            }
+        }
         public float Z
         {
             get { return vals[2]; }
@@ -44,14 +55,10 @@ namespace RayTracer.Common
             set { vals[0] = value; }
         }
 
-        public float[] Vals
+        public static Point3 operator *(Point3 point, float scalar)
         {
-            get { return vals; }
-            set { vals = value; }
+            return new Point3(point.X * scalar, point.Y * scalar, point.Z * scalar);
         }
-
-
-        public static Point3 ZERO { get { return new Point3(0, 0, 0); } }
 
         public static Point3 operator +(Point3 a, Point3 b)
         {
@@ -63,18 +70,6 @@ namespace RayTracer.Common
             return a + (b * -1f);
         }
 
-        public static Point3 operator *(Point3 a, float scale)
-        {
-            return new Point3(a.X * scale, a.Y * scale, a.Z * scale);
-        }
-        public static Point3 operator *(Point3 a, int scale)
-        {
-            return new Point3(a.X * scale, a.Y * scale, a.Z * scale);
-        }
 
-        public void ShowInformation()
-        {
-            Console.WriteLine(" Point:" + X.ToString("#.0000") + " " + Y.ToString("#.0000") + " " + Z.ToString("#.0000"));
-        }
     }
 }

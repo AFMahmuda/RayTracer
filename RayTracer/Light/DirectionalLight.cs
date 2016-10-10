@@ -32,7 +32,7 @@ namespace RayTracer.Lighting
 
         public override Vec3 GetPointToLight(Point3 point)
         {
-            return new Vec3(Direction.Point * -1);
+            return new Vec3(Direction * -1);
         }
 
         public override bool IsEffective(Point3 point, Container bvh)

@@ -33,8 +33,8 @@ namespace RayTracer.BVH
 
                 for (int i = 0; i < 3; i++)
                 {
-                    min.Vals[i] -= sphere.radius;
-                    max.Vals[i] += sphere.radius;
+                    min[i] -= sphere.radius;
+                    max[i] += sphere.radius;
                 }
 
                 Point3[] p = new Point3[8];
@@ -49,7 +49,7 @@ namespace RayTracer.BVH
                 p[7] = (new Point3(max.X, max.Y, max.Z));
 
                 for (int i = 0; i < p.Length; i++)
-                    p[i] = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1).Point;
+                    p[i] = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(p[i]), 1);
 
                 SetMinMax(p);
 
@@ -59,9 +59,9 @@ namespace RayTracer.BVH
             {
                 Triangle tri = (Triangle)item;
 
-                Point3 a = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.a), 1).Point;
-                Point3 b = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.b), 1).Point;
-                Point3 c = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.c), 1).Point;
+                Point3 a = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.a), 1);
+                Point3 b = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.b), 1);
+                Point3 c = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(tri.c), 1);
 
                 SetMinMax(new Point3[] { a, b, c });
             }
@@ -76,8 +76,8 @@ namespace RayTracer.BVH
 
             for (int i = 0; i < 3; i++)
             {
-                min.Vals[i] = Math.Min(a.min.Vals[i], b.min.Vals[i]);
-                max.Vals[i] = Math.Max(a.max.Vals[i], b.max.Vals[i]);
+                min[i] = Math.Min(a.min[i], b.min[i]);
+                max[i] = Math.Max(a.max[i], b.max[i]);
             }
             Point3 size = max - min;
 
@@ -91,11 +91,11 @@ namespace RayTracer.BVH
 
             for (int i = 0; i < 3; i++)
             {
-                if (ray.Direction.Point.Vals[i] != 0f)
+                if (ray.Direction[i] != 0f)
                 {
-                    float invTemp = 1f / ray.Direction.Point.Vals[i];
-                    float tx1 = (min.Vals[i] - ray.Start.Vals[i]) * invTemp;
-                    float tx2 = (max.Vals[i] - ray.Start.Vals[i]) * invTemp;
+                    float invTemp = 1f / ray.Direction[i];
+                    float tx1 = (min[i] - ray.Start[i]) * invTemp;
+                    float tx2 = (max[i] - ray.Start[i]) * invTemp;
 
                     tmin = Math.Max(tmin, Math.Min(tx1, tx2));
                     tmax = Math.Min(tmax, Math.Max(tx1, tx2));
@@ -113,8 +113,8 @@ namespace RayTracer.BVH
             for (int i = 0; i < points.Length; i++)
                 for (int j = 0; j < 3; j++)
                 {
-                    min.Vals[j] = Math.Min(min.Vals[j], points[i].Vals[j]);
-                    max.Vals[j] = Math.Max(max.Vals[j], points[i].Vals[j]);
+                    min[j] = Math.Min(min[j], points[i][j]);
+                    max[j] = Math.Max(max[j], points[i][j]);
                 }
         }
     }

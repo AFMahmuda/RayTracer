@@ -69,14 +69,14 @@ namespace RayTracer.Shape
 
         public override Vec3 GetNormal(Point3 point)
         {
-            point = Mattrix.Mul44x41(Trans.Matrix.Inverse, new Vec3(point), 1).Point;
+            point = Mattrix.Mul44x41(Trans.Matrix.Inverse, new Vec3(point), 1);
             Vec3 norm = new Vec3(center, point).Normalize();
             return norm;
         }
 
         public override void UpdatePos()
         {
-            pos = Mattrix.Mul44x41(Trans.Matrix, new Vec3(center), 1).Point;
+            pos = Mattrix.Mul44x41(Trans.Matrix, new Vec3(center), 1);
 
             // todo : think a way to normalize position with ??? range
             pos.X = pos.X / 100f + .5f;

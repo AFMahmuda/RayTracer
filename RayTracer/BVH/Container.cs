@@ -1,11 +1,7 @@
-﻿using RayTracer.Common;
-using RayTracer.Shape;
+﻿using RayTracer.Shape;
 using RayTracer.Tracer;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.BVH
 {

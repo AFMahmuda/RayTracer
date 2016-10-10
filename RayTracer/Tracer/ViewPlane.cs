@@ -47,20 +47,20 @@ namespace RayTracer.Tracer
         void PreCalculate()
         {
             upperLeft = GetUpperLeft();
-            unitRight = (Camera.Instance.U.Point * (worldWidth / (float)PixelWidth) * -1);
-            unitDown = (Camera.Instance.V.Point * (worldHeight / (float)PixelHeight) * -1);
+            unitRight = (Camera.Instance.U * (worldWidth / (float)PixelWidth) * -1);
+            unitDown = (Camera.Instance.V * (worldHeight / (float)PixelHeight) * -1);
         }
 
         Point3 GetUpperLeft()
         {
 
             Point3 center = Camera.Instance.Position;
-            center += Camera.Instance.W.Point;
+            center += Camera.Instance.W;
             position = center;
             Point3 upperLeft =
                 center
-                + Camera.Instance.U.Point * (worldWidth / 2.0f)    //U is left
-                + Camera.Instance.V.Point * (worldHeight / 2.0f);  //V is up
+                + Camera.Instance.U * (worldWidth / 2.0f)    //U is left
+                + Camera.Instance.V * (worldHeight / 2.0f);  //V is up
 
 
             return upperLeft;
@@ -83,18 +83,5 @@ namespace RayTracer.Tracer
                 + unitDown * (row + .5f + rowOffset);
             return newLocation;
         }
-
-        public void ShowInformation()
-        {
-            Console.WriteLine("View Plane Information =============================");
-            Console.WriteLine("Upper Left");
-            upperLeft.ShowInformation();
-            Console.WriteLine("Center");
-            position.ShowInformation();
-            Console.WriteLine("H / W pixel : " + PixelHeight + " / " + PixelWidth);
-            Console.WriteLine("H / W world : " + worldHeight + " / " + worldWidth);
-            Console.WriteLine("====================================================");
-        }
-
     }
 }

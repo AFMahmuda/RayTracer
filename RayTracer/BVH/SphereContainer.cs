@@ -51,7 +51,7 @@ namespace RayTracer.BVH
                 radius = (float)Math.Sqrt(new Vec3(reference, tri.c) * new Vec3(reference, tri.c));
             }
 
-            center = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(center), 1).Point;
+            center = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(center), 1);
             radius = Mattrix.Mul44x41(item.Trans.Matrix, new Vec3(radius, 0, 0), 0).Magnitude;
         }
 
@@ -80,7 +80,7 @@ namespace RayTracer.BVH
             else
             {
                 radius = (a.radius + b.radius + aToB.Magnitude) * .5f;
-                center = a.center + (aToB.Normalize() * (radius - a.radius)).Point;
+                center = a.center + (aToB.Normalize() * (radius - a.radius));
             }
 
             area = 4f * (float)Math.PI * (float)Math.Pow(radius, 2);           

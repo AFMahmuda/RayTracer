@@ -1,43 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RayTracer.Common
 {
     [Serializable]
-    public class Vec3
+    public class Vec3 : Point3
     {
-
         public Vec3(float x, float y, float z)
         {
-            Point = new Point3(x, y, z);
+            vals = new float[] { x, y, z};
         }
 
-        public Vec3(Point3 point)
+        public Vec3(Vec3 vector)
+            :this(vector[0], vector[0], vector[0])
         {
-            //point is a reference! we only need value.
-            Point = point * 1;
+        }
+        public Vec3(Point3 point)
+        : this(point[0], point[1], point[2])
+        {
         }
 
         public Vec3(Point3 start, Point3 end)
+            :this(end - start)
         {
-            this.Point = end - start;
+            
         }
 
         public static Vec3 UP { get { return new Vec3(0, 1, 0); } }
         public static Vec3 RIGHT { get { return new Vec3(1, 0, 0); } }
-        public static Vec3 DOWN { get { return UP * -1; } }
-        public static Vec3 LEFT { get { return RIGHT * -1; } }
+        public static Vec3 DOWN { get { return (UP * -1); } }
+        public static Vec3 LEFT { get { return (RIGHT * -1); } }
 
-
-
-        public Point3 Point
-        { get; set; }
 
         public float Magnitude
         {
-            get { return (float)Math.Sqrt((Point.X * Point.X) + (Point.Y * Point.Y) + (Point.Z * Point.Z)); }
+            get { return (float)Math.Sqrt((X * X) + (Y * Y) + (Z * Z)); }
         }
 
         public Vec3 Normalize()
@@ -48,26 +44,17 @@ namespace RayTracer.Common
 
         public static float operator *(Vec3 a, Vec3 b)
         {
-            Point3 newA = a.Point;
-            Point3 newB = b.Point;
+            Vec3 newA = a;
+            Vec3 newB = b;
             float result = ((newA.X * newB.X) + (newA.Y * newB.Y) + (newA.Z * newB.Z));
 
             return result;
         }
 
-        public static Vec3 operator *(Vec3 vector, float scalar)
-        {
-            Vec3 result = new Vec3(vector.Point);
-            for (int i = 0; i < 3; i++)
-            {
-                result.Point.Vals[i] *= scalar;
-            }
-            return result;
-        }
-
+      
         public static Vec3 operator +(Vec3 a, Vec3 b)
         {            
-            Vec3 result = new Vec3(a.Point + b.Point);
+            Vec3 result = new Vec3(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
             return result;
 
         }
@@ -76,28 +63,24 @@ namespace RayTracer.Common
         {
             return a + (b * -1);
         }
-
+        public static Vec3 operator *(Vec3 vector, float scalar)
+        {
+            return new Vec3(vector.X * scalar, vector.Y * scalar, vector.Z * scalar);
+        }
         public static Vec3 operator /(Vec3 vector, float scalar)
         {
-            return vector * (1.0f / scalar);
+            return (vector * (1.0f / scalar));
         }
 
         public static Vec3 Cross(Vec3 a, Vec3 b)
         {
-            Point3 A = a.Point;
-            Point3 B = b.Point;
+            Vec3 A = a;
+            Vec3 B = b;
             return new Vec3(
                 A.Y * B.Z - A.Z * B.Y,
                 (A.X * B.Z - A.Z * B.X) * -1,
                 A.X * B.Y - A.Y * B.X
             );
-        }
-
-        public void ShowInformation()
-        {
-            Console.WriteLine(" vector:");
-            Console.WriteLine(" Value     = " + Point.X.ToString("#.0000") + " " + Point.Y.ToString("#.0000") + " " + Point.Z.ToString("#.0000"));
-            Console.WriteLine(" Magnitude = " + Magnitude.ToString("#.0000"));
         }
     }
 }

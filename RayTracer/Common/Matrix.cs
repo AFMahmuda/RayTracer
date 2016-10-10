@@ -169,9 +169,9 @@ namespace RayTracer.Common
         {
 
             float[,] val = matrix.GetValue();
-            float x = vector.Point.X;
-            float y = vector.Point.Y;
-            float z = vector.Point.Z;
+            float x = vector.X;
+            float y = vector.Y;
+            float z = vector.Z;
 
             float newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
             float newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;

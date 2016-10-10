@@ -39,29 +39,9 @@ namespace RayTracer.Tracer
 
         public Point3 CameraViewPosition()
         {
-            return (U * Position.X + V * Position.Y + W * Position.Z).Point;
+            return (U * Position.X + V * Position.Y + W * Position.Z);
         }
 
-
-        public void ShowInformation()
-        {
-
-            Console.WriteLine("Camera Information ================================");
-            Console.Write("Pos    : ");
-            Position.ShowInformation();
-            Console.Write("LookAt : ");
-            LookAt.ShowInformation();
-            Console.WriteLine("Up");
-            Up.ShowInformation();
-
-            Console.Write("W : ");
-            W.ShowInformation();
-            Console.Write("U : ");
-            U.ShowInformation();
-            Console.Write("V : ");
-            V.ShowInformation();
-            Console.WriteLine("===================================================");
-        }
 
         public Vec3 U
         { get; set; }
