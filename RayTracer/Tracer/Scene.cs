@@ -162,6 +162,12 @@ namespace RayTracer.Tracer
                 case "shininess":
                     material.Shininess = param[0];
                     break;
+                case "refIndex":
+                    material.RefractIndex = param[0];
+                    break;
+                case "refValue":
+                    material.RefractValue = param[0];
+                    break;
 
 
                 //light
@@ -198,12 +204,6 @@ namespace RayTracer.Tracer
             ApplyTransform(geo);
             ApplyMaterial(geo);
             ApplyAmbient(geo);
-
-            //if (type == Geometry.TYPE.SPHERE)
-            //{
-            //    geo.Material.RefractIndex = 1.25f;
-            //    geo.Material.RefractValue = 1f;
-            //}
 
             return geo;
         }
