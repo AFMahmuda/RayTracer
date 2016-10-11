@@ -6,7 +6,6 @@ D:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.exe
 D:\Dokumen\code\c#\RayTracer\RayTracer\bin\Debug\RayTracer.pdb
 D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.exe
 D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
-D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.csprojResolveAssemblyReference.cache
 C:\5112100118\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe.config
 C:\5112100118\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.exe
 C:\5112100118\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
@@ -24,3 +23,4 @@ E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe.co
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.exe
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\bin\Debug\RayTracer.pdb
 E:\5112100118 - Fathur\TA\Project\RayTracer\RayTracer\obj\Debug\RayTracer.pdb
+D:\Dokumen\code\c#\RayTracer\RayTracer\obj\Debug\RayTracer.csprojResolveAssemblyReference.cache

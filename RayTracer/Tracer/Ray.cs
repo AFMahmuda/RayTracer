@@ -72,7 +72,8 @@ namespace RayTracer.Tracer
                         Vec3 tempDir = Utils.DeepClone(Direction);
 
                         //transform ray according to each shapes transformation
-                        TransformInv(Bvh.Geo.Trans);
+                        if (Bvh.Geo.Trans != new Translation())
+                            TransformInv(Bvh.Geo.Trans);
 
                         if (Bvh.Geo.IsIntersecting(this))
                             IntersectWith = Bvh.Geo;
@@ -135,7 +136,7 @@ namespace RayTracer.Tracer
         {
             if (bounce <= 0 || IntersectWith == null)
             {
-                if(Type == TYPE.REFRACTION || Type == TYPE.REFRACTION)
+                if (Type == TYPE.REFRACTION || Type == TYPE.REFRACTION)
                     return new MyColor();
                 return scene.defColor;
             }

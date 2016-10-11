@@ -16,7 +16,7 @@ namespace RayTracer
 
             if (File.Exists(scenefile))
             {
-                TracerManager tracer = new TracerManager(6,false,BVH.Container.TYPE.BOX);
+                TracerManager tracer = new TracerManager(6,true,BVH.Container.TYPE.BOX);
                 tracer.TraceScene(scenefile);
             }
             else

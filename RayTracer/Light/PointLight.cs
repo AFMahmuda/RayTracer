@@ -3,6 +3,7 @@ using RayTracer.Material;
 using RayTracer.Tracer;
 using System;
 using RayTracer.BVH;
+using RayTracer.Transformation;
 
 namespace RayTracer.Lighting
 {
@@ -39,7 +40,8 @@ namespace RayTracer.Lighting
             {
                 if (bvh.Geo != null)
                 {
-                    shadowRay.TransformInv(bvh.Geo.Trans);
+                    if (bvh.Geo.Trans != new Translation())
+                        shadowRay.TransformInv(bvh.Geo.Trans);
                     if (bvh.Geo.IsIntersecting(shadowRay))
                         if (shadowRay.IntersectDistance < pointToLight.Magnitude)
                             return false;

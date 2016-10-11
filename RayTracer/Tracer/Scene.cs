@@ -201,12 +201,14 @@ namespace RayTracer.Tracer
             if (type == Geometry.TYPE.SPHERE)
             {
                 geo = CreateSphere(param);
+                ApplyTransform(geo);
+
             }
             else //if (type == Geometry.TYPE.TRIANGLE)
             {
                 geo = CreateTriangle(param);
+                //transform already aplied in each vertices
             }
-            ApplyTransform(geo);
             ApplyMaterial(geo);
             ApplyAmbient(geo);
 
@@ -225,6 +227,10 @@ namespace RayTracer.Tracer
             Point3 a = vertices[(int)param[0]];
             Point3 b = vertices[(int)param[1]];
             Point3 c = vertices[(int)param[2]];
+
+            a = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(a), 1);
+            b = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(b), 1);
+            c = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(c), 1);
 
             Triangle tri = new Triangle(a, b, c);
 

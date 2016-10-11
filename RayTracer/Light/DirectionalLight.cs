@@ -5,6 +5,7 @@ using RayTracer.Tracer;
 using System;
 using System.Collections.Generic;
 using RayTracer.BVH;
+using RayTracer.Transformation;
 
 namespace RayTracer.Lighting
 {
@@ -37,14 +38,15 @@ namespace RayTracer.Lighting
 
         public override bool IsEffective(Point3 point, Container bvh)
         {
-            Ray shadowRay = new Ray(point, (Direction*-1));
+            Ray shadowRay = new Ray(point, (Direction * -1));
             if (bvh.IsIntersecting(shadowRay))
             {
                 if (bvh.Geo != null)
                 {
-                    shadowRay.TransformInv(bvh.Geo.Trans);
+                    if (bvh.Geo.Trans != new Translation())
+                        shadowRay.TransformInv(bvh.Geo.Trans);
                     if (bvh.Geo.IsIntersecting(shadowRay))
-                            return false;
+                        return false;
                 }
                 else
                 {
@@ -59,7 +61,7 @@ namespace RayTracer.Lighting
 
             return true;
         }
-        
+
 
         public override float GetAttValue(Point3 point, Attenuation attenuation)
         {

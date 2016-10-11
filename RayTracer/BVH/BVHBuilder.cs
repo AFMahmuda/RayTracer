@@ -1,9 +1,11 @@
 ﻿using RayTracer.Algorithm;
 using RayTracer.Shape;
 using RayTracer.Tracer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RayTracer.BVH
 {
@@ -44,30 +46,38 @@ namespace RayTracer.BVH
         }
 
 
-        int threshold = 4; //4 or 20
+        int threshold = 20; //4 or 20
         List<Container> BuildTree(Geometry[] primitives)
         {
+            //Console.WriteLine("building tree from " + primitives.Length);
             List<Container> bins = new List<Container>();
             if (primitives.Length < threshold)
             {
+
                 for (int i = 0; i < primitives.Length; i++)
                 {
                     bins.Add(ContainerFactory.Instance.CreateContainer(primitives[i], type));
                 }
-
                 return CombineCluster(bins, f(threshold));
             }
 
-
             int pivot = getPivot(primitives);
-            Geometry[] left = primitives.Take(pivot-1).ToArray();
-            
-            Geometry[] right = primitives.Skip(pivot-1).ToArray(); // pivot included in right
+            Geometry[] left = primitives.Take(pivot).ToArray();
+            Geometry[] right = primitives.Skip(pivot).ToArray(); // pivot included in right
 
-            bins.AddRange(BuildTree(left));
-            bins.AddRange(BuildTree(right));
+            List<Container> leftTree = new List<Container>(), rightTree = new List<Container>();
 
-            return CombineCluster(bins, f(primitives.Length));
+            Task[] BuildTreeTask = new Task[2];
+            BuildTreeTask[0] = Task.Factory.StartNew(() => leftTree = BuildTree(left).ToList());
+            BuildTreeTask[1] = Task.Factory.StartNew(() => rightTree = BuildTree(right).ToList());
+            Task.WaitAll(BuildTreeTask);
+
+
+            bins.AddRange(leftTree);
+            bins.AddRange(rightTree);
+            //bins.AddRange(BuildTree(left));
+            //bins.AddRange(BuildTree(right));
+            return CombineCluster(bins, f(bins.Count));
         }
 
         /*cluster reduction function
@@ -94,9 +104,9 @@ namespace RayTracer.BVH
             {
                 for (int j = 1; j < geo.Length; j++)
                 {
-                    BitArray last = geo[j].mortonBit;
-                    BitArray curr = geo[j - 1].mortonBit;
-                    if (last[i] != curr[i])
+                    string last = geo[j - 1].GetMortonBitString();
+                    string curr = geo[j].GetMortonBitString();
+                    if (curr[i] != last[i])
                         return j;
                 }
             }
@@ -107,11 +117,12 @@ namespace RayTracer.BVH
         //combine bins cluster to [limit] cluster
         List<Container> CombineCluster(List<Container> bins, int limit)
         {
+            //Console.WriteLine("Combining from " + bins.Count + " to " + limit);
 
             for (int i = 0; i < bins.Count; i++)
             {
-
                 bins[i].FindBestMatch(bins);
+
             }
 
             while (bins.Count > limit)

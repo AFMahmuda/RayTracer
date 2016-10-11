@@ -1,7 +1,5 @@
 ﻿using RayTracer.Shape;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RayTracer.Algorithm
 {
@@ -10,12 +8,11 @@ namespace RayTracer.Algorithm
         //TaskCompletionSource : https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Radix_sort
         public static Geometry[] Sort(Geometry[] items)
         {
-
             // our helper array 
             Geometry[] t = new Geometry[items.Length];
 
             // number of bits our group will be long 
-            int r = 8; // try to set this also to 2, 8 or 16 to see if it is quicker or not 
+            int r = 4; // try to set this also to 2, 8 or 16 to see if it is quicker or not 
 
             // number of bits of a C# int 
             int b = 32;
@@ -26,7 +23,7 @@ namespace RayTracer.Algorithm
             int[] pref = new int[1 << r];
 
             // number of groups 
-            int groups = (int)Math.Ceiling((float)b / (float)r);
+            int groups = (int)Math.Ceiling((double)b / (double)r);
 
             // the mask to identify groups 
             int mask = (1 << r) - 1;
@@ -52,8 +49,7 @@ namespace RayTracer.Algorithm
                     t[pref[(items[i].GetMortonPos() >> shift) & mask]++] = items[i];
 
                 // a[]=t[] and start again until the last group 
-
-                //items = t.ToList();
+                t.CopyTo(items, 0);
             }
             // a is sorted 
             return items;

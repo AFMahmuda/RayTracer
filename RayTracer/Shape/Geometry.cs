@@ -22,7 +22,6 @@ namespace RayTracer.Shape
         protected Point3 pos;
         protected bool hasMorton;
         protected uint mortonCode;
-        public BitArray mortonBit;
 
 
         public Point3 Pos { get { return pos; } }
@@ -52,7 +51,6 @@ namespace RayTracer.Shape
                 uint y = expandBits((uint)Math.Min(Math.Max(pos.Y * 1024f, 0f), 1023f));
                 uint z = expandBits((uint)Math.Min(Math.Max(pos.Z * 1024f, 0f), 1023f));
                 mortonCode = x * 4 + y * 2 + z;
-                mortonBit = new BitArray(BitConverter.GetBytes(mortonCode));
                 hasMorton = true;
             }
             return mortonCode;
@@ -66,7 +64,10 @@ namespace RayTracer.Shape
             v = (v * 0x00000005u) & 0x49249249u;
             return v;
         }
-
+        public string GetMortonBitString()
+        {
+            return Convert.ToString(mortonCode, 2).PadLeft(30, '0');
+        }
 
         public void printPos()
         {
