@@ -134,7 +134,12 @@ namespace RayTracer.Tracer
         public MyColor GetColor(Scene scene, int bounce)
         {
             if (bounce <= 0 || IntersectWith == null)
-                return new MyColor();
+            {
+                if(Type == TYPE.REFRACTION || Type == TYPE.REFRACTION)
+                    return new MyColor();
+                return scene.defColor;
+            }
+
             else
             {
                 List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Bvh);
@@ -199,7 +204,8 @@ namespace RayTracer.Tracer
 
                 if (cosT2 < 0)
                 {
-                    //return new MyColor();
+                    //if (bounce - 1 == 0)
+                    //    return scene.defColor;
                     return (1f - IntersectWith.Material.RefractValue) * CalcReflection(scene, bounce - 1);
                 }
 

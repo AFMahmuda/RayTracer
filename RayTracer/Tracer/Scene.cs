@@ -24,6 +24,7 @@ namespace RayTracer.Tracer
         private MyColor ambient;
         private Mat material;
         public Container Bvh;
+        public MyColor defColor = new MyColor();
 
         public Scene()
         {
@@ -101,6 +102,10 @@ namespace RayTracer.Tracer
             }
             switch (command)
             {
+
+                case "defColor":
+                    defColor = new MyColor(param[0],param[1],param[2]);
+                    break;
                 case "size":
                     Size = new Size((int)param[0], (int)param[1]);
                     break;
