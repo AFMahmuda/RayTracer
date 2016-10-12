@@ -9,13 +9,13 @@ namespace RayTracer
         static void Main(string[] args)
         {
 
-            String scenefile = "default.test";
+            string scenefile = "default.test";
             if (args.Length != 0)
                 scenefile = args[0];
 
             if (File.Exists(scenefile))
             {
-                TracerManager tracer = new TracerManager(24,true,BVH.Container.TYPE.BOX);
+                TracerManager tracer = new TracerManager(12,true,BVH.Container.TYPE.BOX);
                 tracer.TraceScene(scenefile);
             }
             else

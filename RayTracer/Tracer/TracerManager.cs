@@ -65,25 +65,19 @@ namespace RayTracer.Tracer
 
 
             //precalculate w and h measurements
-
             //w and h total
             height = ViewPlane.Instance.PixelHeight;
             width = ViewPlane.Instance.PixelWidth;
 
             //search two closest factors 6 = 3 and 2 , 5 = 5 and 1
             verDiv = (int)Math.Sqrt(tn);
-            do
-            {
-                verDiv++;
-            } while (tn % verDiv != 0);
+            do verDiv++; while (tn % verDiv != 0);
             horDiv = tn / verDiv;
 
             wPerSeg = width / horDiv; //width per segmen
             hPerSeg = height / verDiv; //height per segmen
 
         }
-
-
 
         void BuildBVH()
         {
@@ -95,8 +89,6 @@ namespace RayTracer.Tracer
 
         void Trace()
         {
-
-
             DateTime start = DateTime.Now;
             Console.WriteLine("Tracing...Please Wait...");
             for (int i = 0; i < tn * 5; i++) Console.Write("-");
@@ -125,8 +117,9 @@ namespace RayTracer.Tracer
 
         void TraceThread(Bitmap result, Scene scene, int rowStart, int colStart, int rowEnd, int colEnd)
         {
-            float total = (colEnd - colStart) * (rowEnd - rowStart);
+            float segmen = (colEnd - colStart) * (rowEnd - rowStart) / 5f;
             float count = 0;
+
             for (int currRow = rowStart; currRow < rowEnd; currRow++)
             {
                 for (int currCol = colStart; currCol < colEnd; currCol++)
@@ -142,10 +135,11 @@ namespace RayTracer.Tracer
                     result.SetPixel(currCol - colStart, currRow - rowStart, rayColor.ToColor());
 
                     //progress bar
-                    if (++count >= total / 5.0)
+
+                    if (++count >= segmen)
                     {
                         Console.Write("*");
-                        count = count - (total / 5.0f);
+                        count -= (segmen);
                     }
                 }
             }
@@ -159,24 +153,18 @@ namespace RayTracer.Tracer
             Bitmap res = new Bitmap(width, height);
             using (Graphics finalResult = Graphics.FromImage(res))
             {
-
-
-                //for (int i = 0; i < results.Length; i++)
-                //    finalResult.DrawImage(results[i], 0, 0);
-
-                int newW = 0, newH = 0;
+                int tempW = 0, tempH = 0;
                 for (int i = 0; i < verDiv; i++)
                 {
                     for (int j = 0; j < horDiv; j++)
                     {
-                        finalResult.DrawImage(results[cnt], newW, newH);
-                        newW += results[cnt].Width;
+                        finalResult.DrawImage(results[cnt], tempW, tempH);
+                        tempW += results[cnt].Width;
                         cnt++;
                     }
-                    newW = 0;
-                    newH += results[cnt - 1].Height;
+                    tempW = 0;
+                    tempH += results[cnt - 1].Height;
                 }
-
             }
 
             if (filename.Equals(""))
@@ -184,8 +172,5 @@ namespace RayTracer.Tracer
             res.Save(filename);
             Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename + "\n");
         }
-
-
-       
     }
 }

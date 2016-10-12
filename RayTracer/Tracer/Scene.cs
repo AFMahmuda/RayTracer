@@ -23,7 +23,7 @@ namespace RayTracer.Tracer
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
         private Mat material;
-        public Container Bvh;
+
         public MyColor defColor = new MyColor();
 
         public Scene()
@@ -37,14 +37,14 @@ namespace RayTracer.Tracer
             OutputFilename = "default.bmp";
         }
 
-        public String SceneFile { get; set; }
-        public Scene(String scenefile)
+        public string SceneFile { get; set; }
+        public Scene(string scenefile)
             : this()
         {
             ParseCommand(scenefile);
         }
 
-        public void ParseCommand(String scenefile)
+        public void ParseCommand(string scenefile)
         {
             SceneFile = scenefile;
             StreamReader filereader = new StreamReader(scenefile);
@@ -104,7 +104,7 @@ namespace RayTracer.Tracer
             {
 
                 case "defColor":
-                    defColor = new MyColor(param[0],param[1],param[2]);
+                    defColor = new MyColor(param[0],param[1],param[2]);                    
                     break;
                 case "size":
                     Size = new Size((int)param[0], (int)param[1]);
@@ -277,6 +277,11 @@ namespace RayTracer.Tracer
 
         public Size Size
         { get; set; }
+
+        public Container Bvh
+        {
+            get;set;
+        }
 
         public void ShowInformation()
         {

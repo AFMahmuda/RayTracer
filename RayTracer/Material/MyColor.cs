@@ -16,26 +16,17 @@ namespace RayTracer.Material
         public float R
         {
             get { return r; }
-            set
-            {
-                r = (value < 0) ? 0 : ((value > 1) ? 1 : value);
-            }
+            set { r = (value < 0) ? 0 : ((value > 1) ? 1 : value); }
         }
         public float G
         {
             get { return g; }
-            set
-            {
-                g = (value < 0) ? 0 : ((value > 1) ? 1 : value);
-            }
+            set { g = (value < 0) ? 0 : ((value > 1) ? 1 : value); }
         }
         public float B
         {
             get { return b; }
-            set
-            {
-                b = (value < 0) ? 0 : ((value > 1) ? 1 : value);
-            }
+            set { b = (value < 0) ? 0 : ((value > 1) ? 1 : value); }
         }
 
         public MyColor(float r, float g, float b)
@@ -51,12 +42,6 @@ namespace RayTracer.Material
         public MyColor()
             : this(0f, 0f, 0f)
         { }
-
-
-        public MyColor Clone()
-        {
-            return (MyColor)this.MemberwiseClone();
-        }
 
         public Color ToColor()
         {
