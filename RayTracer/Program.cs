@@ -1,6 +1,5 @@
 ﻿using RayTracer.Tracer;
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace RayTracer
@@ -16,7 +15,7 @@ namespace RayTracer
 
             if (File.Exists(scenefile))
             {
-                TracerManager tracer = new TracerManager(6,true,BVH.Container.TYPE.BOX);
+                TracerManager tracer = new TracerManager(24,true,BVH.Container.TYPE.BOX);
                 tracer.TraceScene(scenefile);
             }
             else
