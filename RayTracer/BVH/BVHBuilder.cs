@@ -1,8 +1,6 @@
 ﻿using RayTracer.Algorithm;
 using RayTracer.Shape;
 using RayTracer.Tracer;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,10 +44,9 @@ namespace RayTracer.BVH
         }
 
 
-        int threshold = 20; //4 or 20
+        int threshold = 4; //4 or 20
         List<Container> BuildTree(Geometry[] primitives)
         {
-            //Console.WriteLine("building tree from " + primitives.Length);
             List<Container> bins = new List<Container>();
             if (primitives.Length < threshold)
             {

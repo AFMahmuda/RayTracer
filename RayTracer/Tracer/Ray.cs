@@ -11,7 +11,6 @@ namespace RayTracer.Tracer
 {
     public class Ray
     {
-
         public Ray()
         {
             IntersectDistance = float.MaxValue;
