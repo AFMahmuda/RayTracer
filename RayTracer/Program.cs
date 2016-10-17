@@ -22,7 +22,6 @@ namespace RayTracer
             {
                 Console.WriteLine("File not found!");
             }
-
         }
     }
 }
