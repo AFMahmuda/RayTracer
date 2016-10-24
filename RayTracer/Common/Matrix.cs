@@ -77,7 +77,7 @@ namespace RayTracer.Common
 
         public static Matrix operator *(Matrix a, float b)
         {
-            Matrix result = new Matrix(a.colNumber, a.rowNumber);
+            Matrix result = new Matrix(a.rowNumber, a.colNumber);
 
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
