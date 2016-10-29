@@ -10,6 +10,7 @@ public:
 	float r; //radius
 
 	Sphere(float * val) :Sphere( Point3(val[0], val[1], val[2]), val[3]) {}
+	Sphere() {}
 	Sphere(Point3& center, float radius) {
 		c = center;
 		r = radius;

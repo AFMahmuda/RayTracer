@@ -4,6 +4,8 @@
 #include"Rotation.h"
 #include"Scaling.h"
 
+
+#include"RadixSort.h"
 using namespace std;
 int main(int argc, char *argv[])
 {
@@ -20,21 +22,25 @@ int main(int argc, char *argv[])
 	else
 	{
 		cout << "file not found!" << endl;
-		float min = -50, max = 50, step = 25;
 
-		for (float x = min; x <= max; x += step)
+		int count = 200;
+		Geometry** balz;
+		balz = (Geometry**)malloc(sizeof(Geometry*) * count);
+		for (int x = 0; x < count; x++)
 		{
-			for (float y = min; y <= max; y += step)
-			{
-				for (float z = min; z <= max; z += step)
-				{
-					Sphere balz(Point3(x, y, z), 1);
-					cout << "sph pos : " << balz.c[0] << "\t" << balz.c[1] << "\t" << balz.c[2] << "\t" << balz.r << "\t" << balz.getMortonBitString() << endl;
-				}
-			}
+			float randx = rand() % 100 - 50;
+			float randy = rand() % 100 - 50;
+			float randz = rand() % 100 - 50;
+			balz[x] = new Sphere(Point3(randx, randy, randz), 1);
+		}
+
+		RadixSort::radixsort(balz, count);
+
+		for (int x = 0; x < count; x++)
+		{
+			cout << "sph pos : " << ((Sphere*)balz[x])->c[0] << "\t" << ((Sphere*)balz[x])->c[1] << "\t" << ((Sphere*)balz[x])->c[2] << "\t" << balz[x]->getMortonPos() << endl;
 
 		}
-		cout << "end" << endl;
 
 
 		//Transform trans = Translation(1, 1, 1);
