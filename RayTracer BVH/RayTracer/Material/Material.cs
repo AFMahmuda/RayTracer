@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RayTracer.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -28,31 +29,17 @@ namespace RayTracer.Material
         { get; set; }
 
 
-        float shininess = 0;
-        public float Shininess
+        Double shininess;
+        public Double Shininess
         {
             get
-            { return shininess; }
+            {
+                return shininess;
+            }
             set
-            { shininess = (value < 0) ? 0 : ((value > 128) ? 128 : value); }
-        }
-
-        float refractValue = 0;
-        public float RefractValue
-        {
-            get
-            { return refractValue; }
-            set
-            { refractValue = (value < 0) ? 0 : ((value > 1) ? 1 : value); }
-        }
-
-        float refractIndex = 1;
-        public float RefractIndex
-        {
-            get
-            { return refractIndex; }
-            set
-            { refractIndex = (value < 0) ? 0 : value; }
+            {
+                shininess = (value < 0) ? 0 : ((value > 128) ? 128 : value);
+            }
         }
 
         public Mat Clone()

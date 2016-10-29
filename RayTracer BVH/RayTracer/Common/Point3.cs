@@ -1,65 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace RayTracer.Common
 {
     [Serializable]
     public class Point3
     {
-        public Point3(float x, float y, float z)
+
+        public Point3(Double x, Double y, Double z)
         {
-            vals = new float[] { x, y, z };
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
         }
 
         public Point3()
             : this(0, 0, 0)
-        { }
+        {
+        }
 
-        public Point3(float[] parameter)
+        public Point3(Double[] parameter)
             : this(parameter[0], parameter[1], parameter[2])
-        { }
+        {
+        }
 
-        public Point3(Point3 point)
-            : this(point[0], point[1], point[2])
-        { }
+        private Double x, y, z;
+
+        public Double Z
+        {
+            get { return z; }
+            set { z = value; }
+        }
+
+        public Double Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
+
+        public Double X
+        {
+            get { return x; }
+            set { x = value; }
+        }
+
 
         public static Point3 ZERO { get { return new Point3(0, 0, 0); } }
-
-
-        protected float[] vals;
-        public float this[int i]
-        {
-            get
-            {
-                return vals[i];
-            }
-            set
-            {
-                vals[i] = value;
-            }
-        }
-        public float Z
-        {
-            get { return vals[2]; }
-            set { vals[2] = value; }
-        }
-
-        public float Y
-        {
-            get { return vals[1]; }
-            set { vals[1] = value; }
-        }
-
-        public float X
-        {
-            get { return vals[0]; }
-            set { vals[0] = value; }
-        }
-
-        public static Point3 operator *(Point3 point, float scalar)
-        {
-            return new Point3(point.X * scalar, point.Y * scalar, point.Z * scalar);
-        }
-
+         
         public static Point3 operator +(Point3 a, Point3 b)
         {
             return new Point3(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
@@ -70,6 +59,18 @@ namespace RayTracer.Common
             return a + (b * -1f);
         }
 
+        public static Point3 operator *(Point3 a, Double scale)
+        {
+            return new Point3(a.X * scale, a.Y * scale, a.Z * scale);
+        }
+        public static Point3 operator *(Point3 a, int scale)
+        {
+            return new Point3(a.X * scale, a.Y * scale, a.Z * scale);
+        }
 
+        public void ShowInformation()
+        {
+            Console.WriteLine(" Point:" + X.ToString("#.0000") + " " + Y.ToString("#.0000") + " " + Z.ToString("#.0000"));
+        }
     }
 }

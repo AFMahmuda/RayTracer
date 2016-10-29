@@ -1,18 +1,23 @@
 ﻿using RayTracer.Shape;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RayTracer.Algorithm
+namespace RayTracer
 {
     class RadixSort
     {
         //TaskCompletionSource : https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Radix_sort
-        public static Geometry[] Sort(Geometry[] items)
+        public static List<Geometry> Sort(List<Geometry> a)
         {
+
             // our helper array 
-            Geometry[] t = new Geometry[items.Length];
+            Geometry[] t = new Geometry[a.Count];
 
             // number of bits our group will be long 
-            int r = 4; // try to set this also to 2, 8 or 16 to see if it is quicker or not 
+            int r = 8; // try to set this also to 2, 8 or 16 to see if it is quicker or not 
 
             // number of bits of a C# int 
             int b = 32;
@@ -36,8 +41,8 @@ namespace RayTracer.Algorithm
                     count[j] = 0;
 
                 // counting elements of the c-th group 
-                for (int i = 0; i < items.Length; i++)
-                    count[(items[i].GetMortonPos() >> shift) & mask]++;
+                for (int i = 0; i < a.Count; i++)
+                    count[(a[i].GetMortonPos() >> shift) & mask]++;
 
                 // calculating prefixes 
                 pref[0] = 0;
@@ -45,14 +50,14 @@ namespace RayTracer.Algorithm
                     pref[i] = pref[i - 1] + count[i - 1];
 
                 // from a[] to t[] elements ordered by c-th group 
-                for (int i = 0; i < items.Length; i++)
-                    t[pref[(items[i].GetMortonPos() >> shift) & mask]++] = items[i];
+                for (int i = 0; i < a.Count; i++)
+                    t[pref[(a[i].GetMortonPos() >> shift) & mask]++] = a[i];
 
                 // a[]=t[] and start again until the last group 
-                t.CopyTo(items, 0);
+                a = t.ToList();
             }
             // a is sorted 
-            return items;
+            return a;
         }
     }
 }

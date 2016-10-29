@@ -1,5 +1,8 @@
 ﻿using RayTracer.Common;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace RayTracer.Tracer
 {
@@ -9,55 +12,91 @@ namespace RayTracer.Tracer
         public static Camera Instance;
 
         public Camera()
-            : this(Point3.ZERO, Point3.ZERO, Vec3.UP, 30f)
+            : this(Point3.ZERO, Point3.ZERO, Vector3.UP, 30f)
         { }
 
-        public Camera(float[] parameter)
+        public Camera(Double[] parameter)
             : this(
-            new Point3(parameter[0], parameter[1], parameter[2]), //position point
-            new Point3(parameter[3], parameter[4], parameter[5]), //look at point
-            new Vec3(parameter[6], parameter[7], parameter[8]), // up dir
-            parameter[9] // field of view
+            new Point3(parameter[0], parameter[1], parameter[2]), //pos
+            new Point3(parameter[3], parameter[4], parameter[5]),
+            new Vector3(parameter[6], parameter[7], parameter[8]),
+            parameter[9]
             )
         { }
 
 
 
-        public Camera(Point3 position, Point3 lookAt, Vec3 up, float fov)
+        public Camera(Point3 position, Point3 lookAt, Vector3 up, double fov)
         {
-            Position = position;
-            LookAt = lookAt;
-            Up = up;
+            this.Position = position;
+            this.LookAt = lookAt;
+            this.Up = up;
             FieldOfView = fov;
 
-            W = (new Vec3(LookAt - Position)).Normalize();
-            U = Vec3.Cross(Up, W).Normalize();
-            V = Vec3.Cross(W, U);
+            W = (new Vector3(LookAt - Position)).Normalize();
+            U = Vector3.Cross(Up, W).Normalize();
+            V = Vector3.Cross(W, U);
 
             Instance = this;
         }
 
         public Point3 CameraViewPosition()
         {
-            return (U * Position.X + V * Position.Y + W * Position.Z);
+            return (U * Position.X + V * Position.Y + W * Position.Z).Point;
         }
 
 
-        public Vec3 U
-        { get; set; }
+        public void ShowInformation()
+        {
+
+            Console.WriteLine("Camera Information ================================");
+            Console.Write("Pos    : ");
+            Position.ShowInformation();
+            Console.Write("LookAt : ");
+            LookAt.ShowInformation();
+            Console.WriteLine("Up");
+            Up.ShowInformation();
+
+            Console.Write("W : ");
+            W.ShowInformation();
+            Console.Write("U : ");
+            U.ShowInformation();
+            Console.Write("V : ");
+            V.ShowInformation();
+            Console.WriteLine("===================================================");
+        }
 
 
-        public Vec3 V
-        { get; set; }
+
+        private Vector3 u;
 
 
-        public Vec3 W
-        { get; set; }
+        public Vector3 U
+        {
+            get { return u; }
+            set { u = value; }
+        }
 
+        private Vector3 v;
+        public Vector3 V
+        {
+            get { return v; }
+            set { v = value; }
+        }
+        private Vector3 w;
 
-        private float fieldOfView;
+        public Vector3 W
+        {
+            get { return w; }
+            set { w = value; }
+        }
 
-        public float FieldOfView
+        private Point3 position;
+        private Point3 lookAt;
+
+        private Double fieldOfView;
+
+        public Double FieldOfView
         {
             get { return fieldOfView; }
             set
@@ -70,16 +109,24 @@ namespace RayTracer.Tracer
                     fieldOfView = value;
             }
         }
-        public Vec3 Up
-        { get; set; }
-
+        private Vector3 up;
+        public Vector3 Up
+        {
+            get { return up; }
+            set { up = value; }
+        }
 
         public Point3 Position
-        { get; set; }
-
+        {
+            get { return position; }
+            set { position = value; }
+        }
 
         public Point3 LookAt
-        { get; set; }
+        {
+            get { return lookAt; }
+            set { lookAt = value; }
+        }
 
     }
 }

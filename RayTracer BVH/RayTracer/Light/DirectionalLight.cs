@@ -1,11 +1,10 @@
 ﻿using RayTracer.Common;
-using RayTracer.Material;
 using RayTracer.Shape;
 using RayTracer.Tracer;
 using System;
 using System.Collections.Generic;
-using RayTracer.BVH;
-using RayTracer.Transformation;
+using System.Linq;
+using System.Text;
 
 namespace RayTracer.Lighting
 {
@@ -14,59 +13,52 @@ namespace RayTracer.Lighting
     {
 
 
-        public DirectionalLight(Vec3 direction, MyColor color)
+        public DirectionalLight(Vector3 direction, MyColor color)
         {
-            Direction = direction.Normalize();
+            Direction = direction;
             Color = color;
 
         }
-        public DirectionalLight(float[] param)
-            : this(new Vec3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
+        public DirectionalLight(Double[] param)
+            : this(new Vector3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
         {
         }
 
-        public Vec3 Direction
+        public Vector3 Direction
         {
             get;
             set;
         }
 
-        public override Vec3 GetPointToLight(Point3 point)
+        public override Vector3 GetPointToLight(Point3 point)
         {
-            return new Vec3(Direction * -1);
+            return new Vector3(Direction.Point * -1);
         }
 
-        public override bool IsEffective(Point3 point, Container bvh)
+        public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
         {
-            Ray shadowRay = new Ray(point, (Direction * -1));
-            if (bvh.IsIntersecting(shadowRay))
-            {
-                if (bvh.Geo != null)
-                {
-                    if (bvh.Geo.Trans != new Translation())
-                        shadowRay.TransformInv(bvh.Geo.Trans);
-                    if (bvh.Geo.IsIntersecting(shadowRay))
-                        return false;
-                }
-                else
-                {
-                    for (int i = 0; i < bvh.Childs.Length; i++)
-                    {
-                        if (!IsEffective(point, bvh.Childs[i]))
-                            return false;
-                    }
+            //not needed. lights effective to both sides
+            //if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
+            //    return false;
 
-                }
+            Ray ray = new Ray(point, GetPointToLight(point));
+            foreach (var item in geometries)
+            {
+                ray.TransformInv(item.Trans);
+                if (item.IsIntersecting(ray))
+                    return false;
+                ray.Transform(item.Trans);
             }
 
             return true;
+
         }
 
-
-        public override float GetAttValue(Point3 point, Attenuation attenuation)
+        public override Double GetAttValue(Point3 point, Attenuation attenuation)
         {
             return 1;
         }
+
 
 
     }

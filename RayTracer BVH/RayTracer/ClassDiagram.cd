@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RayTracer.Camera">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAgIAAAMAAAAAAAAAACQBoAAgAaAAI=</HashCode>
+      <FileName>Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Vector3">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAcAUAEAAAAAICAAAgAACgAAEAAAA=</HashCode>
+      <FileName>Type\Vector3.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Point3">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAYAEAEAAAAAAAAAAAAABgAQAAYQE=</HashCode>
+      <FileName>Type\Point3.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.ViewPlane">
+    <Position X="5.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAEAAAABAgAAAAJAAAAMAAIBgCAAAAAQAAAAAAIAAA=</HashCode>
+      <FileName>ViewPlane.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Ray">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACABQAAAQCAAFATAAACAABCAAAAAAAAAAAA=</HashCode>
+      <FileName>Ray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.RayTracer">
+    <Position X="18.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAIgA=</HashCode>
+      <FileName>RayTracer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Geometry">
+    <Position X="2.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAIAAAgAAAAAQAAAIAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Shape\Geometry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Sphere">
+    <Position X="0.5" Y="9" Width="1.5" />
+    <InheritanceLine Type="RayTracer.Geometry" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="8.334" />
+        <Point X="3" Y="8.625" />
+        <Point X="1.188" Y="8.625" />
+        <Point X="1.188" Y="9" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAACAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shape\Sphere.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Triangle">
+    <Position X="2.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAQAAAAACAAAAAgAAAAAAEAAKAAACgASAACAAAAAA=</HashCode>
+      <FileName>Shape\Triangle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.TringleNorm">
+    <Position X="0.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAgAAAAAAgAAIAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Shape\TringleNorm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Transform">
+    <Position X="9.75" Y="5.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAECAAAAAgAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Transform\Transform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.PointLight">
+    <Position X="18" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAEAAAAAAAgAABAAAAAAAAAAA=</HashCode>
+      <FileName>Light\PointLight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.DirectionalLight">
+    <Position X="16" Y="7.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAEAAAAAAAgAABAAAAAAAAAAA=</HashCode>
+      <FileName>Light\DirectionalLight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Material">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEABAAAAAQgAAAAAAgAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Material.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Light">
+    <Position X="16.75" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAgAABAAAAgAAAAAA=</HashCode>
+      <FileName>Light\Light.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.MyMatrix">
+    <Position X="12.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAgAAIAIUACAAEAQIAKAAAAAAACBAkAA=</HashCode>
+      <FileName>Type\Matrix.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Translation">
+    <Position X="8.5" Y="10.5" Width="1.5" />
+    <InheritanceLine Type="RayTracer.Transform" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.949" />
+        <Point X="10.5" Y="11.062" />
+        <Point X="10" Y="11.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Translation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Rotation">
+    <Position X="8.5" Y="8.75" Width="1.5" />
+    <InheritanceLine Type="RayTracer.Transform" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.949" />
+        <Point X="10.5" Y="9.5" />
+        <Point X="10" Y="9.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Rotation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Scaling">
+    <Position X="8.5" Y="12.25" Width="1.5" />
+    <InheritanceLine Type="RayTracer.Transform" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="7.949" />
+        <Point X="10.5" Y="12.75" />
+        <Point X="10" Y="12.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transform\Scaling.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Scene">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QIQAAAACQAAAgAAAABQAEiAAAAIwAAIAEAAAIQFEAAA=</HashCode>
+      <FileName>Scene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.MyColor">
+    <Position X="7.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAYAEAAAAEAACAAAAIAQABCAEAARA=</HashCode>
+      <FileName>Type\MyColor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RayTracer.Attenuation">
+    <Position X="9.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAIAAAAAAAAAAAAAAAAAgAIAAIACAAAAA=</HashCode>
+      <FileName>Attenuation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

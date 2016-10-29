@@ -1,88 +1,81 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace RayTracer.Common
 {
     [Serializable]
-    public class Matrix
+    public class MyMatrix
     {
 
         int rowNumber;
         int colNumber;
-        float[,] vals;
+        Double[,] value;
 
-        public float this[int indexI, int indexJ]
-        {
-            get
-            {
-                return vals[indexI, indexJ];
-            }
-
-            set
-            {
-                vals[indexI, indexJ] = value;
-            }
-        }
-
-        public Matrix(int row, int col)
+        public MyMatrix(int row, int col)
         {
             rowNumber = row;
             colNumber = col;
-            vals = new float[rowNumber, colNumber];
+            value = new Double[rowNumber, colNumber];
             haveInverse = false;
             haveIdentity = false;
 
         }
 
-        public Matrix(int row, int col, float[] val)
+        public MyMatrix(int row, int col, Double[] val)
             : this(row, col)
         {
             SetValue(val);
         }
 
-        public void SetValue(float[] value)
+        public void SetValue(Double[] value)
         {
-            if (value.Length == this.vals.Length)
+            if (value.Length == this.value.Length)
                 for (int row = 0; row < rowNumber; row++)
                     for (int col = 0; col < colNumber; col++)
-                        this.vals[row, col] = value[row * rowNumber + col];
+                        this.value[row, col] = value[row * rowNumber + col];
             haveInverse = false;
         }
 
-        public void SetValue(int row, int col, float value)
+        public void SetValue(int row, int col, Double value)
         {
-            this.vals[row, col] = value;
+            this.value[row, col] = value;
             haveInverse = false;
         }
 
 
 
-        public float[,] GetValue() { return vals; }
-
-
-        public Matrix GetRow(int row)
+        public Double[,] GetValue() { return value; }
+        public Double GetValue(int column, int row)
         {
-            Matrix result = new Matrix(1, colNumber);
+            return value[column, row];
+        }
+
+        public MyMatrix GetRow(int row)
+        {
+            MyMatrix result = new MyMatrix(1, colNumber);
             for (int i = 0; i < colNumber; i++)
-                result.SetValue(0, i, this[row, i]);
+                result.SetValue(0, i, this.value[row, i]);
             return result;
         }
 
-        public Matrix GetCol(int col)
+        public MyMatrix GetCol(int col)
         {
-            Matrix result = new Matrix(rowNumber, 1);
+            MyMatrix result = new MyMatrix(rowNumber, 1);
             for (int i = 0; i < rowNumber; i++)
-                result.SetValue(i, 0, this[i, col]);
+                result.SetValue(i, 0, this.value[i, col]);
             return result;
         }
 
-        public static Matrix operator *(Matrix a, float b)
+        public static MyMatrix operator *(MyMatrix a, Double b)
         {
-            Matrix result = new Matrix(a.rowNumber, a.colNumber);
+            MyMatrix result = new MyMatrix(a.colNumber, a.rowNumber);
 
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
                 {
-                    float val = a[row, col] * b;
+                    Double val = a.GetValue(row, col) * b;
                     result.SetValue(row, col, val);
                 }
             return result;
@@ -90,8 +83,8 @@ namespace RayTracer.Common
 
 
         private bool haveIdentity;
-        private Matrix identity;
-        public Matrix I
+        private MyMatrix identity;
+        public MyMatrix I
         {
             get
             {
@@ -103,20 +96,20 @@ namespace RayTracer.Common
                 return identity;
             }
         }
-        private Matrix CreateIdentity()
+        private MyMatrix CreateIdentity()
         {
-            Matrix result = new Matrix(colNumber, rowNumber);
+            MyMatrix result = new MyMatrix(colNumber, rowNumber);
             for (int row = 0; row < result.rowNumber; row++)
                 for (int col = 0; col < result.colNumber; col++)
-                    result[row, col] = (row == col) ? 1 : 0;
+                    result.SetValue(row, col, (row == col) ? 1 : 0);
             return result;
         }
 
 
 
         bool haveInverse;
-        Matrix inverse;
-        public Matrix Inverse
+        MyMatrix inverse;
+        public MyMatrix Inverse
         {
             get
             {
@@ -129,91 +122,91 @@ namespace RayTracer.Common
             }
         }
 
-        Matrix CreateInverse()
+        MyMatrix CreateInverse()
         {
-            float s0 = vals[0, 0] * vals[1, 1] - vals[1, 0] * vals[0, 1];
-            float s1 = vals[0, 0] * vals[1, 2] - vals[1, 0] * vals[0, 2];
-            float s2 = vals[0, 0] * vals[1, 3] - vals[1, 0] * vals[0, 3];
-            float s3 = vals[0, 1] * vals[1, 2] - vals[1, 1] * vals[0, 2];
-            float s4 = vals[0, 1] * vals[1, 3] - vals[1, 1] * vals[0, 3];
-            float s5 = vals[0, 2] * vals[1, 3] - vals[1, 2] * vals[0, 3];
+            Double s0 = value[0, 0] * value[1, 1] - value[1, 0] * value[0, 1];
+            Double s1 = value[0, 0] * value[1, 2] - value[1, 0] * value[0, 2];
+            Double s2 = value[0, 0] * value[1, 3] - value[1, 0] * value[0, 3];
+            Double s3 = value[0, 1] * value[1, 2] - value[1, 1] * value[0, 2];
+            Double s4 = value[0, 1] * value[1, 3] - value[1, 1] * value[0, 3];
+            Double s5 = value[0, 2] * value[1, 3] - value[1, 2] * value[0, 3];
 
-            float c5 = vals[2, 2] * vals[3, 3] - vals[3, 2] * vals[2, 3];
-            float c4 = vals[2, 1] * vals[3, 3] - vals[3, 1] * vals[2, 3];
-            float c3 = vals[2, 1] * vals[3, 2] - vals[3, 1] * vals[2, 2];
-            float c2 = vals[2, 0] * vals[3, 3] - vals[3, 0] * vals[2, 3];
-            float c1 = vals[2, 0] * vals[3, 2] - vals[3, 0] * vals[2, 2];
-            float c0 = vals[2, 0] * vals[3, 1] - vals[3, 0] * vals[2, 1];
+            Double c5 = value[2, 2] * value[3, 3] - value[3, 2] * value[2, 3];
+            Double c4 = value[2, 1] * value[3, 3] - value[3, 1] * value[2, 3];
+            Double c3 = value[2, 1] * value[3, 2] - value[3, 1] * value[2, 2];
+            Double c2 = value[2, 0] * value[3, 3] - value[3, 0] * value[2, 3];
+            Double c1 = value[2, 0] * value[3, 2] - value[3, 0] * value[2, 2];
+            Double c0 = value[2, 0] * value[3, 1] - value[3, 0] * value[2, 1];
 
-            float invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+            Double invdet = 1f / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
 
-            Matrix result = new Matrix(4, 4);
+            MyMatrix result = new MyMatrix(4, 4);
 
-            result[0, 0] = (vals[1, 1] * c5 - vals[1, 2] * c4 + vals[1, 3] * c3) * invdet;
-            result[0, 1] = (-vals[0, 1] * c5 + vals[0, 2] * c4 - vals[0, 3] * c3) * invdet;
-            result[0, 2] = (vals[3, 1] * s5 - vals[3, 2] * s4 + vals[3, 3] * s3) * invdet;
-            result[0, 3] = (-vals[2, 1] * s5 + vals[2, 2] * s4 - vals[2, 3] * s3) * invdet;
+            result.SetValue(0, 0, (value[1, 1] * c5 - value[1, 2] * c4 + value[1, 3] * c3) * invdet);
+            result.SetValue(0, 1, (-value[0, 1] * c5 + value[0, 2] * c4 - value[0, 3] * c3) * invdet);
+            result.SetValue(0, 2, (value[3, 1] * s5 - value[3, 2] * s4 + value[3, 3] * s3) * invdet);
+            result.SetValue(0, 3, (-value[2, 1] * s5 + value[2, 2] * s4 - value[2, 3] * s3) * invdet);
 
-            result[1, 0] = (-vals[1, 0] * c5 + vals[1, 2] * c2 - vals[1, 3] * c1) * invdet;
-            result[1, 1] = (vals[0, 0] * c5 - vals[0, 2] * c2 + vals[0, 3] * c1) * invdet;
-            result[1, 2] = (-vals[3, 0] * s5 + vals[3, 2] * s2 - vals[3, 3] * s1) * invdet;
-            result[1, 3] = (vals[2, 0] * s5 - vals[2, 2] * s2 + vals[2, 3] * s1) * invdet;
+            result.SetValue(1, 0, (-value[1, 0] * c5 + value[1, 2] * c2 - value[1, 3] * c1) * invdet);
+            result.SetValue(1, 1, (value[0, 0] * c5 - value[0, 2] * c2 + value[0, 3] * c1) * invdet);
+            result.SetValue(1, 2, (-value[3, 0] * s5 + value[3, 2] * s2 - value[3, 3] * s1) * invdet);
+            result.SetValue(1, 3, (value[2, 0] * s5 - value[2, 2] * s2 + value[2, 3] * s1) * invdet);
 
-            result[2, 0] = (vals[1, 0] * c4 - vals[1, 1] * c2 + vals[1, 3] * c0) * invdet;
-            result[2, 1] = (-vals[0, 0] * c4 + vals[0, 1] * c2 - vals[0, 3] * c0) * invdet;
-            result[2, 2] = (vals[3, 0] * s4 - vals[3, 1] * s2 + vals[3, 3] * s0) * invdet;
-            result[2, 3] = (-vals[2, 0] * s4 + vals[2, 1] * s2 - vals[2, 3] * s0) * invdet;
+            result.SetValue(2, 0, (value[1, 0] * c4 - value[1, 1] * c2 + value[1, 3] * c0) * invdet);
+            result.SetValue(2, 1, (-value[0, 0] * c4 + value[0, 1] * c2 - value[0, 3] * c0) * invdet);
+            result.SetValue(2, 2, (value[3, 0] * s4 - value[3, 1] * s2 + value[3, 3] * s0) * invdet);
+            result.SetValue(2, 3, (-value[2, 0] * s4 + value[2, 1] * s2 - value[2, 3] * s0) * invdet);
 
-            result[3, 0] = (-vals[1, 0] * c3 + vals[1, 1] * c1 - vals[1, 2] * c0) * invdet;
-            result[3, 1] = (vals[0, 0] * c3 - vals[0, 1] * c1 + vals[0, 2] * c0) * invdet;
-            result[3, 2] = (-vals[3, 0] * s3 + vals[3, 1] * s1 - vals[3, 2] * s0) * invdet;
-            result[3, 3] = (vals[2, 0] * s3 - vals[2, 1] * s1 + vals[2, 2] * s0) * invdet;
+            result.SetValue(3, 0, (-value[1, 0] * c3 + value[1, 1] * c1 - value[1, 2] * c0) * invdet);
+            result.SetValue(3, 1, (value[0, 0] * c3 - value[0, 1] * c1 + value[0, 2] * c0) * invdet);
+            result.SetValue(3, 2, (-value[3, 0] * s3 + value[3, 1] * s1 - value[3, 2] * s0) * invdet);
+            result.SetValue(3, 3, (value[2, 0] * s3 - value[2, 1] * s1 + value[2, 2] * s0) * invdet);
 
             return result;
         }
 
-        public static Vec3 Mul44x41(Matrix matrix, Vec3 vector, int homogeneousValue)
+        public static Vector3 Mult44x41(MyMatrix matrix, Vector3 vector, int homogeneousValue)
         {
 
-            Matrix m = matrix;
-            float x = vector.X;
-            float y = vector.Y;
-            float z = vector.Z;
+            Double[,] val = matrix.GetValue();
+            Double x = vector.Point.X;
+            Double y = vector.Point.Y;
+            Double z = vector.Point.Z;
 
-            float newX = m[0, 0] * x + m[0, 1] * y + m[0, 2] * z + m[0, 3] * homogeneousValue;
-            float newY = m[1, 0] * x + m[1, 1] * y + m[1, 2] * z + m[1, 3] * homogeneousValue;
-            float newZ = m[2, 0] * x + m[2, 1] * y + m[2, 2] * z + m[2, 3] * homogeneousValue;
+            Double newX = val[0, 0] * x + val[0, 1] * y + val[0, 2] * z + val[0, 3] * homogeneousValue;
+            Double newY = val[1, 0] * x + val[1, 1] * y + val[1, 2] * z + val[1, 3] * homogeneousValue;
+            Double newZ = val[2, 0] * x + val[2, 1] * y + val[2, 2] * z + val[2, 3] * homogeneousValue;
 
-            Vec3 result = new Vec3(newX, newY, newZ);
+            Vector3 result = new Vector3(newX, newY, newZ);
 
             return result;
         }
 
-        public static Matrix Mul44x44(Matrix matA, Matrix matB)
+        public static MyMatrix Mult44x44(MyMatrix matA, MyMatrix matB)
         {
-            Matrix res = new Matrix(4, 4);
+            MyMatrix res = new MyMatrix(4, 4);
 
             for (int col = 0; col < 4; col++)
             {
-                Matrix mat41 = Mul44x41(matA, matB.GetCol(col));
+                MyMatrix mat41 = Mult44x41(matA, matB.GetCol(col));
                 for (int row = 0; row < 4; row++)
-                    res[row, col]= mat41[row, 0];
+                    res.SetValue(row, col, mat41.GetValue(row, 0));
             }
 
             return res;
         }
 
 
-        public static Matrix Mul44x41(Matrix mat44, Matrix mat41)
+        public static MyMatrix Mult44x41(MyMatrix mat44, MyMatrix mat41)
         {
-            Matrix res = new Matrix(4, 1);
+            MyMatrix res = new MyMatrix(4, 1);
 
             for (int row = 0; row < 4; row++)
             {
-                float val = 0;
+                Double val = 0;
                 for (int col = 0; col < 4; col++)
-                    val += mat44[row, col] * mat41[col, 0];
-                res[row, 0] = val;
+                    val += mat44.GetValue(row, col) * mat41.GetValue(col, 0);
+                res.SetValue(row, 0, val);
             }
 
             return res;
