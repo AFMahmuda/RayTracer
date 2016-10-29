@@ -2,10 +2,6 @@
 
 
 
-BVHBuilder::BVHBuilder()
-{
-}
-
 
 BVHBuilder::~BVHBuilder()
 {

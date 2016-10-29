@@ -6,7 +6,7 @@
 class RadixSort
 {
 private:
-	static	int getMax(Geometry** arr, int n)
+	static int getMax(Geometry** arr, int n)
 	{
 		unsigned int max = arr[0]->getMortonPos();
 		for (int i = 1; i < n; i++)
@@ -17,7 +17,7 @@ private:
 	/*
 	* count sort of arr[]
 	*/
-	static	void countSort(Geometry** arr, int n, int exp)
+	static void countSort(Geometry** arr, int n, int exp)
 	{
 		Geometry  **output;
 		output = (Geometry**)malloc(sizeof(Geometry*) * n);

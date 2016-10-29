@@ -18,19 +18,20 @@ public:
 	float r;
 
 	SphereContainer(Geometry* item) {
+		isLeaf = true;
 		type = SPHERE;
 		geo = item;
 		if (item->type == Geometry::SPHERE)
 		{
 
-			c = ((Sphere*)item)->c;
-			r = ((Sphere*)item)->r;
+			c = ((Sphere*)item)->c + Point3();
+			r = ((Sphere*)item)->r + 0.f;
 
 		}
 		else //if (item.GetType() == typeof(Triangle))
 		{
 			Triangle& tri = *(Triangle*)item;
-			Vec3 ab =Vec3(tri.a, tri.b);
+			Vec3 ab = Vec3(tri.a, tri.b);
 			Vec3 bc = Vec3(tri.b, tri.c);
 			Vec3 ac = Vec3(tri.a, tri.c);
 
@@ -57,14 +58,17 @@ public:
 
 		c = Matrix::Mul44x41(item->getTrans().matrix, c);
 		r = Matrix::Mul44x41(item->getTrans().matrix, Vec3(r, 0, 0)).Magnitude();
+
 	}
 	SphereContainer() {}
 	SphereContainer(SphereContainer& a, SphereContainer& b)
 	{
+		isLeaf = false;
+
 		type = SPHERE;
-		childs = new SphereContainer[2];
-		childs[0] = a;
-		childs[1] = b;
+
+		LChild = &a;
+		RChild = &b;
 
 		Vec3 aToB = Vec3(a.c, b.c);
 		float aToBLength = aToB.Magnitude();
@@ -72,37 +76,34 @@ public:
 		if (aToB.Magnitude() == 0)
 		{
 			r = std::max(a.r, b.r);
-			c = a.c;
+			c = a.c + Point3();
 		}
 
 		else if (aToBLength + a.r + b.r < a.r * 2 ||
 			aToB.Magnitude() + a.r + b.r < b.r * 2)
 		{
 			r = std::max(a.r, b.r);
-			c = (a.r > b.r) ? a.c : b.c;
+			c = (a.r > b.r) ? a.c + Point3() : b.c + Point3();
 		}
 
 		else
 		{
 			r = (a.r + b.r + aToB.Magnitude()) * .5f;
-			c = a.c + (aToB.Normalize() * (r - a.r));
+
+			aToB = aToB.Normalize();
+			aToB = aToB * (r - a.r);
+			c = (a.c) + Point3(aToB.x, aToB.y, aToB.z);
 		}
 
 		area = 4.f * (float)M_PI * (float)std::powf(r, 2);
 	}
-	bool IsIntersecting(Ray* ray)
-	{
 
-		//Vec3 rayToSphere = Vec3(ray->start, this.c);
-
-		//float a = ray.Direction * ray.Direction;
-		//float b = -2 * (rayToSphere * ray.Direction);
-		//float c = (rayToSphere * rayToSphere) - (r * r);
-		//float dd = (b * b) - (4 * a * c);
-
-		//return (dd > 0);
-		return false;
-	}
 	~SphereContainer();
+
+
+
+	// Inherited via Container
+	virtual bool IsIntersecting(Ray ray) override;
+	virtual void showInfo() override;
 };
 

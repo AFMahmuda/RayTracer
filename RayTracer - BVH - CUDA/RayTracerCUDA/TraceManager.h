@@ -4,6 +4,7 @@
 #include"Container.h"
 
 #include"ViewPlane.h"
+#include"BVHBuilder.h"
 #include<cmath>
 
 class TraceManager
@@ -11,7 +12,7 @@ class TraceManager
 
 	int tn = 4;
 	bool isAAC = false;
-	//	Container::TYPE binType;
+	Container::TYPE binType;
 	Scene scene;
 	//	Bitmap image;
 
@@ -23,51 +24,77 @@ class TraceManager
 
 	int wPerSeg;
 	int hPerSeg;
-public:
 
-	TraceManager(int threadNumber = 4, bool _isAAC = true)//, Container.TYPE _type = Container.TYPE.BOX)
+
+	void TraceDFS(Container* bin, int level)
 	{
-		tn = threadNumber;
-		isAAC = _isAAC;
-		//		type = _type;
-	}
 
-	void traceScene(std::string sceneFile)
-	{
-		initScene(sceneFile);
 
-		buildBVH();
+		std::cout << "BIN lv " << level;
+		if (bin->isLeaf)
+			std::cout << " LEAF";
+		std::cout << std::endl;
+		bin->showInfo();
 
-		trace();
+		if (!bin->isLeaf) {
+			TraceDFS(bin->LChild, level + 1);
+			TraceDFS(bin->RChild, level + 1);
+		}
 
-		mergeAndSaveImage();
+
 	}
 
 	void initScene(std::string sceneFile) {
 		scene = Scene(sceneFile);
-		//precalculate w and h measurements
-		//w and h total
-		height = ViewPlane::Instance().pixelH;
-		width = ViewPlane::Instance().pixelW;
 
-		//search two closest factors 6 = 3 and 2 , 5 = 5 and 1
-		verDiv = (int)sqrtf(tn);
-		do verDiv++; while (tn % verDiv != 0);
-		horDiv = tn / verDiv;
 
-		wPerSeg = width / horDiv; //width per segmen
-		hPerSeg = height / verDiv; //height per segmen
+
+		//----
+		int count = 10;
+		std::vector<Geometry*> balz;
+		//for (int x = 0; x < count; x++)
+		//{
+		//	float randx = (rand() % 100 - 50.f);
+		//	float randy = (rand() % 100 - 50.f);
+		//	float randz = (rand() % 100 - 50.f);
+		//	balz.push_back(new Sphere(Point3(randx, randy, randz), 1));
+		//}
+		balz.push_back(new Sphere(Point3(-1, 0, 0), 1));
+		balz.push_back(new Sphere(Point3(1, 0, 0), 1));
+
+		//balz.push_back(new Sphere(Point3(0, -1, 0), 1));
+		//balz.push_back(new Sphere(Point3(0, 1, 0), 1));
+
+		//balz.push_back(new Sphere(Point3(0, 0, 10), 1));
+		//balz.push_back(new Sphere(Point3(0, 0, 11), 1));
+
+		scene.geometries = balz;
+		//-------
+
+		////precalculate w and h measurements
+		////w and h total
+		//height = ViewPlane::Instance().pixelH;
+		//width = ViewPlane::Instance().pixelW;
+
+		////search two closest factors 6 = 3 and 2 , 5 = 5 and 1
+		//verDiv = (int)sqrtf(tn);
+		//do verDiv++; while (tn % verDiv != 0);
+		//horDiv = tn / verDiv;
+
+		//wPerSeg = width / horDiv; //width per segmen
+		//hPerSeg = height / verDiv; //height per segmen
 	}
 
-	void 	buildBVH() {
+	void buildBVH() {
 		//DateTime start = DateTime.Now;
 		//Console.WriteLine("Building BVH. Please Wait...");
-		//new BVHManager(type, isAAC).BuildBVH(scene);
+
+		BVHBuilder(binType, isAAC).BuildBVH(scene);
 		//Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
 
 	}
 
-	void 	trace() {
+	void trace() {
 		//DateTime start = DateTime.Now;
 		//Console.WriteLine("Tracing...Please Wait...");
 		//for (int i = 0; i < tn * 5; i++) Console.Write("-");
@@ -124,34 +151,54 @@ public:
 		//}
 	}
 
-	void	mergeAndSaveImage() {
+	void mergeAndSaveImage() {
 		/*string filename = scene.OutputFilename;
 		int cnt = 0;
 		Bitmap res = new Bitmap(width, height);
 		using (Graphics finalResult = Graphics.FromImage(res))
 		{
-			int tempW = 0, tempH = 0;
-			for (int i = 0; i < verDiv; i++)
-			{
-				for (int j = 0; j < horDiv; j++)
-				{
-					finalResult.DrawImage(results[cnt], tempW, tempH);
-					tempW += results[cnt].Width;
-					cnt++;
-				}
-				tempW = 0;
-				tempH += results[cnt - 1].Height;
-			}
+		int tempW = 0, tempH = 0;
+		for (int i = 0; i < verDiv; i++)
+		{
+		for (int j = 0; j < horDiv; j++)
+		{
+		finalResult.DrawImage(results[cnt], tempW, tempH);
+		tempW += results[cnt].Width;
+		cnt++;
+		}
+		tempW = 0;
+		tempH += results[cnt - 1].Height;
+		}
 		}
 
 		if (filename.Equals(""))
-			filename = "default.bmp";
+		filename = "default.bmp";
 		res.Save(filename);
 		Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename + "\n");*/
 	}
 
+public:
 
-	TraceManager();
+	TraceManager(int threadNumber = 4, Container::TYPE _type = Container::BOX, bool _isAAC = true)//, Container.TYPE _type = Container.TYPE.BOX)
+	{
+		tn = threadNumber;
+		isAAC = _isAAC;
+		binType = _type;
+	}
+
+	void traceScene(std::string sceneFile)
+	{
+		initScene(sceneFile);
+
+		buildBVH();
+		TraceDFS(scene.container, 0);
+		//		trace();
+
+		//		mergeAndSaveImage();
+	}
+
+
+
 
 
 	~TraceManager();

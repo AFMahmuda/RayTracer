@@ -28,9 +28,9 @@ public:
 	Vec3& getNormal(Point3& point)
 	{
 		Point3 p = Matrix::Mul44x41(trans.matrix.Inverse(), point);
-		Vec3  res = Vec3(c, p);
-		res.Normalize();
-		return res;
+		Vec3 * res = new Vec3(c, p);
+		res->Normalize();
+		return *res;
 	}
 
 	void updatePos()

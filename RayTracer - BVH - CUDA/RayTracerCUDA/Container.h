@@ -9,34 +9,18 @@ public:
 		BOX, SPHERE
 	};
 	TYPE type;
-
-	Container* childs;
+	bool isLeaf = false;
+	Container* LChild;
+	Container* RChild;
 	Geometry* geo;
 	float area;
 
-	virtual bool IsIntersecting(Ray ray) { return false; }
+	virtual bool IsIntersecting(Ray ray) = 0;
+	virtual void showInfo() = 0;
 
-	float areaWithClosest = FLT_MAX;
+	float areaWithClosest = INFINITY;
 	Container* closest = nullptr;
 
-	void FindBestMatch(std::vector<Container*> bins)
-	{
-		float bestDist = FLT_MAX;
-		Container* bestmatch = nullptr;
-		for (int i = 0; i < bins.size(); i++)
-		{
-			if (bins[i] == this)
-				continue;
-			//Container newBin = ContainerFactory.Instance.CombineContainer(this, bins[i]);
-			//if (newBin.area < bestDist)
-			//{
-			//	bestDist = newBin.area;
-			//	bestmatch = bins[i];
-			//}
-		}
-		closest = bestmatch;
-		areaWithClosest = bestDist;
-	}
 
 	Container();
 	~Container();

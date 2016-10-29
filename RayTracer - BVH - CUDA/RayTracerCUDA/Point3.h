@@ -48,26 +48,62 @@ public:
 		}
 	}
 
-	//const float operator[](int index) const {
-	//	return operator[](index);
-	//}
-
-	Point3& operator+(const Point3& b) {
-		return  Point3(x + b.x, y + b.y, z + b.z);
+	Point3& operator+=(const Point3& rhs)
+	{
+		x += rhs.x;
+		y += rhs.y;
+		z += rhs.z;
+		return *this;
+	}
+	Point3& operator-=(const Point3& rhs)
+	{
+		x -= rhs.x;
+		y -= rhs.y;
+		z -= rhs.z;
+		return *this;
 	}
 
-	Point3& operator-(const Point3& b) {
-		return  Point3(x - b.x, y - b.y, z - b.z);
+	Point3& operator*=(const Point3& rhs)
+	{
+		x *= rhs.x;
+		y *= rhs.y;
+		z *= rhs.z;
+		return *this;
 	}
-	Point3& operator*(float s) {
-		return  Point3(x * s, y *s, z *s);
-	}
-	Point3& operator/(float s) {
-		return  Point3(x / s, y / s, z / s);
+	Point3& operator*=(float rhs)
+	{
+		x *= rhs;
+		y *= rhs;
+		z *= rhs;
+		return *this;
 	}
 
 
-
+	friend Point3 operator+(Point3 lhs, const Point3& rhs)
+	{
+		lhs += rhs;
+		return lhs;
+	}
+	friend Point3 operator*(Point3 lhs, const Point3& rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+	friend Point3 operator-(Point3 lhs, const Point3& rhs)
+	{
+		lhs -= rhs;
+		return lhs;
+	}
+	friend Point3 operator*(Point3 lhs, float rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+	friend Point3 operator*(float lhs, Point3 rhs)
+	{
+		rhs *= lhs;
+		return rhs;
+	}
 
 
 };

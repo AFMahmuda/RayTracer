@@ -9,10 +9,11 @@ class BoxContainer :
 	public Container
 {
 public:
-	Point3 min = Point3(FLT_MAX, FLT_MAX, FLT_MAX);
-	Point3 max = Point3(FLT_MIN, FLT_MIN, FLT_MIN);
+	Point3 min = Point3(INFINITY, INFINITY, INFINITY);
+	Point3 max = Point3(-INFINITY, -INFINITY, -INFINITY);
 	BoxContainer(Geometry* item)
 	{
+		isLeaf = true;
 		type = BOX;
 		geo = item;
 
@@ -20,17 +21,8 @@ public:
 		{
 			Sphere* sphere = (Sphere*)item;
 
-//			min = Utils.DeepClone(sphere.c);
-			min = sphere->c + Point3();
-			min.x -= sphere->r;
-			min.y -= sphere->r;
-			min.z -= sphere->r;
-
-			max = sphere->c + Point3();
-			max.x += sphere->r;
-			max.y += sphere->r;
-			max.z += sphere->r;
-
+			min = (sphere->c + Point3());
+			max = (sphere->c + Point3());
 			for (int i = 0; i < 3; i++)
 			{
 				min[i] -= sphere->r;
@@ -39,21 +31,20 @@ public:
 
 			Point3 p[8];
 
-			p[0] = ( Point3(min.x, min.y, min.z));
-			p[1] = ( Point3(min.x, min.y, max.z));
-			p[2] = ( Point3(min.x, max.y, min.z));
-			p[3] = ( Point3(min.x, max.y, max.z));
-			p[4] = ( Point3(max.x, min.y, min.z));
-			p[5] = ( Point3(max.x, min.y, max.z));
-			p[6] = ( Point3(max.x, max.y, min.z));
-			p[7] = ( Point3(max.x, max.y, max.z));
+			p[0] = (Point3(min.x, min.y, min.z));
+			p[1] = (Point3(min.x, min.y, max.z));
+			p[2] = (Point3(min.x, max.y, min.z));
+			p[3] = (Point3(min.x, max.y, max.z));
+			p[4] = (Point3(max.x, min.y, min.z));
+			p[5] = (Point3(max.x, min.y, max.z));
+			p[6] = (Point3(max.x, max.y, min.z));
+			p[7] = (Point3(max.x, max.y, max.z));
 
 
-			for (int i = 0; i < sizeof(p)/sizeof(Point3); i++)
+			for (int i = 0; i < 8; i++)
 				p[i] = Matrix::Mul44x41(item->getTrans().matrix, p[i]);
 
-
-			SetMinMax(p,8);
+			SetMinMax(p, 8);
 
 		}
 
@@ -65,14 +56,16 @@ public:
 			Point3 b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
 			Point3 c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
 
-			SetMinMax(new Point3[3]{ a, b, c },3);
+			SetMinMax(new Point3[3]{ a, b, c }, 3);
 		}
+		std::cout << "min: " << min[0] << "\t" << min[1] << "\t" << min[2] << std::endl;
+		std::cout << "max: " << max[0] << "\t" << max[1] << "\t" << max[2] << std::endl;
 	}
 
-	void SetMinMax(Point3* points,int n)
+	void SetMinMax(Point3* points, int n)
 	{
-		 min = Point3(FLT_MAX, FLT_MAX, FLT_MAX);
-		max = Point3(FLT_MIN, FLT_MIN, FLT_MIN);
+		min = Point3(INFINITY, INFINITY, INFINITY);
+		max = Point3(-INFINITY, -INFINITY, -INFINITY);
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < 3; j++)
 			{
@@ -81,25 +74,32 @@ public:
 			}
 	}
 
-	bool IsIntersecting(Ray* ray) { 
-		float tmin = FLT_MIN, tmax = FLT_MAX;
+	BoxContainer(BoxContainer& a, BoxContainer& b)
+	{
+		isLeaf = false;
+		type = TYPE::BOX;
+		LChild = &a;
+		RChild = &b;
 
-		//for (int i = 0; i < 3; i++)
-		//{
-		//	if (ray.Direction[i] != 0f)
-		//	{
-		//		float invTemp = 1f / ray.Direction[i];
-		//		float tx1 = (min[i] - ray.Start[i]) * invTemp;
-		//		float tx2 = (max[i] - ray.Start[i]) * invTemp;
 
-		//		tmin = Math.Max(tmin, Math.Min(tx1, tx2));
-		//		tmax = Math.Min(tmax, Math.Max(tx1, tx2));
-		//	}
-		//}
+		for (int i = 0; i < 3; i++)
+		{
+			min[i] = std::min(a.min[i], b.min[i]);
+			max[i] = std::max(a.max[i], b.max[i]);
+		}
+		Point3 size = max - min;
 
-		return tmax >= tmin;
+		area = 2.f * (size.x * size.y + size.x * size.z + size.y * size.z);
+
 	}
+
 	BoxContainer();
 	~BoxContainer();
+
+
+
+	// Inherited via Container
+	virtual bool IsIntersecting(Ray ray) override;
+	virtual void showInfo() override;
 };
 

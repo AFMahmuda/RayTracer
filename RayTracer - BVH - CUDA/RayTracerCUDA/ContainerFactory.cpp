@@ -1,7 +1,5 @@
 #include "ContainerFactory.h"
 
-
-
 ContainerFactory::ContainerFactory()
 {
 }

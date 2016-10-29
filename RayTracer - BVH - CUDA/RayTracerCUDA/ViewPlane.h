@@ -11,7 +11,6 @@ class ViewPlane
 {
 public:
 
-
 	static ViewPlane& Instance();
 
 	float worldH;
