@@ -8,6 +8,7 @@ public:
 	enum TYPE {
 		BOX, SPHERE
 	};
+	TYPE type;
 
 	Container* childs;
 	Geometry* geo;

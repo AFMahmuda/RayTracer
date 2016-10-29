@@ -2,9 +2,6 @@
 
 
 
-SphereContainer::SphereContainer()
-{
-}
 
 
 SphereContainer::~SphereContainer()

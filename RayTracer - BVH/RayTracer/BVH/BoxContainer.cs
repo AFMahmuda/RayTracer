@@ -106,16 +106,6 @@ namespace RayTracer.BVH
 
         }
 
-        void SetMinMax(Point3[] points)
-        {
-            min = new Point3(float.MaxValue, float.MaxValue, float.MaxValue);
-            max = new Point3(float.MinValue, float.MinValue, float.MinValue);
-            for (int i = 0; i < points.Length; i++)
-                for (int j = 0; j < 3; j++)
-                {
-                    min[j] = Math.Min(min[j], points[i][j]);
-                    max[j] = Math.Max(max[j], points[i][j]);
-                }
-        }
+       
     }
 }
