@@ -5,24 +5,20 @@ using RayTracer.Material;
 using RayTracer.Transformation;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using RayTracer.BVH;
 
 namespace RayTracer.Tracer
 {
     public class Ray
     {
-
-
         public Ray()
         {
-            IntersectDistance = double.MaxValue;
+            IntersectDistance = float.MaxValue;
             IntersectWith = null;
             Type = TYPE.RAY;
         }
 
-        public Ray(Point3 start, Vector3 direction)
+        public Ray(Point3 start, Vec3 direction)
             : this()
         {
             Start = start;
@@ -32,10 +28,10 @@ namespace RayTracer.Tracer
         public Point3 Start
         { get; set; }
 
-        public Vector3 Direction
+        public Vec3 Direction
         { get; set; }
 
-        public Double IntersectDistance
+        public float IntersectDistance
         { get; set; }
 
         public Geometry IntersectWith
@@ -51,43 +47,49 @@ namespace RayTracer.Tracer
 
         Point3 HitPointMinus
         {
-            get { return Start + (Direction * (IntersectDistance * (.999f))).Point; }
+            get { return Start + (Direction * (IntersectDistance * (.999f))); }
         }
 
         Point3 HitPointPlus
         {
-            get { return Start + (Direction * (IntersectDistance * (1.001f))).Point; }
+            get { return Start + (Direction * (IntersectDistance * (1.001f))); }
         }
         Point3 RealHitPoint
         {
-            get { return Start + (Direction * (IntersectDistance)).Point; }
+            get { return Start + (Direction * (IntersectDistance)); }
         }
 
-        public MyColor Trace(Scene scene, int bounce = 0)
+        public void Trace(Scene scene, Container Bvh)
         {
-
-            if (bounce > scene.MaxDepth)
-                return scene.defColor;
-
-
             try
             {
-                //save original value
-                Point3 tempStart = Utils.DeepClone(Start);
-                Vector3 tempDir = Utils.DeepClone(Direction);
-                foreach (var geometry in scene.Geometries)
+                if (Bvh.IsIntersecting(this))
                 {
-                    //transform ray according to each shapes transformation
-                    TransformInv(geometry.Trans);
+                    if (Bvh.Geo != null)
+                    {
+                        Point3 tempStart = Utils.DeepClone(Start);
+                        Vec3 tempDir = Utils.DeepClone(Direction);
 
+                        //transform ray according to each shapes transformation
+                        if (Bvh.Geo.Trans != new Translation())
+                            TransformInv(Bvh.Geo.Trans);
 
-                    if (geometry.IsIntersecting(this))
-                        IntersectWith = geometry;
+                        if (Bvh.Geo.IsIntersecting(this))
+                            IntersectWith = Bvh.Geo;
 
-                    //assign original value for start and direction by memory
-                    Start = tempStart;
-                    Direction = tempDir;
-                    //Transform(geometry.Trans);
+                        //assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
+                        Start = tempStart;
+                        Direction = tempDir;
+
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Bvh.Childs.Length; i++)
+                        {
+                            Trace(scene, Bvh.Childs[i]);
+                        }
+
+                    }
                 }
             }
             catch (Exception e)
@@ -96,78 +98,133 @@ namespace RayTracer.Tracer
                 throw;
             }
 
-            if (IntersectWith != null)
-            {
-                List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Geometries);
-                MyColor color = CalcColor(effectiveLights, scene.Attenuation);
-
-                return color +
-                    CalcReflection(scene, bounce + 1);
-                //CalcRefraction(scene, bounce + 1) ;
-            }
-
-            else return new MyColor();
         }
-        MyColor CalcReflection(Scene scene, int bounce)
-        {
-            if (Type != TYPE.REFRACTION)
-            {
-                Vector3 rreflectDir = Direction - (IntersectWith.GetNormal(RealHitPoint) * 2.0 * (Direction * IntersectWith.GetNormal(HitPointMinus)));
-                Ray reflectRay = new Ray(HitPointMinus, rreflectDir);
-                //reflectRay.Type = TYPE.REFLECTION;
-
-                return IntersectWith.Material.Specular * (reflectRay.Trace(scene, bounce));
-            }
-            else return new MyColor();
-        }
-
-        //        MyColor CalcRefraction(Scene scene, int bounce)
-        //        {
-        //            if (IntersectWith.GetType() == typeof(Sphere))
-        //            {
-        //                Vector3 refDir = Direction;
-        //                Ray refRay = new Ray(HitPointPlus, refDir);
-        ////              refRay.Type = TYPE.REFRACTION;
-        //                return (refRay.Trace(scene, bounce));
-        //            }
-        //            else return new MyColor();
-        //        }
-
-
 
         MyColor CalcColor(List<Light> effectiveLights, Attenuation attenuation)
         {
 
             MyColor result = IntersectWith.Ambient + IntersectWith.Material.Emission;
-            Vector3 normal = IntersectWith.GetNormal(HitPointMinus);
-
-            foreach (var light in effectiveLights)
+            Vec3 normal = IntersectWith.GetNormal(HitPointMinus);
+            float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
+            if (cosI > 0)
             {
-                Vector3 pointToLight = light.GetPointToLight(HitPointMinus);
-                Vector3 halfAngleToLight = (Direction * -1f + pointToLight).Normalize();
+                normal *= -1f;
+            }
+
+            for (int i = 0; i < effectiveLights.Count; i++)
+            {
+                Light light = effectiveLights[i];
+                Vec3 pointToLight = light.GetPointToLight(HitPointMinus);
+                Vec3 halfAngleToLight = ((Direction * -1.0f) + pointToLight).Normalize();
 
                 Mat material = IntersectWith.Material;
 
-                double attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
+                float attenuationValue = light.GetAttValue(HitPointMinus, attenuation);
 
                 result +=
                     attenuationValue * light.Color *
                     (
                         material.Diffuse * (pointToLight.Normalize() * normal) +
-                        (material.Specular * Math.Pow(halfAngleToLight * normal, material.Shininess))
+                        (material.Specular * (float)Math.Pow(halfAngleToLight * normal, material.Shininess))
                     );
             }
             return result;
 
         }
+        public MyColor GetColor(Scene scene, int bounce)
+        {
+            if (bounce <= 0 || IntersectWith == null)
+            {
+                if (Type == TYPE.REFRACTION || Type == TYPE.REFRACTION)
+                    return new MyColor();
+                return scene.defColor;
+            }
 
-        List<Light> PopulateEffectiveLight(List<Light> allLights, List<Geometry> geometries)
+            else
+            {
+                List<Light> effectiveLights = PopulateEffectiveLight(scene.Lights, scene.Bvh);
+                MyColor color = CalcColor(effectiveLights, scene.Attenuation);
+
+                return color +
+                       CalcReflection(scene, bounce - 1) +
+                       CalcRefraction(scene, bounce - 1);
+            }
+        }
+        MyColor CalcReflection(Scene scene, int bounce)
+        {
+            float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
+            Vec3 normal = IntersectWith.GetNormal(RealHitPoint);
+            //if (cosI < 0)
+            //{
+            //    normal *= -1f;
+            //}
+
+
+            Vec3 newDir = Direction + (normal * 2.0f * -(normal * Direction));
+            Ray reflectRay = new Ray(HitPointMinus, newDir);
+            reflectRay.Type = TYPE.REFLECTION;
+            reflectRay.Trace(scene, scene.Bvh);
+            return IntersectWith.Material.Specular * reflectRay.GetColor(scene, bounce);
+
+        }
+
+        MyColor CalcRefraction(Scene scene, int bounce)
+        {
+            if (IntersectWith.Material.RefractValue != 0)
+            {
+                float cosI = IntersectWith.GetNormal(RealHitPoint) * Direction;
+                Vec3 normal;
+                float n1, n2, n;
+                normal = IntersectWith.GetNormal(RealHitPoint);
+                if (cosI > 0)
+                {
+                    n1 = IntersectWith.Material.RefractIndex;
+                    n2 = 1;
+                    normal *= -1f;
+                }
+                else
+                {
+                    n1 = 1;
+                    n2 = IntersectWith.Material.RefractIndex;
+                    cosI = -cosI;
+                }
+                n = n1 / n2;
+                float sinT2 = n * n * (1f - cosI * cosI);
+                float cosT2 = (1f - sinT2);
+                float cosT = (float)Math.Sqrt(1f - sinT2);
+
+
+
+                float rn = (n1 * cosI - n2 * cosT) / (n1 * cosI + n2 * cosT);
+                float rt = (n2 * cosI - n1 * cosT) / (n2 * cosI + n2 * cosT);
+                rn *= rn;
+                rt *= rt;
+                float refl = (rn + rt) * .5f;
+                float trans = 1f - refl;
+
+                if (cosT2 < 0)
+                {
+                    //if (bounce - 1 == 0)
+                    //    return scene.defColor;
+                    return (1f - IntersectWith.Material.RefractValue) * CalcReflection(scene, bounce - 1);
+                }
+
+                Vec3 newDir = Direction * n + normal * (n * cosI - cosT);
+                Ray refractRay = new Ray(HitPointPlus, newDir);
+                refractRay.Type = TYPE.REFRACTION;
+                refractRay.Trace(scene, scene.Bvh);
+                return IntersectWith.Material.RefractValue * (refractRay.GetColor(scene, bounce));
+            }
+            else return new MyColor();
+        }
+
+        List<Light> PopulateEffectiveLight(Light[] allLights, Container bvh)
         {
             List<Light> result = new List<Light>();
-            foreach (var light in allLights)
+            for (int i = 0; i < allLights.Length; i++)
             {
-                if (light.IsEffective(HitPointMinus, IntersectWith, geometries))
-                    result.Add(light);
+                if (allLights[i].IsEffective(HitPointMinus, bvh))
+                    result.Add(allLights[i]);
             }
 
             return result;
@@ -175,31 +232,19 @@ namespace RayTracer.Tracer
 
         public void Transform(Transform transform)
         {
-            Start = MyMatrix.Mult44x41(transform.Matrix, new Vector3(Start), 1).Point;
-            Direction = MyMatrix.Mult44x41(transform.Matrix, Direction, 0).Normalize();
+            Start = Matrix.Mul44x41(transform.Matrix, new Vec3(Start), 1);
+            Direction = Matrix.Mul44x41(transform.Matrix, Direction, 0).Normalize();
         }
 
         public void TransformInv(Transform transform)
         {
-            Start = MyMatrix.Mult44x41(transform.Matrix.Inverse, new Vector3(Start), 1).Point;
-            Direction = MyMatrix.Mult44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
+            Start = Matrix.Mul44x41(transform.Matrix.Inverse, new Vec3(Start), 1);
+            Direction = Matrix.Mul44x41(transform.Matrix.Inverse, Direction, 0).Normalize();
         }
-        public bool IsSmallerThanCurrent(Double distance, Transform trans)
+        public bool IsSmallerThanCurrent(float distance, Transform trans)
         {
-            double newMagnitude = MyMatrix.Mult44x41(trans.Matrix, Direction * distance, 0).Magnitude;
+            float newMagnitude = Matrix.Mul44x41(trans.Matrix, Direction * distance, 0).Magnitude;
             return (newMagnitude < IntersectDistance) ? true : false;
         }
-
-        void ShowInformation()
-        {
-            Console.WriteLine("Ray Information======================================");
-            Console.Write("Start : ");
-            Start.ShowInformation();
-            Console.WriteLine("Direction");
-            Direction.ShowInformation();
-            Console.WriteLine("=====================================================");
-        }
-
-
     }
 }

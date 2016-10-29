@@ -1,10 +1,9 @@
 ﻿using RayTracer.Common;
-using RayTracer.Shape;
+using RayTracer.Material;
 using RayTracer.Tracer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RayTracer.BVH;
+using RayTracer.Transformation;
 
 namespace RayTracer.Lighting
 {
@@ -18,7 +17,7 @@ namespace RayTracer.Lighting
             Color = color;
 
         }
-        public PointLight(Double[] param)
+        public PointLight(float[] param)
             : this(new Point3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))
         {
         }
@@ -26,50 +25,50 @@ namespace RayTracer.Lighting
         public Point3 Position
         { get; set; }
 
-        public override Vector3 GetPointToLight(Point3 point)
+        public override Vec3 GetPointToLight(Point3 point)
         {
-            return new Vector3(point, Position);
+            return new Vec3(point, Position);
         }
 
-        public override bool IsEffective(Point3 point, Geometry geometry, List<Geometry> geometries)
+        public override bool IsEffective(Point3 point, Container bvh)
         {
-            if (GetPointToLight(point) * geometry.GetNormal(point) < 0)
-                return false;
+            Vec3 pointToLight = GetPointToLight(point);
 
-            Ray shadowRay = new Ray(point, GetPointToLight(point));
-            foreach (var item in geometries)
+            Ray shadowRay = new Ray(point, pointToLight.Normalize());
+
+            if (bvh.IsIntersecting(shadowRay))
             {
-                if (item.Equals(geometry))
-                    continue;
-
-                Point3 pos = Utils.DeepClone(shadowRay.Start);
-                Vector3 dir = Utils.DeepClone(shadowRay.Direction);
-
-                shadowRay.TransformInv(item.Trans);
-
-                if (item.IsIntersecting(shadowRay))
-                    if (shadowRay.IntersectDistance < GetPointToLight(point).Magnitude)
-                        return false;
-                
-                shadowRay.Start = pos;
-                shadowRay.Direction = dir;
+                if (bvh.Geo != null)
+                {
+                    if (bvh.Geo.Trans != new Translation())
+                        shadowRay.TransformInv(bvh.Geo.Trans);
+                    if (bvh.Geo.IsIntersecting(shadowRay))
+                        if (shadowRay.IntersectDistance < pointToLight.Magnitude)
+                            return false;
+                }
+                else
+                {
+                    for (int i = 0; i < bvh.Childs.Length; i++)
+                        if (!IsEffective(point, bvh.Childs[i])) return false;
+                }
             }
 
             return true;
         }
 
-        public override Double GetAttValue(Point3 point, Attenuation attenuation)
+        public override float GetAttValue(Point3 point, Attenuation attenuation)
         {
             if (!attenuation.Equals(new Attenuation()))
                 return 1f;
 
-            Double d = GetPointToLight(point).Magnitude;
+            float d = GetPointToLight(point).Magnitude;
             return 1f /
                 (attenuation.Constant +
                 attenuation.Linear * d +
-                attenuation.Quadratic * Math.Pow(d, 2));
+                attenuation.Quadratic * (float)Math.Pow(d, 2));
 
         }
+
 
     }
 }

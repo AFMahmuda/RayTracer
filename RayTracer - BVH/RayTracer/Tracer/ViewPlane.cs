@@ -1,14 +1,15 @@
 ﻿using RayTracer.Common;
-using RayTracer.Shape;
 using System;
 
 namespace RayTracer.Tracer
 {
     public class ViewPlane
     {
+        //TO DO: make NOT singleton
+
         public static ViewPlane Instance;
-        double worldWidth;
-        double worldHeight;
+        float worldWidth;
+        float worldHeight;
         int pixelHeight;
         int pixelWidth;
         Point3 position;
@@ -35,8 +36,8 @@ namespace RayTracer.Tracer
             pixelHeight = height;
 
 
-            worldHeight = 2.0 * Math.Tan((Camera.Instance.FieldOfView / 2f) * Math.PI / 180.0);
-            worldWidth = worldHeight * (double)((double)pixelWidth / (double)PixelHeight);
+            worldHeight = 2.0f * (float)Math.Tan((Camera.Instance.FieldOfView / 2f) * (float)Math.PI / 180.0f);
+            worldWidth = worldHeight * (pixelWidth / (float)PixelHeight);
 
             PreCalculate();
 
@@ -46,20 +47,20 @@ namespace RayTracer.Tracer
         void PreCalculate()
         {
             upperLeft = GetUpperLeft();
-            unitRight = (Camera.Instance.U.Point * (worldWidth / (Double)PixelWidth) * -1);
-            unitDown = (Camera.Instance.V.Point * (worldHeight / (Double)PixelHeight) * -1);
+            unitRight = (Camera.Instance.U * (worldWidth / (float)PixelWidth) * -1);
+            unitDown = (Camera.Instance.V * (worldHeight / (float)PixelHeight) * -1);
         }
 
         Point3 GetUpperLeft()
         {
 
             Point3 center = Camera.Instance.Position;
-            center += Camera.Instance.W.Point;
+            center += Camera.Instance.W;
             position = center;
             Point3 upperLeft =
                 center
-                + Camera.Instance.U.Point * (worldWidth / 2.0)    //U is left
-                + Camera.Instance.V.Point * (worldHeight / 2.0);  //V is up
+                + Camera.Instance.U * (worldWidth / 2.0f)    //U is left
+                + Camera.Instance.V * (worldHeight / 2.0f);  //V is up
 
 
             return upperLeft;
@@ -69,33 +70,18 @@ namespace RayTracer.Tracer
         {
             Point3 newLocation =
                 upperLeft
-                + unitRight * (col + .5)
-                + unitDown * (row + .5);
+                + unitRight * (col + .5f)
+                + unitDown * (row + .5f);
             return newLocation;
         }
 
-        public Point3 GetNewLocation(int col, int row, Double col2, Double row2)
+        public Point3 GetNewLocation(int col, int row, float colOffset, float rowOffset)
         {
-
             Point3 newLocation =
                 upperLeft
-                + unitRight * (col + .5 + col2)
-                + unitDown * (row + .5 + row2);
+                + unitRight * (col + .5f + colOffset)
+                + unitDown * (row + .5f + rowOffset);
             return newLocation;
         }
-
-
-        public void ShowInformation()
-        {
-            Console.WriteLine("View Plane Information =============================");
-            Console.WriteLine("Upper Left");
-            upperLeft.ShowInformation();
-            Console.WriteLine("Center");
-            position.ShowInformation();
-            Console.WriteLine("H / W pixel : " + PixelHeight + " / " + PixelWidth);
-            Console.WriteLine("H / W world : " + worldHeight + " / " + worldWidth);
-            Console.WriteLine("====================================================");
-        }
-
     }
 }

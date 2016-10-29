@@ -3,12 +3,22 @@ using RayTracer.Material;
 using RayTracer.Tracer;
 using RayTracer.Transformation;
 using System;
+using System.Collections;
 
 namespace RayTracer.Shape
 {
     [Serializable]
     public abstract class Geometry
     {
+        public enum TYPE
+        {
+            SPHERE,
+            TRIANGLE
+        }
+
+        public TYPE type;
+
+
         protected Point3 pos;
         protected bool hasMorton;
         protected uint mortonCode;
@@ -25,15 +35,11 @@ namespace RayTracer.Shape
                 }
         }
 
+        public Mat Material;
 
-        public Mat Material
-        {
-            get;
-            set;
-        }
         public abstract void UpdatePos();
         public abstract bool IsIntersecting(Ray ray);
-        public abstract Vector3 GetNormal(Point3 point);
+        public abstract Vec3 GetNormal(Point3 point);
         public MyColor Ambient { get; set; }
 
         //source : https://devblogs.nvidia.com/parallelforall/thinking-parallel-part-iii-tree-construction-gpu/
@@ -58,9 +64,12 @@ namespace RayTracer.Shape
             v = (v * 0x00000005u) & 0x49249249u;
             return v;
         }
+        public string GetMortonBitString()
+        {
+            return Convert.ToString(mortonCode, 2).PadLeft(30, '0');
+        }
 
-
-        public void print()
+        public void printPos()
         {
             Console.WriteLine("{3}\t{0}\t{1}\t{2}", pos.X, pos.Y, pos.Z, Convert.ToString(GetMortonPos(), 2).PadLeft(30, '0'));
         }

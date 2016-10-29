@@ -2,6 +2,7 @@
 using RayTracer.Shape;
 using RayTracer.Lighting;
 using RayTracer.Material;
+using RayTracer.BVH;
 using RayTracer.Transformation;
 using System;
 using System.Collections.Generic;
@@ -10,20 +11,20 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+
 namespace RayTracer.Tracer
 {
     [Serializable]
     public class Scene
     {
-
-
-        private List<Geometry> geometries = new List<Geometry>();
+        private Geometry[] geometries;
         private LinkedList<Transform> transforms = new LinkedList<Transform>();
-        private List<Light> lights = new List<Light>();
+        private Light[] lights;
         private List<Point3> vertices = new List<Point3>();
         private MyColor ambient;
         private Mat material;
-        public MyColor defColor = new MyColor(.5f, .5f, .5f);
+
+        public MyColor defColor = new MyColor();
 
         public Scene()
         {
@@ -31,28 +32,43 @@ namespace RayTracer.Tracer
             maxDepth = 5;
             transforms.AddFirst(new Scaling(new Point3(1, 1, 1)));
             material = new Mat();
-            ambient = new MyColor(.2, .2, .2);
+            ambient = new MyColor(.2f, .2f, .2f);
             Attenuation = new Attenuation();
             OutputFilename = "default.bmp";
         }
 
-        public String SceneFile { get; set; }
-        public Scene(String scenefile)
+        public string SceneFile { get; set; }
+        public Scene(string scenefile)
             : this()
         {
             ParseCommand(scenefile);
         }
 
-        public void ParseCommand(String scenefile) 
+        public void ParseCommand(string scenefile)
         {
             SceneFile = scenefile;
             StreamReader filereader = new StreamReader(scenefile);
             string command;
             while ((command = filereader.ReadLine()) != null)
                 ExecuteCommand(command);
+
+            ConvertToArray();
+
+
             filereader.Close();
         }
 
+        private void ConvertToArray()
+        {
+            lights = tempLights.ToArray();
+            geometries = tempGeos.ToArray();
+            tempGeos.Clear();
+            tempLights.Clear();
+            transforms.Clear();
+            vertices.Clear();
+            transforms.Clear();
+
+        }
 
         string CleanCommand(string command)
         {
@@ -61,7 +77,9 @@ namespace RayTracer.Tracer
             return command;
         }
 
-        public void ExecuteCommand(String fullcommand)
+        List<Light> tempLights = new List<Light>();
+        List<Geometry> tempGeos = new List<Geometry>();
+        public void ExecuteCommand(string fullcommand)
         {
 
             if (fullcommand.Contains('#'))
@@ -77,18 +95,24 @@ namespace RayTracer.Tracer
                 return;
             }
 
-            double[] param = new double[words.Length - 1];
+            float[] param = new float[words.Length - 1];
             for (int i = 0; i < param.Length; i++)
             {
-                param[i] = double.Parse(words[i + 1]);
+                param[i] = float.Parse(words[i + 1]);
             }
             switch (command)
             {
+
+                case "defColor":
+                    defColor = new MyColor(param[0],param[1],param[2]);                    
+                    break;
                 case "size":
                     Size = new Size((int)param[0], (int)param[1]);
                     break;
                 case "camera":
+                    if (Camera.Instance != null) { break; }
                     Camera.Instance = new Camera(param);
+                    ViewPlane.Instance = new ViewPlane(Size.Width, Size.Height);
                     break;
                 case "maxdepth":
                     maxDepth = (int)param[0];
@@ -104,15 +128,14 @@ namespace RayTracer.Tracer
 
                 //geometry
                 case "tri":
-                    Triangle tri = CrerateTriangle(param);
-                    Geometries.Add(tri);
+                    Geometry tri = CreateShape(Geometry.TYPE.TRIANGLE, param);
+                    tempGeos.Add(tri);
                     break;
 
                 case "sphere":
-                    Sphere sphere = CreateSphere(param);
-                    Geometries.Add(sphere);
+                    Geometry sphere = CreateShape(Geometry.TYPE.SPHERE, param);
+                    tempGeos.Add(sphere);
                     break;
-
 
                 //transforms 
                 case "pushTransform":
@@ -122,13 +145,13 @@ namespace RayTracer.Tracer
                     transforms.RemoveFirst();
                     break;
                 case "translate":
-                    transforms.First().Matrix = MyMatrix.Mult44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
+                    transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
                     break;
                 case "scale":
-                    transforms.First().Matrix = MyMatrix.Mult44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
+                    transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
                     break;
                 case "rotate":
-                    transforms.First().Matrix = MyMatrix.Mult44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
+                    transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
                     break;
 
                 //material
@@ -144,6 +167,12 @@ namespace RayTracer.Tracer
                 case "shininess":
                     material.Shininess = param[0];
                     break;
+                case "refIndex":
+                    material.RefractIndex = param[0];
+                    break;
+                case "refValue":
+                    material.RefractValue = param[0];
+                    break;
 
 
                 //light
@@ -154,10 +183,10 @@ namespace RayTracer.Tracer
                     ambient = new MyColor(param);
                     break;
                 case "directional":
-                    Lights.Add(new DirectionalLight(param));
+                    tempLights.Add(new DirectionalLight(param));
                     break;
                 case "point":
-                    Lights.Add(new PointLight(param));
+                    tempLights.Add(new PointLight(param));
                     break;
 
                 default:
@@ -166,38 +195,51 @@ namespace RayTracer.Tracer
         }
 
 
-        Sphere CreateSphere(double[] param)
+        Geometry CreateShape(Geometry.TYPE type, float[] param)
+        {
+            Geometry geo;
+            if (type == Geometry.TYPE.SPHERE)
+            {
+                geo = CreateSphere(param);
+                ApplyTransform(geo);
+
+            }
+            else //if (type == Geometry.TYPE.TRIANGLE)
+            {
+                geo = CreateTriangle(param);
+                //transform already aplied in each vertices
+            }
+            ApplyMaterial(geo);
+            ApplyAmbient(geo);
+
+            return geo;
+        }
+
+        Sphere CreateSphere(float[] param)
         {
             Sphere sphere = new Sphere(param);
-
-            ApplyTransform(sphere);
-            ApplyMaterial(sphere);
-            ApplyAmbient(sphere);
 
             return sphere;
         }
 
-        Triangle CrerateTriangle(double[] param)
+        Triangle CreateTriangle(float[] param)
         {
             Point3 a = vertices[(int)param[0]];
             Point3 b = vertices[(int)param[1]];
             Point3 c = vertices[(int)param[2]];
 
-            Triangle tri = new Triangle(a, b, c);
+            a = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(a), 1);
+            b = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(b), 1);
+            c = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(c), 1);
 
-            ApplyTransform(tri);
-            ApplyMaterial(tri);
-            ApplyAmbient(tri);
+            Triangle tri = new Triangle(a, b, c);
 
             return tri;
         }
 
-
-
-        
         private void ApplyTransform(Geometry shape)
         {
-            shape.Trans= Utils.DeepClone(transforms.First());
+            shape.Trans = Utils.DeepClone(transforms.First());
         }
 
         private void ApplyMaterial(Geometry shape)
@@ -211,24 +253,22 @@ namespace RayTracer.Tracer
         }
 
 
-        public List<Geometry> Geometries
+        public Geometry[] Geometries
         {
             get { return geometries; }
             set { geometries = value; }
         }
 
-        public List<Light> Lights
+        public Light[] Lights
         {
             get { return lights; }
         }
-
-
 
         int maxDepth;
         public int MaxDepth
         { get { return maxDepth; } }
 
-        public String OutputFilename
+        public string OutputFilename
         { get; set; }
 
 
@@ -238,14 +278,19 @@ namespace RayTracer.Tracer
         public Size Size
         { get; set; }
 
+        public Container Bvh
+        {
+            get;set;
+        }
+
         public void ShowInformation()
         {
             Console.WriteLine("=======Scene Information===========================");
             //Camera.ShowInformation();
-            Console.WriteLine("Total Objects : " + Geometries.Count);
-            Console.WriteLine("Total Lights  : " + Lights.Count);
+            Console.WriteLine("Total Objects : " + Geometries.Length);
+            Console.WriteLine("Total Lights  : " + Lights.Length);
             Console.WriteLine("Max Bounce    : " + MaxDepth);
-            Console.WriteLine("Image Size    : " + Size.Width +" x " + Size.Height);
+            Console.WriteLine("Image Size    : " + Size.Width + " x " + Size.Height);
             Console.WriteLine("===================================================");
         }
     }
