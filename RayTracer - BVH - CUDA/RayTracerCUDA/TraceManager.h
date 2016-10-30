@@ -51,7 +51,7 @@ class TraceManager
 		width = ViewPlane::Instance()->pixelW;
 
 		//search two closest factors 6 = 3 and 2 , 5 = 5 and 1
-		verDiv = (int)sqrtf(tn);
+		verDiv = (int) sqrtf(tn);
 		do verDiv++; while (tn % verDiv != 0);
 		horDiv = tn / verDiv;
 

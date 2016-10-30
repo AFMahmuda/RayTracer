@@ -285,7 +285,6 @@ public:
 	Sphere* createSphere(float* param)
 	{
 		Sphere sphere = Sphere(param);
-
 		return &sphere;
 	}
 
@@ -295,9 +294,8 @@ public:
 		for (size_t i = 0; i < 3; i++)
 		{
 			p[i] = Point3(Matrix::Mul44x41(transforms.back()->matrix, *vertices[(int)param[i]]));
-			p[i].h = 1;
+			/*p[i].h = 1;*/
 		}
-
 
 		Triangle tri = Triangle(p[0], p[1], p[2]);
 		return &tri;

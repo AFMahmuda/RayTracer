@@ -112,6 +112,7 @@
     <ClCompile Include="Translation.cpp">
       <Filter>Transform</Filter>
     </ClCompile>
+    <ClCompile Include="IData3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -198,6 +199,7 @@
     <ClInclude Include="Translation.h">
       <Filter>Transform</Filter>
     </ClInclude>
+    <ClInclude Include="IData3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

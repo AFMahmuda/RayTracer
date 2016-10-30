@@ -28,7 +28,7 @@ Vec3& Camera::CameraViewPosition()
 	float	x = pos[0];
 	float	y = pos[1];
 	float	z = pos[2];
-	return ((U * x) + (V * y) + (W * z));
+	return Vec3((U * x) + (V * y) + (W * z));
 }
 
 Camera::Camera()

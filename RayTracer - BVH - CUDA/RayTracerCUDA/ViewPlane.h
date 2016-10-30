@@ -10,8 +10,7 @@
 class ViewPlane
 {
 
-	static bool flag;
-	static ViewPlane* instance;
+
 
 public:
 
@@ -29,19 +28,23 @@ public:
 	float worldW = 1;
 	int pixelH = 1;
 	int pixelW = 1;
+
+	void Init(int width, int height);
+
+	Point3 getNewLocation(int col, int row);
+private:
+	static bool flag;
+	static ViewPlane* instance;
+
 	Point3 pos;
 	Point3 upperLeft;
 	Point3 unitRight;
 	Point3 unitDown;
 
-	void Init(int width, int height);
 
 	void Precalculate();
 
 	Point3 &getUpperLeft();
-
-	Point3 &getNewLocation(int col, int row);
-protected:
 
 	ViewPlane(); // Prevent construction
 	ViewPlane(const ViewPlane&); // Prevent construction by copying

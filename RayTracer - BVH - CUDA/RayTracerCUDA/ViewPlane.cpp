@@ -34,13 +34,13 @@ Point3 & ViewPlane::getUpperLeft()
 	return res;
 }
 
-Point3& ViewPlane::getNewLocation(int col, int row)
+Point3 ViewPlane::getNewLocation(int col, int row)
 {
 	Point3 uleft = upperLeft;
 	Vec3 uRight = unitRight;
 	Vec3 uDown = unitDown;
 
-	return	uleft + Point3(
+	return	Point3(uleft +
 		uRight * (col + .5f)
 		+ uDown * (row + .5f))
 		;

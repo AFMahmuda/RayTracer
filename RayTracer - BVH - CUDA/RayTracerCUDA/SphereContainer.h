@@ -57,7 +57,7 @@ public:
 		}
 
 		c = Matrix::Mul44x41(item->getTrans().matrix, c);
-		r = Matrix::Mul44x41(item->getTrans().matrix, Vec3(r, 0, 0)).Magnitude();
+		r = Vec3(Matrix::Mul44x41(item->getTrans().matrix, Vec3(r, 0, 0))).Magnitude();
 
 	}
 	SphereContainer() {}
