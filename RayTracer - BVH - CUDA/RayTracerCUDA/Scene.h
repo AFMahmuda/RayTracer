@@ -18,24 +18,28 @@
 #include"PointLight.h"
 #include"DirectionalLight.h"
 
+#include"Camera.h"
+#include"ViewPlane.h"
+
 #include<vector>
 #include<string>
+#include<iostream>
+#include<fstream>
 
+#include<regex>
+
+using namespace std;
 class Scene
 {
-
-
-
-
 public:
 	int maxDepth = 5;
 	int size[2];
 	Container * container;
 
-	std::vector< Geometry*> geometries;
-	std::vector< Light*> light;
-	std::vector< Transform*> transforms;
-	std::vector< Point3*> vertices;
+	vector< Geometry*> geometries;
+	vector< Light*> light;
+	vector< Transform*> transforms;
+	vector< Point3*> vertices;
 
 	MyColor ambient = MyColor();
 	Material material = Material();
@@ -46,146 +50,216 @@ public:
 		transforms.push_back(new Translation());
 	}
 
-	Scene(std::string filename) :Scene()
+	Scene(string filename) :Scene()
 	{
 		parseCommand(filename);
 	}
 
-	void parseCommand(std::string filename
-		)
+	void parseCommand(string filename)
 	{
-		//StreamReader filereader = new StreamReader(scenefile);
-		//string command;
-		//while ((command = filereader.ReadLine()) != null)
-		//	ExecuteCommand(command);
 
-		//ConvertToArray();
+		string line;
+		ifstream myfile(filename);
+		if (myfile.is_open())
+		{
+			while (getline(myfile, line))
+			{
+				executeCommand(line);
+			}
+			myfile.close();
 
-
-		//filereader.Close();
-
-
+		}
+		else cout << "Unable to open file";
 	}
 
-	std::string CleanCommand(std::string command)
+	string CleanCommand(string command)
 	{
-		//command = command.Trim();
-		//command = Regex.Replace(command, @"\s + ", " ");
+
+		command = regex_replace(command, regex("\t"), " "); //replace tab w/ space
+		command = regex_replace(command, regex("^ +| +$"), ""); //replce leading and trailing space with nothing
 		return command;
 	}
 
-	void executeCommand(std::string command)
+	vector<string> splitString(string fullcommand, char delimiter) {
+		vector<string> results;
+		size_t pos = 0;
+		std::string token;
+		while ((pos = fullcommand.find(delimiter)) != std::string::npos) {
+			token = fullcommand.substr(0, pos);
+			results.push_back(token);
+			fullcommand.erase(0, pos + 1);
+		}
+		results.push_back(fullcommand);
+		fullcommand.erase(0, pos);
+		return results;
+	}
+
+	void executeCommand(string fullcommand)
 	{
-		//	if (fullcommand.Contains('#'))
-		//		return;
+		if (fullcommand.compare("") == 0)
+			return;
+		if (fullcommand.find('#') != string::npos)
+			return;
 
-		//	fullcommand = CleanCommand(fullcommand);
-		//	String[] words = fullcommand.Split(' ');
-		//	String command = words[0];
+		fullcommand = CleanCommand(fullcommand);
 
-		//	if (command.Equals("output"))
-		//	{
-		//		OutputFilename = words[1] + ".bmp";
-		//		return;
-		//	}
+		vector<string> words = splitString(fullcommand, ' ');
+		string command = words[0];
+		std::transform(command.begin(), command.end(), command.begin(), ::tolower);
 
-		//	float[] param = new float[words.Length - 1];
-		//	for (int i = 0; i < param.Length; i++)
-		//	{
-		//		param[i] = float.Parse(words[i + 1]);
-		//	}
-		//	switch (command)
-		//	{
+		if (command.compare("output") == 0)
+		{
+			outFileName = words[1] + ".bmp";
+			return;
+		}
+
+		vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
+
 
 		//	case "defColor":
 		//		defColor = new MyColor(param[0], param[1], param[2]);
 		//		break;
-		//	case "size":
-		//		Size = new Size((int)param[0], (int)param[1]);
-		//		break;
-		//	case "camera":
-		//		if (Camera.Instance != null) { break; }
-		//		Camera.Instance = new Camera(param);
-		//		ViewPlane.Instance = new ViewPlane(Size.Width, Size.Height);
-		//		break;
-		//	case "maxdepth":
-		//		maxDepth = (int)param[0];
-		//		break;
+		if (command.compare("size") == 0) {
+			size[0] = (int)param[0];
+			size[1] = (int)param[1];
+			return;
+		}
+
+		if (command.compare("camera") == 0) {
+
+			Camera::Instance()->Init(&param[0]);
+			ViewPlane::Instance()->Init(size[0], size[1]);
+
+			return;
+		}
+		if (command.compare("maxdepth") == 0)
+		{
+			maxDepth = (int)param[0];
+			return;
+		}
+
+		if (command.compare("maxvertex") == 0)
+		{
+			//no need		
+			//vertices.reserve((int)param[0]);
+			return;
+		}
+		if (command.compare("vertex") == 0)
+		{
+			vertices.push_back(new Point3(&param[0]));
+			return;
+		}
+
+		//geometry
+		if (command.compare("tri") == 0)
+		{
+			Geometry* tri = createShape(Geometry::TRIANGLE, &param[0]);
+			geometries.push_back(tri);
+			return;
+		}
+		if (command.compare("sphere") == 0)
+		{
+			Geometry* sph = createShape(Geometry::SPHERE, &param[0]);
+			geometries.push_back(sph);
+			return;
+		}
 
 
-		//	case "maxverts":
-		//		vertices = new List<Point3>((int)param[0]);
-		//		break;
-		//	case "vertex":
-		//		vertices.Add(new Point3(param));
-		//		break;
+		//transforms 
+		if (command.compare("pushtransform") == 0)
+		{
+			Transform* trans = (Transform*)malloc(sizeof(Transform));
+			memcpy(trans, transforms.back(), sizeof(Transform));
+			transforms.push_back(trans);
+			return;
+		}
+		if (command.compare("poptransform") == 0)
+		{
+			transforms.pop_back();
+			return;
+		}
 
-		//		//geometry
-		//	case "tri":
-		//		Geometry tri = CreateShape(Geometry.TYPE.TRIANGLE, param);
-		//		tempGeos.Add(tri);
-		//		break;
+		if (command.compare("translate") == 0)
+		{
+			Transform trans = Translation(&param[0]);
+			Transform& last = (Transform)*transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
+			return;
+		}
+		if (command.compare("scale") == 0)
+		{
+			Transform trans = Scaling(&param[0]);
+			Transform& last = (Transform)*transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
+			return;
+		}
+		if (command.compare("rotate") == 0)
+		{
+			Transform trans = Rotation(&param[0]);
+			Transform& last = (Transform)*transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
+			return;
+		}
+		//material
 
-		//	case "sphere":
-		//		Geometry sphere = CreateShape(Geometry.TYPE.SPHERE, param);
-		//		tempGeos.Add(sphere);
-		//		break;
+		if (command.compare("diffuse") == 0)
+		{
+			material.Diffuse = new MyColor(param[0], param[1], param[2]);
+			return;
+		}
 
-		//		//transforms 
-		//	case "pushTransform":
-		//		transforms.AddFirst(Utils.DeepClone(transforms.First()));
-		//		break;
-		//	case "popTransform":
-		//		transforms.RemoveFirst();
-		//		break;
-		//	case "translate":
-		//		transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Translation(param)).Matrix);
-		//		break;
-		//	case "scale":
-		//		transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Scaling(param)).Matrix);
-		//		break;
-		//	case "rotate":
-		//		transforms.First().Matrix = Matrix.Mul44x44(transforms.First().Matrix, (new Rotation(param)).Matrix);
-		//		break;
+		if (command.compare("specular") == 0)
+		{
+			material.Specular = new MyColor(param[0], param[1], param[2]);
+			return;
+		}
+		if (command.compare("emission") == 0)
+		{
+			material.Emmission = new MyColor(param[0], param[1], param[2]);
+			return;
+		}
+		if (command.compare("shininess") == 0)
+		{
+			material.setShininess(param[0]);
+			return;
+		}
 
-		//		//material
-		//	case "diffuse":
-		//		material.Diffuse = new MyColor(param[0], param[1], param[2]);
-		//		break;
-		//	case "specular":
-		//		material.Specular = new MyColor(param[0], param[1], param[2]);
-		//		break;
-		//	case "emission":
-		//		material.Emission = new MyColor(param[0], param[1], param[2]);
-		//		break;
-		//	case "shininess":
-		//		material.Shininess = param[0];
-		//		break;
-		//	case "refIndex":
-		//		material.RefractIndex = param[0];
-		//		break;
-		//	case "refValue":
-		//		material.RefractValue = param[0];
-		//		break;
-
+		if (command.compare("refindex") == 0)
+		{
+			material.setrefIndex(param[0]);
+			return;
+		}
+		if (command.compare("refvalue") == 0)
+		{
+			material.setRefValue(param[0]);
+			return;
+		}
 
 		//		//light
-		//	case "attenuation":
-		//		Attenuation = new Attenuation(param);
-		//		break;
-		//	case "ambient":
-		//		ambient = new MyColor(param);
-		//		break;
-		//	case "directional":
-		//		tempLights.Add(new DirectionalLight(param));
-		//		break;
-		//	case "point":
-		//		tempLights.Add(new PointLight(param));
-		//		break;
-
-		//	default:
-		//		break;
-		//	}
+		if (command.compare("attenuation") == 0)
+		{
+			att = Attenuation(&param[0]);
+			return;
+		}
+		if (command.compare("ambient") == 0)
+		{
+			ambient = MyColor(param[0], param[1], param[2]);
+			return;
+		}
+		if (command.compare("directional") == 0)
+		{
+			light.push_back(new DirectionalLight(new Vec3(&param[0]), new MyColor(param[3], param[4], param[5])));
+			return;
+		}
+		if (command.compare("point") == 0)
+		{
+			light.push_back(new PointLight(new Point3(&param[0]), new MyColor(param[3], param[4], param[5])));
+			return;
+		}
 	}
 
 	Geometry* createShape(Geometry::TYPE type, float* params)
@@ -217,35 +291,37 @@ public:
 
 	Triangle* createTriangle(float* param)
 	{
-		Point3* a = vertices[(int)param[0]];
-		Point3* b = vertices[(int)param[1]];
-		Point3* c = vertices[(int)param[2]];
+		Point3 p[3];
+		for (size_t i = 0; i < 3; i++)
+		{
+			p[i] = Point3(Matrix::Mul44x41(transforms.back()->matrix, *vertices[(int)param[i]]));
+			p[i].h = 1;
+		}
 
 
-		//a = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(a), 1);
-		//b = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(b), 1);
-		//c = Matrix.Mul44x41(transforms.First().Matrix, new Vec3(c), 1);
-
-		//Triangle tri = Triangle(a, b, c);
-
-		Triangle tri = Triangle(0, 0, 0);
-
+		Triangle tri = Triangle(p[0], p[1], p[2]);
 		return &tri;
 	}
 
 	void applyTransform(Geometry* shape)
 	{
-		//		shape.Trans = Utils.DeepClone(transforms.First());
+		Transform currTrans;
+		memcpy(&currTrans, transforms.back(), sizeof(Transform));
+		shape->setTrans(currTrans);
 	}
 
 	void applyMaterial(Geometry* shape)
 	{
-		//		shape.Material = Utils.DeepClone(material);
+		Material mat;
+		memcpy(&mat, &material, sizeof(Material));
+		shape->mat = mat;
 	}
 
 	void applyAmbient(Geometry* shape)
 	{
-		//		shape.Ambient = Utils.DeepClone(ambient);
+		MyColor amb;
+		memcpy(&amb, &ambient, sizeof(MyColor));
+		shape->ambient = amb;
 	}
 
 

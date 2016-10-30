@@ -9,11 +9,20 @@
 class Camera
 {
 private:
-
+	static bool flag;
+	static Camera* instance;
 
 public:
 
-	static Camera& Instance();
+	static Camera* Instance()
+	{
+		if (flag == false)
+		{
+			instance = new Camera();
+			flag = true;
+		}		
+		return instance;
+	}
 
 	Vec3 U;
 	Vec3 V;
@@ -34,7 +43,7 @@ protected:
 
 	Camera(); // Prevent construction
 	Camera(const Camera&); // Prevent construction by copying
-	Camera& operator=(const Camera&); // Prevent assignment
+//	Camera& operator=(const Camera&); // Prevent assignment
 	~Camera(); // Prevent unwanted destruction
 };
 

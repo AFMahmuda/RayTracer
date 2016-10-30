@@ -35,6 +35,16 @@ Vec3 * Vec3::DOWN() { return new Vec3(0, -1, 0); }
 Vec3 * Vec3::LEFT() { return new Vec3(-1, 0, 0); }
 Vec3 * Vec3::RIGHT() { return new Vec3(1, 0, 0); }
 
+Vec3 Vec3::Cross(const Vec3 & a, const Vec3 & b) {
+	float X, Y, Z;
+	X = (a.y * b.z) - (a.z * b.y);
+	Y = ((a.x * b.z) - (a.z * b.x)) * -1;
+	Z = (a.x * b.y) - (a.y * b.x);
+
+	Vec3& res = Vec3(X, Y, Z);
+	return res;
+}
+
 Vec3::~Vec3()
 {
 }

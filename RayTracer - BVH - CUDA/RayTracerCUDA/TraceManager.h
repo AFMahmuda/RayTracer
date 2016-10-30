@@ -28,8 +28,6 @@ class TraceManager
 
 	void TraceDFS(Container* bin, int level)
 	{
-
-
 		std::cout << "BIN lv " << level;
 		if (bin->isLeaf)
 			std::cout << " LEAF";
@@ -47,42 +45,18 @@ class TraceManager
 	void initScene(std::string sceneFile) {
 		scene = Scene(sceneFile);
 
+		//precalculate w and h measurements
+		//w and h total
+		height = ViewPlane::Instance()->pixelH;
+		width = ViewPlane::Instance()->pixelW;
 
+		//search two closest factors 6 = 3 and 2 , 5 = 5 and 1
+		verDiv = (int)sqrtf(tn);
+		do verDiv++; while (tn % verDiv != 0);
+		horDiv = tn / verDiv;
 
-		//----
-		int count = 10;
-		std::vector<Geometry*> balz;
-		//for (int x = 0; x < count; x++)
-		//{
-		//	float randx = (rand() % 100 - 50.f);
-		//	float randy = (rand() % 100 - 50.f);
-		//	float randz = (rand() % 100 - 50.f);
-		//	balz.push_back(new Sphere(Point3(randx, randy, randz), 1));
-		//}
-		balz.push_back(new Sphere(Point3(-1, 0, 0), 1));
-		balz.push_back(new Sphere(Point3(1, 0, 0), 1));
-
-		//balz.push_back(new Sphere(Point3(0, -1, 0), 1));
-		//balz.push_back(new Sphere(Point3(0, 1, 0), 1));
-
-		//balz.push_back(new Sphere(Point3(0, 0, 10), 1));
-		//balz.push_back(new Sphere(Point3(0, 0, 11), 1));
-
-		scene.geometries = balz;
-		//-------
-
-		////precalculate w and h measurements
-		////w and h total
-		//height = ViewPlane::Instance().pixelH;
-		//width = ViewPlane::Instance().pixelW;
-
-		////search two closest factors 6 = 3 and 2 , 5 = 5 and 1
-		//verDiv = (int)sqrtf(tn);
-		//do verDiv++; while (tn % verDiv != 0);
-		//horDiv = tn / verDiv;
-
-		//wPerSeg = width / horDiv; //width per segmen
-		//hPerSeg = height / verDiv; //height per segmen
+		wPerSeg = width / horDiv; //width per segmen
+		hPerSeg = height / verDiv; //height per segmen
 	}
 
 	void buildBVH() {
@@ -192,14 +166,11 @@ public:
 
 		buildBVH();
 		TraceDFS(scene.container, 0);
-		//		trace();
 
-		//		mergeAndSaveImage();
+		trace();
+
+		mergeAndSaveImage();
 	}
-
-
-
-
 
 	~TraceManager();
 };

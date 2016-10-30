@@ -1,12 +1,7 @@
 #include "Camera.h"
 
-
-
-Camera & Camera::Instance()
-{
-	static Camera inst;
-	return inst;
-}
+bool Camera::flag = false;
+Camera * Camera::instance = nullptr;
 
 void Camera::Init(float * vals) {
 	Init(
@@ -24,7 +19,7 @@ void Camera::Init(Point3& pos, Point3& lookAt, Vec3& up, float fov) {
 	this->fov = fov;
 
 	W = Vec3(pos, lookAt).Normalize();
-	U = Vec3::Cross(up, W).Normalize();
+	U = Vec3::Cross(this->up, W).Normalize();
 	V = Vec3::Cross(W, U);
 }
 
@@ -38,15 +33,11 @@ Vec3& Camera::CameraViewPosition()
 
 Camera::Camera()
 {
+	Init(Point3(), Point3(), Vec3(), 15);
 }
 
 Camera::Camera(const Camera &)
 {
-}
-
-Camera & Camera::operator=(const Camera &)
-{
-	return Instance();
 }
 
 Camera::~Camera()

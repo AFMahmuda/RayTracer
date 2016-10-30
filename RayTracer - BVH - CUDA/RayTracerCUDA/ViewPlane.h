@@ -9,14 +9,26 @@
 
 class ViewPlane
 {
+
+	static bool flag;
+	static ViewPlane* instance;
+
 public:
 
-	static ViewPlane& Instance();
+	static ViewPlane* Instance()
+	{
+		if (flag == false)
+		{
+			instance = new ViewPlane();
+			flag = true;
+		}
+		return instance;
+	}
 
-	float worldH;
-	float worldW;
-	int pixelH;
-	int pixelW;
+	float worldH = 1;
+	float worldW = 1;
+	int pixelH = 1;
+	int pixelW = 1;
 	Point3 pos;
 	Point3 upperLeft;
 	Point3 unitRight;
@@ -33,7 +45,7 @@ protected:
 
 	ViewPlane(); // Prevent construction
 	ViewPlane(const ViewPlane&); // Prevent construction by copying
-	ViewPlane& operator=(const ViewPlane&); // Prevent assignment
+//	ViewPlane& operator=(const ViewPlane&); // Prevent assignment
 	~ViewPlane(); // Prevent unwanted destruction
 };
 

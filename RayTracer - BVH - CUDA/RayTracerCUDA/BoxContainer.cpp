@@ -33,9 +33,6 @@ bool BoxContainer::IsIntersecting(Ray ray)
 
 void BoxContainer::showInfo()
 {
-
 	std::cout << "min: " << min[0] << "\t" << min[1] << "\t" << min[2] << std::endl;
 	std::cout << "max: " << max[0] << "\t" << max[1] << "\t" << max[2] << std::endl;
-
-
 }

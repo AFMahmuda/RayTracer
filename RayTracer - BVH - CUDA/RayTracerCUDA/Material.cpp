@@ -6,7 +6,7 @@ Material::Material()
 {
 }
 
-inline void Material::setShininess(float val)
+ void Material::setShininess(float val)
 {
 	shininess = val;
 	if (shininess < 0)
@@ -15,7 +15,7 @@ inline void Material::setShininess(float val)
 		shininess = 128;
 }
 
-inline void Material::setrefIndex(float val)
+ void Material::setrefIndex(float val)
 {
 	refractIndex = val;
 	if (refractIndex < 0)
@@ -24,7 +24,7 @@ inline void Material::setrefIndex(float val)
 		refractIndex = 1;
 }
 
-inline void Material::setRefValue(float val)
+ void Material::setRefValue(float val)
 {
 	refractValue = val;
 	if (refractValue < 0)

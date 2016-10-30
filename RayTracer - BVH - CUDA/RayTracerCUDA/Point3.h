@@ -62,14 +62,6 @@ public:
 		z -= rhs.z;
 		return *this;
 	}
-
-	Point3& operator*=(const Point3& rhs)
-	{
-		x *= rhs.x;
-		y *= rhs.y;
-		z *= rhs.z;
-		return *this;
-	}
 	Point3& operator*=(float rhs)
 	{
 		x *= rhs;
@@ -84,11 +76,7 @@ public:
 		lhs += rhs;
 		return lhs;
 	}
-	friend Point3 operator*(Point3 lhs, const Point3& rhs)
-	{
-		lhs *= rhs;
-		return lhs;
-	}
+
 	friend Point3 operator-(Point3 lhs, const Point3& rhs)
 	{
 		lhs -= rhs;

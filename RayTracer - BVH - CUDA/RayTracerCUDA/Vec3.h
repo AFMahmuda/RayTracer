@@ -26,31 +26,65 @@ public:
 		return x*b.x + y*b.y + z*b.z;
 	}
 
-	Vec3& operator+(const Vec3 & b) {
-		return  Vec3(x + b.x, y + b.y, z + b.z);
+	Vec3& operator+=(const Vec3& rhs)
+	{
+		x += rhs.x;
+		y += rhs.y;
+		z += rhs.z;
+		return *this;
+	}
+	Vec3& operator-=(const Vec3& rhs)
+	{
+		x -= rhs.x;
+		y -= rhs.y;
+		z -= rhs.z;
+		return *this;
 	}
 
-	Vec3& operator-(const Vec3 & b) {
-		return  Vec3(x - b.x, y - b.y, z - b.z);
+	
+	Vec3& operator*=(float rhs)
+	{
+		x *= rhs;
+		y *= rhs;
+		z *= rhs;
+		return *this;
 	}
 
 
-	Vec3& operator*(float scalar) {
-		return  Vec3(x*scalar, y*scalar, z*scalar);
+	friend Vec3 operator+(Vec3 lhs, const Vec3& rhs)
+	{
+		lhs += rhs;
+		return lhs;
 	}
 
-	Vec3& operator/(float scalar) {
-		scalar = 1.f / scalar;
-		return  Vec3(x*scalar, y*scalar, z*scalar);
+	friend Vec3 operator-(Vec3 lhs, const Vec3& rhs)
+	{
+		lhs -= rhs;
+		return lhs;
 	}
-	static Vec3& Cross(const Vec3 & a, const Vec3 & b) {
-		return  Vec3(
-			a.y * b.z - a.z * b.y,
-			a.z * b.x - a.x * b.z,
-			a.x * b.y - a.y * b.x
-			);
+	friend Vec3 operator*(Vec3 lhs, float rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+	friend Vec3 operator*(float lhs, Vec3 rhs)
+	{
+		rhs *= lhs;
+		return rhs;
 	}
 
+
+	static Vec3 Cross(const Vec3 & a, const Vec3 & b);
+	Vec3 Cross(const Vec3 & b)
+	{
+		float X, Y, Z;
+		X = (y * b.z) - (z * b.y);
+		Y = ((x * b.z) - (z * b.x)) * -1;
+		Z = (x * b.y) - (y * b.x);
+
+		Vec3& res = Vec3(X, Y, Z);
+		return res;
+	}
 	~Vec3();
 };
 

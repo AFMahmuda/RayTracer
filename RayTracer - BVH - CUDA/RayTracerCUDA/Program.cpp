@@ -1,30 +1,27 @@
-#include<string.h>
-#include"Sphere.h"
-#include"Translation.h"
-#include"Rotation.h"
-#include"Scaling.h"
-
 #include"TraceManager.h"
-#include"RadixSort.h"
+
+#include<string>
+#include<iostream>
+#include<fstream>
 using namespace std;
 int main(int argc, char *argv[])
 {
-	char* fileName = "default.test";
+	string filename = "D:/Dokumen/code/c#/RayTracer/RayTracer - BVH - CUDA/Debug/default.test";
 
 	if (argc >= 2)
-		fileName = argv[1];
+		filename = argv[1];
 
-	FILE *file;
-	if (file = fopen(fileName, "r"))
+	ifstream myfile(filename);
+
+	if (myfile.is_open())
 	{
-		cout << fileName << endl;
+		myfile.close();
+		TraceManager(1, Container::BOX, false).traceScene(filename);
 	}
 	else
 	{
-		cout << "file not found!" << endl;
-		TraceManager(1,Container::BOX,false).traceScene("");		
+		cout << filename << " file not found!" << endl;
 	}
-
 
 	int a;
 	cin >> a;
