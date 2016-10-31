@@ -6,7 +6,7 @@
 using namespace std;
 int main(int argc, char *argv[])
 {
-	string filename = "D:/Dokumen/code/c#/RayTracer/RayTracer - BVH - CUDA/Debug/default.test";
+	string filename = "E:/5112100118 - Fathur/TA/Project/RayTracer/RayTracer - BVH - CUDA/x64/Debug/default.test";
 
 	if (argc >= 2)
 		filename = argv[1];

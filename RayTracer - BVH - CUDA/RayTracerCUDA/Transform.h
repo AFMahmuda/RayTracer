@@ -7,7 +7,9 @@ class Transform
 public:
 	Matrix matrix;
 
-	Transform();
+	Transform() :matrix(Matrix(4, 4)) {	}
+	Transform(const Transform& orig) :matrix(orig.matrix) {	}
+
 	~Transform();
 };
 

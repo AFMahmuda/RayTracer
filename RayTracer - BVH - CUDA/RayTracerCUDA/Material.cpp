@@ -4,9 +4,9 @@
 
 Material::Material()
 {
-	Specular = make_shared<MyColor>();
-	Diffuse = make_shared<MyColor>();
-	Emmission = make_shared<MyColor>();
+	Specular = MyColor();
+	Diffuse = MyColor();
+	Emmission = MyColor();
 }
 
 void Material::setShininess(float val)

@@ -49,8 +49,8 @@ public:
 	Scene()
 	{
 
-		auto trans = make_shared<Transform>(Translation(0,0,0));
-		transforms.push_back(trans);		
+		auto trans = make_shared<Transform>(Translation(0, 0, 0));
+		transforms.push_back(trans);
 		ambient = MyColor();
 		att = Attenuation();
 		material = Material();
@@ -182,8 +182,8 @@ public:
 		//transforms 
 		if (command.compare("pushtransform") == 0)
 		{
-			auto trans = make_shared<Transform>(transforms.back());
-			transforms.push_back(trans);
+			Transform& trans = *transforms.back();
+			transforms.push_back(make_shared<Transform>(trans));
 			return;
 		}
 		if (command.compare("poptransform") == 0)
@@ -194,42 +194,42 @@ public:
 
 		if (command.compare("translate") == 0)
 		{
-			/*Transform trans = Translation(&param[0]);
-			Transform last = *transforms.back();
-			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));*/
+			Transform& trans = Translation(&param[0]);
+			Transform& last = *transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
 			return;
 		}
 		if (command.compare("scale") == 0)
 		{
-			/*Transform trans = Scaling(&param[0]);
-			Transform last = *transforms.back();
-			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));*/
+			Transform& trans = Scaling(&param[0]);
+			Transform& last = *transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
 			return;
 		}
 		if (command.compare("rotate") == 0)
 		{
-			/*Transform trans = Rotation(&param[0]);
-			Transform last = *transforms.back();
-			last.matrix = Matrix::Mul44x44(last.matrix, trans.matrix);*/
+			Transform& trans = Rotation(&param[0]);
+			Transform& last = *transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, trans.matrix);
 			return;
 		}
 		//material
 
 		if (command.compare("diffuse") == 0)
 		{
-			material.Diffuse = make_shared<MyColor>(MyColor(param[0], param[1], param[2]));
+			material.Diffuse = (MyColor(param[0], param[1], param[2]));
 			return;
 		}
 
 		if (command.compare("specular") == 0)
 		{
-			material.Specular = make_shared<MyColor>(MyColor(param[0], param[1], param[2]));
+			material.Specular = (MyColor(param[0], param[1], param[2]));
 			return;
 		}
 		if (command.compare("emission") == 0)
 		{
 
-			material.Emmission = make_shared<MyColor>(MyColor(param[0], param[1], param[2]));
+			material.Emmission = (MyColor(param[0], param[1], param[2]));
 			return;
 		}
 		if (command.compare("shininess") == 0)
@@ -300,8 +300,8 @@ public:
 
 	void applyTransform(Geometry* shape)
 	{
-		auto currTrans = make_shared<Transform>(transforms.back());
-		shape->setTrans(*currTrans);
+		Transform& currTrans = *transforms.back();
+		shape->setTrans(currTrans);
 	}
 
 	void applyMaterial(Geometry& shape)

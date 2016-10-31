@@ -33,9 +33,9 @@ public:
 	{
 		return trans;
 	}
-	void setTrans(Transform trans)
+	void setTrans(const Transform& trans)
 	{
-		Geometry::trans = trans;
+		Geometry::trans.matrix = trans.matrix;
 		hasMorton = false;
 		updatePos();
 		return;
