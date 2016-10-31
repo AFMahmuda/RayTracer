@@ -7,7 +7,6 @@
 #include <vector>
 
 #include<memory>
-using namespace std;
 class BVHBuilder
 {
 public:
@@ -25,7 +24,7 @@ public:
 			scene.geometries[i]->getMortonPos();
 
 		RadixSort::radixsort(scene.geometries, n);
-		std::vector<shared_ptr< Container>> temp;
+		std::vector<std::shared_ptr< Container>> temp;
 		if (!isAAC)
 		{
 			for (int i = 0; i < n; i++)
@@ -41,13 +40,13 @@ public:
 
 
 		temp = CombineCluster(temp, 1);
-		scene.container = temp[0];
+		scene.bin = temp[0];
 	}
 
 	int threshold = 4; //4 or 20
-	std::vector<shared_ptr< Container>> BuildTree(vector<	shared_ptr< Geometry>> primitives)
+	std::vector<std::shared_ptr< Container>> BuildTree(std::vector<	std::shared_ptr< Geometry>> primitives)
 	{
-		vector<shared_ptr< Container>> bins;
+		std::vector<std::shared_ptr< Container>> bins;
 		if (primitives.size() < threshold)
 		{
 
@@ -59,11 +58,11 @@ public:
 		}
 
 		int pivot = getPivot(primitives);
-		vector<shared_ptr<Geometry>> left(primitives.begin(), primitives.begin() + pivot);
-		vector<shared_ptr<Geometry>> right(primitives.begin() + pivot, primitives.end());// pivot included in right
+		std::vector<std::shared_ptr<Geometry>> left(primitives.begin(), primitives.begin() + pivot);
+		std::vector<std::shared_ptr<Geometry>> right(primitives.begin() + pivot, primitives.end());// pivot included in right
 
-		vector<shared_ptr< Container>> leftTree = BuildTree(left);
-		vector<shared_ptr< Container>> rightTree = BuildTree(right);
+		std::vector<std::shared_ptr< Container>> leftTree = BuildTree(left);
+		std::vector<std::shared_ptr< Container>> rightTree = BuildTree(right);
 
 		//combine two vec
 		left.insert(left.end(), right.begin(), right.end());
@@ -89,14 +88,14 @@ public:
 	*      [3] 00100000
 	*      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
 	*/
-	int getPivot(vector<shared_ptr< Geometry>> geo)
+	int getPivot(std::vector<std::shared_ptr< Geometry>> geo)
 	{
 		for (int i = 0; i < 30; i++)
 		{
 			for (int j = 1; j < geo.size(); j++)
 			{
-				string last = geo[j - 1]->getMortonBitString();
-				string curr = geo[j]->getMortonBitString();
+				std::string last = geo[j - 1]->getMortonBitString();
+				std::string curr = geo[j]->getMortonBitString();
 				if (curr[i] != last[i])
 					return j;
 			}
@@ -106,7 +105,7 @@ public:
 
 
 	//combine bins cluster to [limit] cluster
-	vector<shared_ptr< Container>> CombineCluster(vector<shared_ptr< Container>> bins, int limit)
+	std::vector<std::shared_ptr< Container>> CombineCluster(std::vector<std::shared_ptr< Container>> bins, int limit)
 	{
 		//Console.WriteLine("Combining from " + bins.Count + " to " + limit);
 
@@ -119,10 +118,10 @@ public:
 		while (bins.size() > limit)
 		{
 			float bestDist = INFINITY;
-			shared_ptr< Container> left = nullptr;
-			shared_ptr< Container> right = nullptr;
+			std::shared_ptr< Container> left = nullptr;
+			std::shared_ptr< Container> right = nullptr;
 
-			vector<shared_ptr <Container>>::iterator indexR, indexL;
+			std::vector<std::shared_ptr <Container>>::iterator indexR, indexL;
 			for (int i = 0; i < bins.size(); i++)
 			{
 				if (bins[i]->areaWithClosest < bestDist)
@@ -134,7 +133,7 @@ public:
 				}
 			}
 
-			shared_ptr< Container> newBin = ContainerFactory().CombineContainer(left, right);
+			std::shared_ptr< Container> newBin = ContainerFactory().CombineContainer(left, right);
 			newBin->LChild = left;
 			newBin->RChild = right;
 			bins.push_back(newBin);

@@ -13,13 +13,13 @@
 
 #include"Sphere.h"
 #include"Triangle.h"
-#include"Container.h"
 
 #include"PointLight.h"
 #include"DirectionalLight.h"
 
 #include"Camera.h"
 #include"ViewPlane.h"
+#include"Container.h"
 
 #include<vector>
 #include<string>
@@ -29,18 +29,19 @@
 #include<regex>
 #include<memory>
 
-using namespace std;
+
+//class Container;//forward declaration
 class Scene
 {
 public:
 	int maxDepth = 5;
 	int size[2];
-	shared_ptr<Container > container;
+	std::shared_ptr<Container > bin;
 
-	vector<	shared_ptr< Geometry>> geometries;
-	vector< shared_ptr<Light>> light;
-	vector< shared_ptr<Transform>> transforms;
-	vector< shared_ptr<Point3>> vertices;
+	std::vector<std::shared_ptr<Geometry>> geometries;
+	std::vector<std::shared_ptr<Light>> lights;
+	std::vector<std::shared_ptr<Transform>> transforms;
+	std::vector<std::shared_ptr<Point3>> vertices;
 
 	MyColor ambient = MyColor();
 	Material material = Material();
@@ -49,23 +50,23 @@ public:
 	Scene()
 	{
 
-		auto trans = make_shared<Transform>(Translation(0, 0, 0));
+		auto trans = std::make_shared<Transform>(Translation(0, 0, 0));
 		transforms.push_back(trans);
 		ambient = MyColor();
 		att = Attenuation();
 		material = Material();
 	}
 
-	Scene(string filename) :Scene()
+	Scene(std::string filename) :Scene()
 	{
 		parseCommand(filename);
 	}
 
-	void parseCommand(string filename)
+	void parseCommand(std::string filename)
 	{
 
-		string line;
-		ifstream myfile(filename);
+		std::string line;
+		std::ifstream myfile(filename);
 		if (myfile.is_open())
 		{
 			while (getline(myfile, line))
@@ -74,19 +75,19 @@ public:
 			}
 			myfile.close();
 		}
-		else cout << "Unable to open file";
+		else std::cout << "Unable to open file";
 	}
 
-	string CleanCommand(string command)
+	std::string CleanCommand(std::string command)
 	{
 
-		command = regex_replace(command, regex("\t"), " "); //replace tab w/ space
-		command = regex_replace(command, regex("^ +| +$"), ""); //replce leading and trailing space with nothing
+		command = std::regex_replace(command, std::regex("\t"), " "); //replace tab w/ space
+		command = std::regex_replace(command, std::regex("^ +| +$"), ""); //replce leading and trailing space with nothing
 		return command;
 	}
 
-	vector<string> splitString(string fullcommand, char delimiter) {
-		vector<string> results;
+	std::vector<std::string> splitString(std::string fullcommand, char delimiter) {
+		std::vector<std::string> results;
 		size_t pos = 0;
 		std::string token;
 		while ((pos = fullcommand.find(delimiter)) != std::string::npos) {
@@ -99,17 +100,17 @@ public:
 		return results;
 	}
 
-	void executeCommand(string fullcommand)
+	void executeCommand(std::string fullcommand)
 	{
 		if (fullcommand.compare("") == 0)
 			return;
-		if (fullcommand.find('#') != string::npos)
+		if (fullcommand.find('#') != std::string::npos)
 			return;
 
 		fullcommand = CleanCommand(fullcommand);
 
-		vector<string> words = splitString(fullcommand, ' ');
-		string command = words[0];
+		std::vector<std::string> words = splitString(fullcommand, ' ');
+		std::string command = words[0];
 		std::transform(command.begin(), command.end(), command.begin(), ::tolower);
 
 		if (command.compare("output") == 0)
@@ -118,7 +119,7 @@ public:
 			return;
 		}
 
-		vector<float> param;
+		std::vector<float> param;
 		for (int i = 0; i < words.size() - 1; i++)
 		{
 			param.push_back(stof(words[i + 1]));
@@ -155,21 +156,21 @@ public:
 		}
 		if (command.compare("vertex") == 0)
 		{
-			vertices.push_back(make_shared<Point3>(Point3(&param[0])));
+			vertices.push_back(std::make_shared<Point3>(Point3(&param[0])));
 			return;
 		}
 
 		//geometry
 		if (command.compare("tri") == 0)
 		{
-			auto geo = make_shared<Triangle>(createTriangle(&param[0]));
+			auto geo = std::make_shared<Triangle>(createTriangle(&param[0]));
 			geometries.push_back(geo);
 			return;
 
 		}
 		if (command.compare("sphere") == 0)
 		{
-			auto geo = make_shared<Sphere>(createSphere(&param[0]));
+			auto geo = std::make_shared<Sphere>(createSphere(&param[0]));
 			geometries.push_back(geo);
 			return;
 		}
@@ -179,7 +180,7 @@ public:
 		if (command.compare("pushtransform") == 0)
 		{
 			Transform& trans = *transforms.back();
-			transforms.push_back(make_shared<Transform>(trans));
+			transforms.push_back(std::make_shared<Transform>(trans));
 			return;
 		}
 		if (command.compare("poptransform") == 0)
@@ -258,12 +259,12 @@ public:
 		}
 		if (command.compare("directional") == 0)
 		{
-			light.push_back(make_shared<DirectionalLight>(DirectionalLight(new Vec3(&param[0]), new MyColor(param[3], param[4], param[5]))));
+			lights.push_back(std::make_shared<DirectionalLight>(DirectionalLight(new Vec3(&param[0]), new MyColor(param[3], param[4], param[5]))));
 			return;
 		}
 		if (command.compare("point") == 0)
 		{
-			light.push_back(make_shared<PointLight>(PointLight(new Point3(&param[0]), new MyColor(param[3], param[4], param[5]))));
+			lights.push_back(std::make_shared<PointLight>(PointLight(new Point3(&param[0]), new MyColor(param[3], param[4], param[5]))));
 			return;
 		}
 	}
@@ -302,16 +303,15 @@ public:
 
 	void applyMaterial(Geometry& shape)
 	{
-		shape.mat = *make_shared<Material>(material);
+		shape.mat = *std::make_shared<Material>(material);
 	}
 
 	void applyAmbient(Geometry* shape)
 	{
-		shape->ambient = *make_shared<MyColor>(ambient);
+		shape->ambient = *std::make_shared<MyColor>(ambient);
 	}
 
 
 
 	~Scene();
 };
-

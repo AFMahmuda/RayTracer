@@ -2,13 +2,12 @@
 #include"Geometry.h"
 #include<memory>
 #include<vector>
-using namespace std;
 
 //http://www.sanfoundry.com/cpp-program-implement-radix-sort/
 class RadixSort
 {
 private:
-	static int getMax(std::vector<shared_ptr< Geometry>> arr, int n)
+	static int getMax(std::vector<std::shared_ptr< Geometry>> arr, int n)
 	{
 		unsigned int max = arr[0].get()->getMortonPos();
 		for (int i = 1; i < n; i++)
@@ -19,9 +18,9 @@ private:
 	/*
 	* count sort of arr[]
 	*/
-	static void countSort(std::vector<shared_ptr< Geometry>> arr, int n, int exp)
+	static void countSort(std::vector<std::shared_ptr< Geometry>> arr, int n, int exp)
 	{
-		vector<shared_ptr< Geometry>> output;
+		std::vector<std::shared_ptr< Geometry>> output;
 		output.resize (n);
 		int i, count[10] = { 0 };
 		for (i = 0; i < n; i++)
@@ -42,7 +41,7 @@ public:
 	/*
 	* sorts arr[] of size n using Radix Sort
 	*/
-	static void radixsort(std::vector<shared_ptr< Geometry>> arr, int n)
+	static void radixsort(std::vector<std::shared_ptr< Geometry>> arr, int n)
 	{
 		int m = getMax(arr, n);
 		for (int exp = 1; m / exp > 0; exp *= 10)

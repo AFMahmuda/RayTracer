@@ -1,7 +1,6 @@
 #include "BoxContainer.h"
 
 
-
 BoxContainer::BoxContainer()
 {
 }
@@ -11,23 +10,22 @@ BoxContainer::~BoxContainer()
 {
 }
 
-bool BoxContainer::IsIntersecting(Ray ray)
+bool BoxContainer::IsIntersecting(Ray& ray)
 {
-	float tmin = INFINITY, tmax = -INFINITY;
+	float tmin = -INFINITY, tmax = INFINITY;
 
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	if (ray.Direction[i] != 0f)
-	//	{
-	//		float invTemp = 1f / ray.Direction[i];
-	//		float tx1 = (min[i] - ray.Start[i]) * invTemp;
-	//		float tx2 = (max[i] - ray.Start[i]) * invTemp;
+	for (int i = 0; i < 3; i++)
+	{		
+		if (ray.direction[i] != 0.f)
+		{
+			float invTemp = 1.f / ray.direction[i];
+			float tx1 = (min[i] - ray.start[i]) * invTemp;
+			float tx2 = (max[i] - ray.start[i]) * invTemp;
 
-	//		tmin = Math.Max(tmin, Math.Min(tx1, tx2));
-	//		tmax = Math.Min(tmax, Math.Max(tx1, tx2));
-	//	}
-	//}
-
+			tmin = std::max(tmin, std::min(tx1, tx2));
+			tmax = std::min(tmax, std::max(tx1, tx2));
+		}
+	}
 	return tmax >= tmin;
 }
 

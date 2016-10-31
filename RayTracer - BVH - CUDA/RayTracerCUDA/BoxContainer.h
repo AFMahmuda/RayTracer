@@ -11,7 +11,7 @@ class BoxContainer :
 public:
 	IData3D min = Point3(INFINITY, INFINITY, INFINITY);
 	IData3D max = Point3(-INFINITY, -INFINITY, -INFINITY);
-	BoxContainer(shared_ptr<Geometry> item)
+	BoxContainer(std::shared_ptr<Geometry> item)
 	{
 		isLeaf = true;
 		type = BOX;
@@ -76,8 +76,8 @@ public:
 	{
 		isLeaf = false;
 		type = TYPE::BOX;
-		LChild = make_shared<BoxContainer>(a);
-		RChild = make_shared<BoxContainer>(b);
+		LChild = std::make_shared<BoxContainer>(a);
+		RChild = std::make_shared<BoxContainer>(b);
 
 
 		for (int i = 0; i < 3; i++)
@@ -95,7 +95,7 @@ public:
 	~BoxContainer();
 
 	// Inherited via Container
-	virtual bool IsIntersecting(Ray ray) override;
+	virtual bool IsIntersecting(Ray& ray) override;
 	virtual void showInfo() override;
 };
 

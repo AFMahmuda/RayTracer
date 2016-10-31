@@ -17,7 +17,7 @@ public:
 	IData3D c;
 	float r;
 
-	SphereContainer(shared_ptr< Geometry> item) {
+	SphereContainer(std::shared_ptr< Geometry> item) {
 		isLeaf = true;
 		type = SPHERE;
 		geo = item;
@@ -67,8 +67,8 @@ public:
 
 		type = SPHERE;
 
-		LChild = make_shared<SphereContainer>(a);
-		RChild = make_shared<SphereContainer>(b);
+		LChild = std::make_shared<SphereContainer>(a);
+		RChild = std::make_shared<SphereContainer>(b);
 
 		Vec3 aToB = Vec3(a.c, b.c);
 		float aToBLength = aToB.Magnitude();
@@ -103,7 +103,7 @@ public:
 
 
 	// Inherited via Container
-	virtual bool IsIntersecting(Ray ray) override;
+	virtual bool IsIntersecting(Ray& ray) override;
 	virtual void showInfo() override;
 };
 

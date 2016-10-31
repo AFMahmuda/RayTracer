@@ -6,32 +6,32 @@ class ContainerFactory
 public:
 	ContainerFactory();
 	~ContainerFactory();
-	shared_ptr<Container> CreateContainer(shared_ptr<Geometry> geo, Container::TYPE type = Container::BOX) {
+	std::shared_ptr<Container> CreateContainer(std::shared_ptr<Geometry> geo, Container::TYPE type = Container::BOX) {
 		if (type == Container::SPHERE)
-			return make_shared<SphereContainer>(SphereContainer(geo));
+			return std::make_shared<SphereContainer>(SphereContainer(geo));
 		else// if (type == Container.TYPE.BOX)
-			return make_shared<BoxContainer>(BoxContainer(geo));
+			return std::make_shared<BoxContainer>(BoxContainer(geo));
 	}
 
-	shared_ptr <Container> CombineContainer(shared_ptr <Container> a, shared_ptr <Container> b)
+	std::shared_ptr <Container> CombineContainer(std::shared_ptr <Container> a, std::shared_ptr <Container> b)
 	{
 		if (a->type != b->type)
 			return nullptr;
 		if (a->type == Container::SPHERE)
-			return make_shared<SphereContainer>(SphereContainer(*static_pointer_cast<SphereContainer>(a), *static_pointer_cast<SphereContainer>(b)));
+			return std::make_shared<SphereContainer>(SphereContainer(*std::static_pointer_cast<SphereContainer>(a), *std::static_pointer_cast<SphereContainer>(b)));
 		else //if (a.Type == Container.TYPE.BOX)
-			return make_shared<BoxContainer>(BoxContainer(*static_pointer_cast<BoxContainer>(a), *static_pointer_cast<BoxContainer>(b)));
+			return std::make_shared<BoxContainer>(BoxContainer(*std::static_pointer_cast<BoxContainer>(a), *std::static_pointer_cast<BoxContainer>(b)));
 		return nullptr;
 	}
-	void FindBestMatch(shared_ptr< Container> bin, std::vector<shared_ptr< Container>> others)
+	void FindBestMatch(std::shared_ptr< Container> bin, std::vector<std::shared_ptr< Container>> others)
 	{
 		float bestDist = INFINITY;
-		shared_ptr< Container> bestmatch = nullptr;
+		std::shared_ptr< Container> bestmatch = nullptr;
 		for (int i = 0; i < others.size(); i++)
 		{
 			if (others[i] == bin)
 				continue;
-			shared_ptr< Container>  newBin = ContainerFactory().CombineContainer(bin, others[i]);
+			std::shared_ptr< Container>  newBin = ContainerFactory().CombineContainer(bin, others[i]);
 			if (newBin->area < bestDist)
 			{
 				bestDist = newBin->area;

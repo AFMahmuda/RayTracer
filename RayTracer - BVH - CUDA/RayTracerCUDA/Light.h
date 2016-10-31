@@ -9,9 +9,9 @@ class Light
 {
 public:
 	MyColor * color;
-	virtual Vec3 * getPointToLight(Point3 * point) { return NULL; }
-	virtual bool isEffective(Point3 * point, Container * bvh) { return false; }
-	virtual float getAttValue(Point3 * point, Attenuation *  attenuation) { return 0; }
+	virtual Vec3 * getPointToLight(Point3& point) = 0;
+	virtual bool isEffective(Point3& point, Container& bvh) = 0;
+	virtual float getAttValue(Point3& point, Attenuation&  attenuation) = 0;
 	Light();
 	~Light();
 };

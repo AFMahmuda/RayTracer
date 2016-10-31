@@ -1,15 +1,17 @@
 #pragma once
+
+
 #include"Point3.h"
 #include"Transform.h"
 #include"Material.h"
 #include"Translation.h"
 #include"Matrix.h"
-#include"Ray.h"
+
 #include<bitset>
 #include<string>
 #include<iostream>
 
-
+class Ray; //forard declaration
 class Geometry
 {
 

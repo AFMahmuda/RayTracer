@@ -6,6 +6,8 @@
 #include"ViewPlane.h"
 #include"BVHBuilder.h"
 #include<cmath>
+#include<iostream>
+#include"FreeImage.h"
 
 class TraceManager
 {
@@ -25,23 +27,6 @@ class TraceManager
 	int wPerSeg;
 	int hPerSeg;
 
-
-	void TraceDFS(Container& bin, int level)
-	{
-		std::cout << "BIN lv " << level;
-		if (bin.isLeaf)
-			std::cout << " LEAF";
-		std::cout << std::endl;
-		bin.showInfo();
-
-		if (!bin.isLeaf) {
-			TraceDFS(*bin.LChild, level + 1);
-			TraceDFS(*bin.RChild, level + 1);
-		}
-
-
-	}
-
 	void initScene(std::string sceneFile) {
 		scene = Scene(sceneFile);
 
@@ -51,7 +36,7 @@ class TraceManager
 		width = ViewPlane::Instance()->pixelW;
 
 		//search two closest factors 6 = 3 and 2 , 5 = 5 and 1
-		verDiv = (int) sqrtf(tn)-1;
+		verDiv = (int)sqrtf(tn) - 1;
 		do verDiv++; while (tn % verDiv != 0);
 		horDiv = tn / verDiv;
 
@@ -93,37 +78,86 @@ class TraceManager
 		//Task.WaitAll(traceTask);
 		//Console.Write("\n");
 		//Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
+		traceThread(scene, 0, 0, height, width);
 	}
 
-	void traceThread()
+	void traceThread(Scene& scene, int rowStart, int colStart, int rowEnd, int colEnd)
 	{
 		//float segmen = (colEnd - colStart) * (rowEnd - rowStart) / 5f;
 		//float count = 0;
+		FreeImage_Initialise();
 
-		//for (int currRow = rowStart; currRow < rowEnd; currRow++)
-		//{
-		//	for (int currCol = colStart; currCol < colEnd; currCol++)
-		//	{
-		//		Ray ray = new Ray();
-		//		Point3 pixPosition = ViewPlane.Instance.GetNewLocation(currCol, currRow);
-		//		ray.Start = Camera.Instance.Position;
-		//		ray.Direction = new Vec3(ray.Start, pixPosition).Normalize();
+		FIBITMAP * image = FreeImage_Allocate(width, height, 24);
+		for (int currRow = rowStart; currRow < rowEnd; currRow++)
+		{
+			for (int currCol = colStart; currCol < colEnd; currCol++)
+			{
+				Ray ray = Ray();
+				Point3 pixPosition = ViewPlane::Instance()->getNewLocation(currCol, currRow);
+				ray.start = Camera::Instance()->pos;
+				ray.direction = Vec3(ray.start, pixPosition).Normalize();
 
-		//		ray.Trace(scene, scene.Bvh);
-		//		MyColor rayColor = ray.GetColor(scene, scene.MaxDepth);
+				traceRay(ray, *scene.bin);
+				RGBQUAD color;
+				color.rgbRed = (currCol / (float)colEnd) * 255;
+				color.rgbGreen = (currRow / (float)rowEnd) * 255;
+				color.rgbBlue = .5 * 255;
 
-		//		result.SetPixel(currCol - colStart, currRow - rowStart, rayColor.ToColor());
+				if (ray.intersectWith != nullptr) {
+					color.rgbRed = 0;
+					color.rgbGreen = 0;
+					color.rgbBlue = 0;
+				}
 
-		//		//progress bar
+				FreeImage_SetPixelColor(image, currCol, currRow, &color);
+				//MyColor rayColor = ray.GetColor(scene, scene.MaxDepth);
 
-		//		if (++count >= segmen)
-		//		{
-		//			Console.Write("*");
-		//			count -= (segmen);
-		//		}
-		//	}
-		//}
+				//result.SetPixel(currCol - colStart, currRow - rowStart, rayColor.ToColor());
+
+				//progress bar
+
+				/*if (++count >= segmen)
+				{
+					Console.Write("*");
+					count -= (segmen);
+				}*/
+			}
+		}
+		FreeImage_Save(FIF_BMP, image, "default.bmp", 0);
+		FreeImage_DeInitialise();
 	}
+
+	void traceRay(Ray& ray, Container& bin)
+	{
+		if (bin.IsIntersecting(ray))
+		{
+			if (bin.geo != nullptr)
+			{
+				auto tempStart = std::make_shared<Point3>(ray.start);
+				auto tempDir = std::make_shared<Vec3>(ray.direction);
+
+				//transform ray according to each shapes transformation
+				ray.transInv(bin.geo->getTrans());
+
+				if (bin.geo->isIntersecting(ray))
+				{
+					ray.intersectWith = bin.geo;
+				}
+
+				//assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
+				ray.start = *tempStart;
+				ray.direction = *tempDir;
+
+			}
+			else
+			{
+				traceRay(ray, *bin.LChild);
+				traceRay(ray, *bin.RChild);
+			}
+		}
+
+	}
+
 
 	void mergeAndSaveImage() {
 		/*string filename = scene.OutputFilename;
@@ -149,6 +183,7 @@ class TraceManager
 		filename = "default.bmp";
 		res.Save(filename);
 		Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename + "\n");*/
+
 	}
 
 public:
@@ -165,7 +200,6 @@ public:
 		initScene(sceneFile);
 
 		buildBVH();
-		TraceDFS(*scene.container, 0);
 
 		trace();
 

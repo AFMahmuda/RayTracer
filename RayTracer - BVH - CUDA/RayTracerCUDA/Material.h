@@ -1,7 +1,6 @@
 #pragma once
 #include "MyColor.h"
 #include<memory>
-using namespace std;
 class Material
 {
 public:
