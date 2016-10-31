@@ -1,11 +1,13 @@
 #pragma once
 #include "MyColor.h"
+#include<memory>
+using namespace std;
 class Material
 {
 public:
-	MyColor * Specular;
-	MyColor * Diffuse;
-	MyColor * Emmission;
+	shared_ptr<MyColor> Specular;
+	shared_ptr<MyColor> Diffuse;
+	shared_ptr<MyColor> Emmission;
 	float shininess;
 	float refractIndex;
 	float refractValue;

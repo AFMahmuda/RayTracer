@@ -27,6 +27,7 @@
 #include<fstream>
 
 #include<regex>
+#include<memory>
 
 using namespace std;
 class Scene
@@ -34,12 +35,12 @@ class Scene
 public:
 	int maxDepth = 5;
 	int size[2];
-	Container * container;
+	shared_ptr<Container > container;
 
-	vector< Geometry*> geometries;
-	vector< Light*> light;
-	vector< Transform*> transforms;
-	vector< Point3*> vertices;
+	vector<	shared_ptr< Geometry>> geometries;
+	vector< shared_ptr<Light>> light;
+	vector< shared_ptr<Transform>> transforms;
+	vector< shared_ptr<Point3>> vertices;
 
 	MyColor ambient = MyColor();
 	Material material = Material();
@@ -47,7 +48,12 @@ public:
 	std::string outFileName = "default.bmp";
 	Scene()
 	{
-		transforms.push_back(new Translation());
+
+		auto trans = make_shared<Transform>(Translation(0,0,0));
+		transforms.push_back(trans);		
+		ambient = MyColor();
+		att = Attenuation();
+		material = Material();
 	}
 
 	Scene(string filename) :Scene()
@@ -67,6 +73,9 @@ public:
 				executeCommand(line);
 			}
 			myfile.close();
+			shared_ptr<Triangle> tri = static_pointer_cast<Triangle>(geometries[0]);
+			shared_ptr<Triangle> tri2 = static_pointer_cast<Triangle>(geometries[1]);
+			shared_ptr<Sphere> sph = static_pointer_cast<Sphere>(geometries[2]);
 
 		}
 		else cout << "Unable to open file";
@@ -150,21 +159,22 @@ public:
 		}
 		if (command.compare("vertex") == 0)
 		{
-			vertices.push_back(new Point3(&param[0]));
+			vertices.push_back(make_shared<Point3>(Point3(&param[0])));
 			return;
 		}
 
 		//geometry
 		if (command.compare("tri") == 0)
 		{
-			Geometry* tri = createShape(Geometry::TRIANGLE, &param[0]);
-			geometries.push_back(tri);
+			auto geo = make_shared<Triangle>(createTriangle(&param[0]));
+			geometries.push_back(geo);
 			return;
+
 		}
 		if (command.compare("sphere") == 0)
 		{
-			Geometry* sph = createShape(Geometry::SPHERE, &param[0]);
-			geometries.push_back(sph);
+			auto geo = make_shared<Sphere>(createSphere(&param[0]));
+			geometries.push_back(geo);
 			return;
 		}
 
@@ -172,8 +182,7 @@ public:
 		//transforms 
 		if (command.compare("pushtransform") == 0)
 		{
-			Transform* trans = (Transform*)malloc(sizeof(Transform));
-			memcpy(trans, transforms.back(), sizeof(Transform));
+			auto trans = make_shared<Transform>(transforms.back());
 			transforms.push_back(trans);
 			return;
 		}
@@ -185,41 +194,42 @@ public:
 
 		if (command.compare("translate") == 0)
 		{
-			Transform trans = Translation(&param[0]);
-			Transform& last = (Transform)*transforms.back();
-			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
+			/*Transform trans = Translation(&param[0]);
+			Transform last = *transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));*/
 			return;
 		}
 		if (command.compare("scale") == 0)
 		{
-			Transform trans = Scaling(&param[0]);
-			Transform& last = (Transform)*transforms.back();
-			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
+			/*Transform trans = Scaling(&param[0]);
+			Transform last = *transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));*/
 			return;
 		}
 		if (command.compare("rotate") == 0)
 		{
-			Transform trans = Rotation(&param[0]);
-			Transform& last = (Transform)*transforms.back();
-			last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
+			/*Transform trans = Rotation(&param[0]);
+			Transform last = *transforms.back();
+			last.matrix = Matrix::Mul44x44(last.matrix, trans.matrix);*/
 			return;
 		}
 		//material
 
 		if (command.compare("diffuse") == 0)
 		{
-			material.Diffuse = new MyColor(param[0], param[1], param[2]);
+			material.Diffuse = make_shared<MyColor>(MyColor(param[0], param[1], param[2]));
 			return;
 		}
 
 		if (command.compare("specular") == 0)
 		{
-			material.Specular = new MyColor(param[0], param[1], param[2]);
+			material.Specular = make_shared<MyColor>(MyColor(param[0], param[1], param[2]));
 			return;
 		}
 		if (command.compare("emission") == 0)
 		{
-			material.Emmission = new MyColor(param[0], param[1], param[2]);
+
+			material.Emmission = make_shared<MyColor>(MyColor(param[0], param[1], param[2]));
 			return;
 		}
 		if (command.compare("shininess") == 0)
@@ -252,74 +262,56 @@ public:
 		}
 		if (command.compare("directional") == 0)
 		{
-			light.push_back(new DirectionalLight(new Vec3(&param[0]), new MyColor(param[3], param[4], param[5])));
+			light.push_back(make_shared<DirectionalLight>(DirectionalLight(new Vec3(&param[0]), new MyColor(param[3], param[4], param[5]))));
 			return;
 		}
 		if (command.compare("point") == 0)
 		{
-			light.push_back(new PointLight(new Point3(&param[0]), new MyColor(param[3], param[4], param[5])));
+			light.push_back(make_shared<PointLight>(PointLight(new Point3(&param[0]), new MyColor(param[3], param[4], param[5]))));
 			return;
 		}
 	}
 
-	Geometry* createShape(Geometry::TYPE type, float* params)
-	{
-		Geometry* geo;
-		if (type == Geometry::SPHERE)
-		{
-			geo = createSphere(params);
-			applyTransform(geo);
-
-		}
-		else //if (type == Geometry.TYPE.TRIANGLE)
-		{
-			geo = createTriangle(params);
-			//transform already aplied in each vertices
-		}
-		applyMaterial(geo);
-		applyAmbient(geo);
-
-		return geo;
-	}
-
-	Sphere* createSphere(float* param)
+	Sphere createSphere(float* param)
 	{
 		Sphere sphere = Sphere(param);
-		return &sphere;
+		applyTransform(&sphere);
+
+		applyMaterial(sphere);
+		applyAmbient(&sphere);
+		return sphere;
 	}
 
-	Triangle* createTriangle(float* param)
+	Triangle createTriangle(float* param)
 	{
 		Point3 p[3];
 		for (size_t i = 0; i < 3; i++)
 		{
-			p[i] = Point3(Matrix::Mul44x41(transforms.back()->matrix, *vertices[(int)param[i]]));
+			p[i] = Point3(*vertices[(int)param[i]]);
+			p[i] = Matrix::Mul44x41(transforms.back()->matrix, p[i]);
 			/*p[i].h = 1;*/
 		}
 
 		Triangle tri = Triangle(p[0], p[1], p[2]);
-		return &tri;
+		applyMaterial(tri);
+		applyAmbient(&tri);
+		return tri;
 	}
 
 	void applyTransform(Geometry* shape)
 	{
-		Transform currTrans;
-		memcpy(&currTrans, transforms.back(), sizeof(Transform));
-		shape->setTrans(currTrans);
+		auto currTrans = make_shared<Transform>(transforms.back());
+		shape->setTrans(*currTrans);
 	}
 
-	void applyMaterial(Geometry* shape)
+	void applyMaterial(Geometry& shape)
 	{
-		Material mat;
-		memcpy(&mat, &material, sizeof(Material));
-		shape->mat = mat;
+		shape.mat = *make_shared<Material>(material);
 	}
 
 	void applyAmbient(Geometry* shape)
 	{
-		MyColor amb;
-		memcpy(&amb, &ambient, sizeof(MyColor));
-		shape->ambient = amb;
+		shape->ambient = *make_shared<MyColor>(ambient);
 	}
 
 

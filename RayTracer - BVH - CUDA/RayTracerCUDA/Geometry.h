@@ -33,19 +33,20 @@ public:
 	{
 		return trans;
 	}
-	void setTrans(Transform& trans)
+	void setTrans(Transform trans)
 	{
-		Geometry::trans.matrix = trans.matrix;
+		Geometry::trans = trans;
 		hasMorton = false;
 		updatePos();
+		return;
 	}
 
-	Material& mat;
-	MyColor& ambient;
+	Material mat;
+	MyColor ambient;
 
-	virtual void updatePos() { return; }
-	virtual bool isIntersecting(Ray& ray) { return false; }
-	virtual Vec3 &getNormal(Point3& point) { return Vec3(); }
+	virtual void updatePos() = 0;
+	virtual bool isIntersecting(Ray& ray) = 0;
+	virtual Vec3 &getNormal(Point3& point) = 0;
 
 
 	unsigned int getMortonPos()

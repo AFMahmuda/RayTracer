@@ -6,31 +6,32 @@ class ContainerFactory
 public:
 	ContainerFactory();
 	~ContainerFactory();
-	Container * CreateContainer(Geometry* geo, Container::TYPE type = Container::BOX) {
+	shared_ptr<Container> CreateContainer(shared_ptr<Geometry> geo, Container::TYPE type = Container::BOX) {
 		if (type == Container::SPHERE)
-			return new SphereContainer(geo);
+			return make_shared<SphereContainer>(SphereContainer(geo));
 		else// if (type == Container.TYPE.BOX)
-			return new BoxContainer(geo);
+			return make_shared<BoxContainer>(BoxContainer(geo));
 	}
 
-	Container* CombineContainer(Container* a, Container* b)
+	shared_ptr <Container> CombineContainer(shared_ptr <Container> a, shared_ptr <Container> b)
 	{
 		if (a->type != b->type)
 			return nullptr;
 		if (a->type == Container::SPHERE)
-			return new SphereContainer((SphereContainer)*(SphereContainer*)a, (SphereContainer)*(SphereContainer*)b);
+			return make_shared<SphereContainer>(SphereContainer(*static_pointer_cast<SphereContainer>(a), *static_pointer_cast<SphereContainer>(b)));
 		else //if (a.Type == Container.TYPE.BOX)
-			return new BoxContainer((BoxContainer)*(BoxContainer*)a, (BoxContainer)*(BoxContainer*)b);
+			return make_shared<BoxContainer>(BoxContainer(*static_pointer_cast<BoxContainer>(a), *static_pointer_cast<BoxContainer>(b)));
+		return nullptr;
 	}
-	void FindBestMatch(Container* bin,std::vector<Container*> others)
+	void FindBestMatch(shared_ptr< Container> bin, std::vector<shared_ptr< Container>> others)
 	{
 		float bestDist = INFINITY;
-		Container* bestmatch = nullptr;
+		shared_ptr< Container> bestmatch = nullptr;
 		for (int i = 0; i < others.size(); i++)
 		{
 			if (others[i] == bin)
 				continue;
-			Container* newBin = ContainerFactory().CombineContainer(bin, others[i]);
+			shared_ptr< Container>  newBin = ContainerFactory().CombineContainer(bin, others[i]);
 			if (newBin->area < bestDist)
 			{
 				bestDist = newBin->area;

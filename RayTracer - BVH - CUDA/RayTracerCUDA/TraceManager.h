@@ -26,17 +26,17 @@ class TraceManager
 	int hPerSeg;
 
 
-	void TraceDFS(Container* bin, int level)
+	void TraceDFS(Container& bin, int level)
 	{
 		std::cout << "BIN lv " << level;
-		if (bin->isLeaf)
+		if (bin.isLeaf)
 			std::cout << " LEAF";
 		std::cout << std::endl;
-		bin->showInfo();
+		bin.showInfo();
 
-		if (!bin->isLeaf) {
-			TraceDFS(bin->LChild, level + 1);
-			TraceDFS(bin->RChild, level + 1);
+		if (!bin.isLeaf) {
+			TraceDFS(*bin.LChild, level + 1);
+			TraceDFS(*bin.RChild, level + 1);
 		}
 
 
@@ -51,7 +51,7 @@ class TraceManager
 		width = ViewPlane::Instance()->pixelW;
 
 		//search two closest factors 6 = 3 and 2 , 5 = 5 and 1
-		verDiv = (int) sqrtf(tn);
+		verDiv = (int) sqrtf(tn)-1;
 		do verDiv++; while (tn % verDiv != 0);
 		horDiv = tn / verDiv;
 
@@ -165,7 +165,7 @@ public:
 		initScene(sceneFile);
 
 		buildBVH();
-		TraceDFS(scene.container, 0);
+		TraceDFS(*scene.container, 0);
 
 		trace();
 

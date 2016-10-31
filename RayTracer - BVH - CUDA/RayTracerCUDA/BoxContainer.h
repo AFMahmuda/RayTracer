@@ -9,9 +9,9 @@ class BoxContainer :
 	public Container
 {
 public:
-	Point3 min = Point3(INFINITY, INFINITY, INFINITY);
-	Point3 max = Point3(-INFINITY, -INFINITY, -INFINITY);
-	BoxContainer(Geometry* item)
+	IData3D min = Point3(INFINITY, INFINITY, INFINITY);
+	IData3D max = Point3(-INFINITY, -INFINITY, -INFINITY);
+	BoxContainer(shared_ptr<Geometry> item)
 	{
 		isLeaf = true;
 		type = BOX;
@@ -19,7 +19,7 @@ public:
 
 		if (item->type == Geometry::SPHERE)
 		{
-			Sphere* sphere = (Sphere*)item;
+			Sphere* sphere = (Sphere*)item.get();
 
 			min = (sphere->c + Point3());
 			max = (sphere->c + Point3());
@@ -29,7 +29,7 @@ public:
 				max[i] += sphere->r;
 			}
 
-			Point3 p[8];
+			IData3D p[8];
 
 			p[0] = (Point3(min.x, min.y, min.z));
 			p[1] = (Point3(min.x, min.y, max.z));
@@ -50,19 +50,19 @@ public:
 
 		else //if (item.GetType() == typeof(Triangle))
 		{
-			Triangle* tri = (Triangle*)item;
+			Triangle* tri = static_cast<Triangle*>(item.get());
 
-			Point3 a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
-			Point3 b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
-			Point3 c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
+			IData3D a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
+			IData3D b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
+			IData3D c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
 
-			SetMinMax(new Point3[3]{ a, b, c }, 3);
+			SetMinMax(new IData3D[3]{ a, b, c }, 3);
 		}
 		std::cout << "min: " << min[0] << "\t" << min[1] << "\t" << min[2] << std::endl;
 		std::cout << "max: " << max[0] << "\t" << max[1] << "\t" << max[2] << std::endl;
 	}
 
-	void SetMinMax(Point3* points, int n)
+	void SetMinMax(IData3D* points, int n)
 	{
 		min = Point3(INFINITY, INFINITY, INFINITY);
 		max = Point3(-INFINITY, -INFINITY, -INFINITY);
@@ -78,8 +78,8 @@ public:
 	{
 		isLeaf = false;
 		type = TYPE::BOX;
-		LChild = &a;
-		RChild = &b;
+		LChild = make_shared<BoxContainer>(a);
+		RChild = make_shared<BoxContainer>(b);
 
 
 		for (int i = 0; i < 3; i++)
@@ -87,7 +87,7 @@ public:
 			min[i] = std::min(a.min[i], b.min[i]);
 			max[i] = std::max(a.max[i], b.max[i]);
 		}
-		Point3 size = max - min;
+		IData3D size = max - min;
 
 		area = 2.f * (size.x * size.y + size.x * size.z + size.y * size.z);
 
@@ -95,8 +95,6 @@ public:
 
 	BoxContainer();
 	~BoxContainer();
-
-
 
 	// Inherited via Container
 	virtual bool IsIntersecting(Ray ray) override;

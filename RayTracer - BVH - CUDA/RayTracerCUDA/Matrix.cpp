@@ -135,7 +135,7 @@ Matrix & Matrix::Inverse() {
 	return Matrix(*inverse);
 }
 
-IData3D & Matrix::Mul44x41(Matrix & m, IData3D & v) {
+IData3D Matrix::Mul44x41(Matrix & m, IData3D & v) {
 	float newX = m(0, 0) * v[0] + m(0, 1) * v[1] + m(0, 2) * v[2] + m(0, 3) * v[3];
 	float newY = m(1, 0) * v[0] + m(1, 1) * v[1] + m(1, 2) * v[2] + m(1, 3) * v[3];
 	float newZ = m(2, 0) * v[0] + m(2, 1) * v[1] + m(2, 2) * v[2] + m(2, 3) * v[3];
@@ -147,7 +147,7 @@ IData3D & Matrix::Mul44x41(Matrix & m, IData3D & v) {
 
 }
 
-Matrix & Matrix::Mul44x44(Matrix & matA, Matrix & matB) {
+Matrix Matrix::Mul44x44(Matrix & matA, Matrix & matB) {
 	Matrix res = Matrix(4, 4);
 	Matrix mat41 = Matrix(4, 1);
 	for (int col = 0; col < 4; col++)
@@ -161,7 +161,7 @@ Matrix & Matrix::Mul44x44(Matrix & matA, Matrix & matB) {
 
 }
 
-Matrix & Matrix::Mul44x41(Matrix & mat44, Matrix & mat41) {
+Matrix Matrix::Mul44x41(Matrix & mat44, Matrix & mat41) {
 	Matrix& res = Matrix(4, 1);
 	for (int row = 0; row < 4; row++)
 	{

@@ -50,13 +50,12 @@ public:
 		invDenom = 1.0f / (d_ab_ab * d_ac_ac - d_ab_ac * d_ab_ac);
 	}
 
-	bool isIntersecting(Ray & ray)
+	virtual	bool isIntersecting(Ray & ray) override
 	{
 		return true;
 	}
 
-	bool IsInsideTriangle(Point3 point)
-	{
+	bool IsInsideTriangle(Point3 point) {
 		Vec3 ap(point - a);
 
 		d_ab_ap = ab * ap;
@@ -68,27 +67,20 @@ public:
 		return (u >= 0) && (v >= 0) && (u + v <= 1);
 	}
 
-	Vec3& getNormal(Point3 &point)
+	virtual Vec3& getNormal(Point3 &point) override
 	{
 		Vec3  res = (Matrix::Mul44x41(trans.matrix.Inverse(), localNorm));
 		res.Normalize();
 		return res;
 	}
 
-	void updatePos()
-	{
-		Point3 temp = (a + b + c)* (.33f);
-		pos = Matrix::Mul44x41(trans.matrix, temp);
-		pos[1] = (pos[0] / 100.f + .5f);
-		pos[1] = (pos[1] / 100.f + .5f);
-		pos[1] = (pos[1] / 100.f + .5f);
-
-		getMortonPos();
-	}
 
 	Triangle();
 
 
 	~Triangle();
+
+	// Inherited via Geometry
+	virtual void updatePos() override;
 };
 

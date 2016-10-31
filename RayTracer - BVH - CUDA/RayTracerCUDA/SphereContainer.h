@@ -14,23 +14,23 @@ class SphereContainer :
 	public Container
 {
 public:
-	Point3 c;
+	IData3D c;
 	float r;
 
-	SphereContainer(Geometry* item) {
+	SphereContainer(shared_ptr< Geometry> item) {
 		isLeaf = true;
 		type = SPHERE;
 		geo = item;
 		if (item->type == Geometry::SPHERE)
 		{
 
-			c = ((Sphere*)item)->c + Point3();
-			r = ((Sphere*)item)->r + 0.f;
+			c = ((Sphere*)item.get())->c + Point3();
+			r = ((Sphere*)item.get())->r + 0.f;
 
 		}
 		else //if (item.GetType() == typeof(Triangle))
 		{
-			Triangle& tri = *(Triangle*)item;
+			Triangle& tri = *(Triangle*)item.get();
 			Vec3 ab = Vec3(tri.a, tri.b);
 			Vec3 bc = Vec3(tri.b, tri.c);
 			Vec3 ac = Vec3(tri.a, tri.c);
@@ -67,8 +67,8 @@ public:
 
 		type = SPHERE;
 
-		LChild = &a;
-		RChild = &b;
+		LChild = make_shared<SphereContainer>(a);
+		RChild = make_shared<SphereContainer>(b);
 
 		Vec3 aToB = Vec3(a.c, b.c);
 		float aToBLength = aToB.Magnitude();

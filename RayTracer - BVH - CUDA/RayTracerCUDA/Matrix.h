@@ -44,9 +44,9 @@ public:
 	}
 	Matrix& Identity();
 	Matrix& Inverse();
-	static IData3D& Mul44x41(Matrix& m, IData3D& v);
-	static Matrix& Mul44x44(Matrix& matA, Matrix& matB);
-	static Matrix& Mul44x41(Matrix& mat44, Matrix& mat41);
+	static IData3D Mul44x41(Matrix& m, IData3D& v);
+	static Matrix Mul44x44(Matrix& matA, Matrix& matB);
+	static Matrix Mul44x41(Matrix& mat44, Matrix& mat41);
 	float& operator()(int r, int c) {
 		return vals[r][c];
 	}

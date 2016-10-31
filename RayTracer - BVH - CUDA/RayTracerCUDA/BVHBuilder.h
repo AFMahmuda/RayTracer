@@ -6,7 +6,8 @@
 #include"Scene.h"
 #include <vector>
 
-
+#include<memory>
+using namespace std;
 class BVHBuilder
 {
 public:
@@ -23,18 +24,18 @@ public:
 		for (int i = 0; i < n; i++)
 			scene.geometries[i]->getMortonPos();
 
-		RadixSort::radixsort(&scene.geometries[0], n);
-
-		std::vector<Container*> temp;
+		RadixSort::radixsort(scene.geometries, n);
+		std::vector<shared_ptr< Container>> temp;
 		if (!isAAC)
 		{
 			for (int i = 0; i < n; i++)
 			{
+
 				temp.push_back((ContainerFactory().CreateContainer(scene.geometries[i], type)));
 			}
 		}
 		else {
-			temp = BuildTree(&scene.geometries[0], n);
+			temp = BuildTree(scene.geometries, n);
 		}
 
 
@@ -45,7 +46,7 @@ public:
 	}
 
 	int threshold = 4; //4 or 20
-	std::vector<Container*> BuildTree(Geometry** primitives, int n)
+	std::vector<shared_ptr< Container>> BuildTree(vector<	shared_ptr< Geometry>> primitives, int n)
 	{
 		//List<Container> bins = new List<Container>();
 		//if (primitives.Length < threshold)
@@ -75,7 +76,7 @@ public:
 		////bins.AddRange(BuildTree(left));
 		////bins.AddRange(BuildTree(right));
 		//return CombineCluster(bins, f(bins.Count));
-		return std::vector<Container*>();
+		return std::vector<shared_ptr< Container>>();
 	}
 
 	/*cluster reduction function
@@ -113,7 +114,7 @@ public:
 
 
 	//combine bins cluster to [limit] cluster
-	std::vector<Container*> CombineCluster(std::vector<Container*> bins, int limit)
+	std::vector<shared_ptr< Container>> CombineCluster(vector<shared_ptr< Container>> bins, int limit)
 	{
 		//Console.WriteLine("Combining from " + bins.Count + " to " + limit);
 
@@ -126,10 +127,10 @@ public:
 		while (bins.size() > limit)
 		{
 			float bestDist = INFINITY;
-			Container* left = nullptr;
-			Container* right = nullptr;
+			shared_ptr< Container> left = nullptr;
+			shared_ptr< Container> right = nullptr;
 
-			std::vector<Container*>::iterator indexR, indexL;
+			std::vector<std::shared_ptr <Container>>::iterator indexR, indexL;
 			for (int i = 0; i < bins.size(); i++)
 			{
 				if (bins[i]->areaWithClosest < bestDist)
@@ -141,7 +142,7 @@ public:
 				}
 			}
 
-			Container* newBin = ContainerFactory().CombineContainer(left, right);
+			shared_ptr< Container> newBin = ContainerFactory().CombineContainer(left, right);
 			newBin->LChild = left;
 			newBin->RChild = right;
 			bins.push_back(newBin);

@@ -2,8 +2,6 @@
 
 
 
- MyColor::MyColor() :MyColor(0, 0, 0) {}
-
  MyColor::MyColor(float r, float g, float b) {
 	this->r = r;
 	this->g = g;

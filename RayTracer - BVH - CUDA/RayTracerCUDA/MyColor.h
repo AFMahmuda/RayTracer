@@ -3,7 +3,7 @@
 class MyColor
 {
 public:
-	MyColor();
+	MyColor() :MyColor(0, 0, 0) {}
 	MyColor(float r, float g, float b);
 
 	float r, g, b;

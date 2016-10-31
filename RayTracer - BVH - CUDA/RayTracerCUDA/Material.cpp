@@ -4,9 +4,12 @@
 
 Material::Material()
 {
+	Specular = make_shared<MyColor>();
+	Diffuse = make_shared<MyColor>();
+	Emmission = make_shared<MyColor>();
 }
 
- void Material::setShininess(float val)
+void Material::setShininess(float val)
 {
 	shininess = val;
 	if (shininess < 0)
@@ -15,7 +18,7 @@ Material::Material()
 		shininess = 128;
 }
 
- void Material::setrefIndex(float val)
+void Material::setrefIndex(float val)
 {
 	refractIndex = val;
 	if (refractIndex < 0)
@@ -24,7 +27,7 @@ Material::Material()
 		refractIndex = 1;
 }
 
- void Material::setRefValue(float val)
+void Material::setRefValue(float val)
 {
 	refractValue = val;
 	if (refractValue < 0)
