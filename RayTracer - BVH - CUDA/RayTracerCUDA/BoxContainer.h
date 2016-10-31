@@ -58,8 +58,6 @@ public:
 
 			SetMinMax(new IData3D[3]{ a, b, c }, 3);
 		}
-		std::cout << "min: " << min[0] << "\t" << min[1] << "\t" << min[2] << std::endl;
-		std::cout << "max: " << max[0] << "\t" << max[1] << "\t" << max[2] << std::endl;
 	}
 
 	void SetMinMax(IData3D* points, int n)

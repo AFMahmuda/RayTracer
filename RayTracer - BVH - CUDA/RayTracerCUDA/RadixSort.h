@@ -22,7 +22,7 @@ private:
 	static void countSort(std::vector<shared_ptr< Geometry>> arr, int n, int exp)
 	{
 		vector<shared_ptr< Geometry>> output;
-		output.reserve(n);
+		output.resize (n);
 		int i, count[10] = { 0 };
 		for (i = 0; i < n; i++)
 			count[(arr[i].get()->getMortonPos() / exp) % 10]++;

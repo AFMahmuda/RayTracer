@@ -73,10 +73,6 @@ public:
 				executeCommand(line);
 			}
 			myfile.close();
-			shared_ptr<Triangle> tri = static_pointer_cast<Triangle>(geometries[0]);
-			shared_ptr<Triangle> tri2 = static_pointer_cast<Triangle>(geometries[1]);
-			shared_ptr<Sphere> sph = static_pointer_cast<Sphere>(geometries[2]);
-
 		}
 		else cout << "Unable to open file";
 	}
