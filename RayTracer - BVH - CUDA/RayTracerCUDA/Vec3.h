@@ -2,7 +2,7 @@
 #include"IData3D.h"
 
 #include <math.h>
-class Vec3 : public IData3D{
+class Vec3 : public Data3D{
 public:	
 	Vec3(float x, float y, float z)
 	{
@@ -13,9 +13,9 @@ public:
 	}
 	Vec3() : Vec3(0, 0, 0) {}
 	Vec3(float * params);
-	Vec3(const IData3D& origin);
+	Vec3(const Data3D& origin);
 
-	Vec3(const IData3D& start,const IData3D& end);
+	Vec3(const Data3D& start,const Data3D& end);
 
 	float Magnitude();
 	Vec3& Normalize();

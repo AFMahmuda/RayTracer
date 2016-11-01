@@ -1,12 +1,14 @@
 #pragma once
 #include<string>
+#include<cmath>
+#include<iostream>
+
 #include"Scene.h"
 #include"Container.h"
 
 #include"ViewPlane.h"
 #include"BVHBuilder.h"
-#include<cmath>
-#include<iostream>
+#include"RayManager.h"
 #include"FreeImage.h"
 
 class TraceManager
@@ -16,8 +18,7 @@ class TraceManager
 	bool isAAC = false;
 	Container::TYPE binType;
 	Scene scene;
-	//	Bitmap image;
-
+	FIBITMAP * image;
 	int height;
 	int width;
 
@@ -85,9 +86,8 @@ class TraceManager
 	{
 		//float segmen = (colEnd - colStart) * (rowEnd - rowStart) / 5f;
 		//float count = 0;
-		FreeImage_Initialise();
 
-		FIBITMAP * image = FreeImage_Allocate(width, height, 24);
+		image = FreeImage_Allocate(width, height, 24);
 		for (int currRow = rowStart; currRow < rowEnd; currRow++)
 		{
 			for (int currCol = colStart; currCol < colEnd; currCol++)
@@ -97,19 +97,26 @@ class TraceManager
 				ray.start = Camera::Instance()->pos;
 				ray.direction = Vec3(ray.start, pixPosition).Normalize();
 
-				traceRay(ray, *scene.bin);
+				RayManager().traceRay(ray, *scene.bin);
 				RGBQUAD color;
 				color.rgbRed = (currCol / (float)colEnd) * 255;
 				color.rgbGreen = (currRow / (float)rowEnd) * 255;
 				color.rgbBlue = .5 * 255;
-
-				if (ray.intersectWith != nullptr) {
-					color.rgbRed = 0;
-					color.rgbGreen = 0;
-					color.rgbBlue = 0;
+				if (currCol == colEnd / 2) {
+					if (currRow == rowEnd / 2)
+					{
+						currCol = currCol;
+					}
 				}
 
-				FreeImage_SetPixelColor(image, currCol, currRow, &color);
+				if (ray.intersectWith != nullptr) {
+					MyColor& col = RayManager().getColor(ray, scene, scene.maxDepth);
+					color.rgbRed = col.r * 255;
+					color.rgbGreen = col.g * 255;
+					color.rgbBlue = col.b * 255;
+				}
+
+				FreeImage_SetPixelColor(image, currCol, rowEnd - currRow, &color);
 				//MyColor rayColor = ray.GetColor(scene, scene.MaxDepth);
 
 				//result.SetPixel(currCol - colStart, currRow - rowStart, rayColor.ToColor());
@@ -123,40 +130,10 @@ class TraceManager
 				}*/
 			}
 		}
-		FreeImage_Save(FIF_BMP, image, "default.bmp", 0);
-		FreeImage_DeInitialise();
-	}
-
-	void traceRay(Ray& ray, Container& bin)
-	{
-		if (bin.IsIntersecting(ray))
-		{
-			if (bin.geo != nullptr)
-			{
-				auto tempStart = std::make_shared<Point3>(ray.start);
-				auto tempDir = std::make_shared<Vec3>(ray.direction);
-
-				//transform ray according to each shapes transformation
-				ray.transInv(bin.geo->getTrans());
-
-				if (bin.geo->isIntersecting(ray))
-				{
-					ray.intersectWith = bin.geo;
-				}
-
-				//assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
-				ray.start = *tempStart;
-				ray.direction = *tempDir;
-
-			}
-			else
-			{
-				traceRay(ray, *bin.LChild);
-				traceRay(ray, *bin.RChild);
-			}
-		}
 
 	}
+
+
 
 
 	void mergeAndSaveImage() {
@@ -183,7 +160,7 @@ class TraceManager
 		filename = "default.bmp";
 		res.Save(filename);
 		Console.WriteLine("Saved in : " + Directory.GetCurrentDirectory() + "\\" + filename + "\n");*/
-
+		FreeImage_Save(FIF_BMP, image, "default.bmp", 0);
 	}
 
 public:
@@ -201,11 +178,13 @@ public:
 
 		buildBVH();
 
+		FreeImage_Initialise();
 		trace();
 
 		mergeAndSaveImage();
+		FreeImage_DeInitialise();
+
 	}
 
 	~TraceManager();
 };
-

@@ -9,8 +9,8 @@ class BoxContainer :
 	public Container
 {
 public:
-	IData3D min = Point3(INFINITY, INFINITY, INFINITY);
-	IData3D max = Point3(-INFINITY, -INFINITY, -INFINITY);
+	Data3D min = Point3(INFINITY, INFINITY, INFINITY);
+	Data3D max = Point3(-INFINITY, -INFINITY, -INFINITY);
 	BoxContainer(std::shared_ptr<Geometry> item)
 	{
 		isLeaf = true;
@@ -29,7 +29,7 @@ public:
 				max[i] += sphere->r;
 			}
 
-			IData3D p[8];
+			Data3D p[8];
 
 			p[0] = (Point3(min.x, min.y, min.z));
 			p[1] = (Point3(min.x, min.y, max.z));
@@ -52,15 +52,15 @@ public:
 		{
 			Triangle* tri = static_cast<Triangle*>(item.get());
 
-			IData3D a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
-			IData3D b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
-			IData3D c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
+			Data3D a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
+			Data3D b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
+			Data3D c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
 
-			SetMinMax(new IData3D[3]{ a, b, c }, 3);
+			SetMinMax(new Data3D[3]{ a, b, c }, 3);
 		}
 	}
 
-	void SetMinMax(IData3D* points, int n)
+	void SetMinMax(Data3D* points, int n)
 	{
 		min = Point3(INFINITY, INFINITY, INFINITY);
 		max = Point3(-INFINITY, -INFINITY, -INFINITY);
@@ -85,7 +85,7 @@ public:
 			min[i] = std::min(a.min[i], b.min[i]);
 			max[i] = std::max(a.max[i], b.max[i]);
 		}
-		IData3D size = max - min;
+		Data3D size = max - min;
 
 		area = 2.f * (size.x * size.y + size.x * size.z + size.y * size.z);
 

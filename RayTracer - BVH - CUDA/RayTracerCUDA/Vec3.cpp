@@ -1,7 +1,7 @@
 #include "Vec3.h"
 Vec3::Vec3(float * params) : Vec3(params[0], params[1], params[2]) {}
- Vec3::Vec3(const IData3D & point) : Vec3(point[0], point[1], point[2]) {}
- Vec3::Vec3(const IData3D & start, const IData3D & end) : Vec3(end[0] - start[0], end[1] - start[1], end[2] - start[2]) {}
+ Vec3::Vec3(const Data3D & point) : Vec3(point[0], point[1], point[2]) {}
+ Vec3::Vec3(const Data3D & start, const Data3D & end) : Vec3(end[0] - start[0], end[1] - start[1], end[2] - start[2]) {}
 
 float Vec3::Magnitude()
 {

@@ -112,7 +112,12 @@
     <ClCompile Include="Translation.cpp">
       <Filter>Transform</Filter>
     </ClCompile>
-    <ClCompile Include="IData3D.cpp" />
+    <ClCompile Include="IData3D.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RayManager.cpp">
+      <Filter>Tracer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -199,7 +204,12 @@
     <ClInclude Include="Translation.h">
       <Filter>Transform</Filter>
     </ClInclude>
-    <ClInclude Include="IData3D.h" />
+    <ClInclude Include="IData3D.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RayManager.h">
+      <Filter>Tracer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

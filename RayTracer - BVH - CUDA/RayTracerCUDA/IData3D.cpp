@@ -2,11 +2,11 @@
 
 
 
-IData3D::IData3D()
+Data3D::Data3D()
 {
 }
 
 
-IData3D::~IData3D()
+Data3D::~Data3D()
 {
 }

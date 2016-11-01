@@ -2,11 +2,7 @@
 
 
 
- MyColor::MyColor(float r, float g, float b) {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-}
+ MyColor::MyColor(float r, float g, float b):r(r),g(g),b(b) {}
 
  void MyColor::setR(float val)
 {

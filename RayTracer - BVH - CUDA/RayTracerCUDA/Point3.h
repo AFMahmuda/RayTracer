@@ -1,7 +1,7 @@
 #pragma once
 #include"IData3D.h"
 
-class Point3 : public IData3D {
+class Point3 : public Data3D {
 protected:
 
 
@@ -16,7 +16,7 @@ public:
 	}
 	Point3() : Point3(0, 0, 0) {}
 	Point3(float* params) :Point3(params[0], params[1], params[2]) {}
-	Point3(const IData3D& vec) :Point3(vec[0], vec[1], vec[2]) {}
+	Point3(const Data3D& vec) :Point3(vec[0], vec[1], vec[2]) {}
 
 	~Point3();
 

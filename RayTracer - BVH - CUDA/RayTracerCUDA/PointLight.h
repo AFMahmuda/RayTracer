@@ -10,18 +10,12 @@ public:
 		this->color = color;
 		this->pos = dir;
 	}
-	Vec3 * getPointToLight(Point3& point) {
-		return new Vec3(Point3(point), Point3(*pos));
-	}
-
-	float getAttValue(Point3 & point, Attenuation & att) {
-		float d = getPointToLight(point)->Magnitude();
-		return 1.f / (att.cons + (att.line * d) + (att.line * d * d));
-	}
 
 	~PointLight();
 
 	// Inherited via Light
 	virtual bool isEffective(Point3 & point, Container & bvh) override;
+	virtual Vec3 getPointToLight(const Point3 & point) override;
+	virtual float getAttValue(Point3 & point, Attenuation & attenuation) override;
 };
 

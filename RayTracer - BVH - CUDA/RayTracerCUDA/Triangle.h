@@ -52,7 +52,27 @@ public:
 
 	virtual	bool isIntersecting(Ray & ray) override
 	{
-		return true;
+		//parallel -> return false
+		if (ray.direction * localNorm == 0)
+			return false;
+		/*
+		relative to ray direction
+		*/
+		float distanceToPlane = (
+			( Vec3(a) * localNorm) -
+			( Vec3(ray.start) * localNorm))
+			/ (ray.direction * localNorm);
+		/*
+		dist < 0 = behind cam
+		*/
+		if (distanceToPlane > 0)
+			if (ray.isCloser(distanceToPlane, trans))
+				if (IsInsideTriangle(ray.start + (ray.direction * distanceToPlane)))
+				{
+					ray.intersectDist = Vec3(Matrix::Mul44x41(trans.matrix, ray.direction * distanceToPlane)).Magnitude();
+					return true;
+				}
+		return false;
 	}
 
 	bool IsInsideTriangle(Point3 point) {
@@ -67,9 +87,9 @@ public:
 		return (u >= 0) && (v >= 0) && (u + v <= 1);
 	}
 
-	virtual Vec3& getNormal(Point3 &point) override
+	virtual Vec3 getNormal(Point3 &point) override
 	{
-		Vec3  res = (Matrix::Mul44x41(trans.matrix.Inverse(), localNorm));
+		Vec3  res = (Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), localNorm));
 		res.Normalize();
 		return res;
 	}

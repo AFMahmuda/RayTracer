@@ -1,9 +1,8 @@
 #pragma once
 #include<vector>
 #include<memory>
-
+#include"Geometry.h";
 #include"Ray.h"
-class Geometry;//forward declaration
 class Container
 {
 public:

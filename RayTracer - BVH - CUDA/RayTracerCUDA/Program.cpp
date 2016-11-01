@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
 	_getcwd(dir, sizeof(dir));
 	string filename = dir;
 
-
 	strcat(dir, "\\");
 	if (argc >= 2)
 		strcat(dir, argv[1]);

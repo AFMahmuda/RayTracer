@@ -1,4 +1,8 @@
 #pragma once
+#include<bitset>
+#include<string>
+#include<algorithm>
+#include<iostream>
 
 
 #include"Point3.h"
@@ -6,12 +10,8 @@
 #include"Material.h"
 #include"Translation.h"
 #include"Matrix.h"
+#include"Ray.h"
 
-#include<bitset>
-#include<string>
-#include<iostream>
-
-class Ray; //forard declaration
 class Geometry
 {
 
@@ -48,7 +48,7 @@ public:
 
 	virtual void updatePos() = 0;
 	virtual bool isIntersecting(Ray& ray) = 0;
-	virtual Vec3 &getNormal(Point3& point) = 0;
+	virtual Vec3 getNormal(Point3& point) = 0;
 
 
 	unsigned int getMortonPos()

@@ -53,7 +53,7 @@ public:
 		auto trans = std::make_shared<Transform>(Translation(0, 0, 0));
 		transforms.push_back(trans);
 		ambient = MyColor();
-		att = Attenuation();
+		att = Attenuation(new float[3]{1,0,0});
 		material = Material();
 	}
 
@@ -163,14 +163,14 @@ public:
 		//geometry
 		if (command.compare("tri") == 0)
 		{
-			auto geo = std::make_shared<Triangle>(createTriangle(&param[0]));
+			auto geo = createShape(Geometry::TRIANGLE, &param[0]);
 			geometries.push_back(geo);
 			return;
 
 		}
 		if (command.compare("sphere") == 0)
 		{
-			auto geo = std::make_shared<Sphere>(createSphere(&param[0]));
+			auto geo = createShape(Geometry::SPHERE, &param[0]);
 			geometries.push_back(geo);
 			return;
 		}
@@ -259,23 +259,37 @@ public:
 		}
 		if (command.compare("directional") == 0)
 		{
-			lights.push_back(std::make_shared<DirectionalLight>(DirectionalLight(new Vec3(&param[0]), new MyColor(param[3], param[4], param[5]))));
+			lights.push_back(std::make_shared<DirectionalLight>(DirectionalLight(new Vec3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))));
 			return;
 		}
 		if (command.compare("point") == 0)
 		{
-			lights.push_back(std::make_shared<PointLight>(PointLight(new Point3(&param[0]), new MyColor(param[3], param[4], param[5]))));
+			lights.push_back(std::make_shared<PointLight>(PointLight(new Point3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))));
 			return;
+		}
+	}
+
+
+	std::shared_ptr<Geometry> createShape(Geometry::TYPE type, float* param)
+	{
+		switch (type)
+		{
+		case Geometry::SPHERE:
+			return std::make_shared<Sphere>(createSphere(param));
+			break;
+		case Geometry::TRIANGLE:
+			return std::make_shared<Triangle>(createTriangle(param));
+			break;
 		}
 	}
 
 	Sphere createSphere(float* param)
 	{
 		Sphere sphere = Sphere(param);
-		applyTransform(&sphere);
+		applyTransform(sphere);
 
 		applyMaterial(sphere);
-		applyAmbient(&sphere);
+		applyAmbient(sphere);
 		return sphere;
 	}
 
@@ -285,20 +299,20 @@ public:
 		for (size_t i = 0; i < 3; i++)
 		{
 			p[i] = Point3(*vertices[(int)param[i]]);
-			p[i] = Matrix::Mul44x41(transforms.back()->matrix, p[i]);
+			p[i] = Matrix::Mul44x41(Matrix(transforms.back()->matrix), p[i]);
 			/*p[i].h = 1;*/
 		}
 
 		Triangle tri = Triangle(p[0], p[1], p[2]);
 		applyMaterial(tri);
-		applyAmbient(&tri);
+		applyAmbient(tri);
 		return tri;
 	}
 
-	void applyTransform(Geometry* shape)
+	void applyTransform(Geometry& shape)
 	{
 		Transform& currTrans = *transforms.back();
-		shape->setTrans(currTrans);
+		shape.setTrans(currTrans);
 	}
 
 	void applyMaterial(Geometry& shape)
@@ -306,9 +320,9 @@ public:
 		shape.mat = *std::make_shared<Material>(material);
 	}
 
-	void applyAmbient(Geometry* shape)
+	void applyAmbient(Geometry& shape)
 	{
-		shape->ambient = *std::make_shared<MyColor>(ambient);
+		shape.ambient = *std::make_shared<MyColor>(ambient);
 	}
 
 

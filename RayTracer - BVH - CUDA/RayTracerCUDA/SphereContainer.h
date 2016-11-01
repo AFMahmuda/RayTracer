@@ -14,7 +14,7 @@ class SphereContainer :
 	public Container
 {
 public:
-	IData3D c;
+	Data3D c;
 	float r;
 
 	SphereContainer(std::shared_ptr< Geometry> item) {

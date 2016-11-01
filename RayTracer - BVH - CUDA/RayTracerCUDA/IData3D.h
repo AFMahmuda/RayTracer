@@ -1,5 +1,5 @@
 #pragma once
-class IData3D
+class Data3D
 {
 public:
 	float x = 0, y = 0, z = 0;
@@ -45,21 +45,21 @@ public:
 		}
 	}
 
-	IData3D& operator+=(const IData3D& rhs)
+	Data3D& operator+=(const Data3D& rhs)
 	{
 		x += rhs.x;
 		y += rhs.y;
 		z += rhs.z;
 		return *this;
 	}
-	IData3D& operator-=(const IData3D& rhs)
+	Data3D& operator-=(const Data3D& rhs)
 	{
 		x -= rhs.x;
 		y -= rhs.y;
 		z -= rhs.z;
 		return *this;
 	}
-	IData3D& operator*=(float rhs)
+	Data3D& operator*=(float rhs)
 	{
 		x *= rhs;
 		y *= rhs;
@@ -68,29 +68,29 @@ public:
 	}
 
 
-	friend IData3D operator+(IData3D lhs, const IData3D& rhs)
+	friend Data3D operator+(Data3D lhs, const Data3D& rhs)
 	{
 		lhs += rhs;
 		return lhs;
 	}
 
-	friend IData3D operator-(IData3D lhs, const IData3D& rhs)
+	friend Data3D operator-(Data3D lhs, const Data3D& rhs)
 	{
 		lhs -= rhs;
 		return lhs;
 	}
-	friend IData3D operator*(IData3D lhs, float rhs)
+	friend Data3D operator*(Data3D lhs, float rhs)
 	{
 		lhs *= rhs;
 		return lhs;
 	}
-	friend IData3D operator*(float lhs, IData3D rhs)
+	friend Data3D operator*(float lhs, Data3D rhs)
 	{
 		rhs *= lhs;
 		return rhs;
 	}
 
-	IData3D();
-	~IData3D();
+	Data3D();
+	~Data3D();
 };
 

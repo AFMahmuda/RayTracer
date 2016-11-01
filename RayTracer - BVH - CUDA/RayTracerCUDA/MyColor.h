@@ -11,34 +11,64 @@ public:
 	void setG(float val);
 	void setB(float val);
 
-	MyColor & operator+(MyColor& other)
+	MyColor& operator+=(const MyColor& rhs)
 	{
-		return MyColor(r + other.r, g + other.g, b + other.b);
+		setR(r + rhs.r);
+		setG(g + rhs.g);	
+		setB(b + rhs.b);
+		return *this;
 	}
-	MyColor & operator-(MyColor& other)
+	MyColor& operator-=(const MyColor& rhs)
 	{
-		return MyColor(r - other.r, g - other.g, b - other.b);
+		setR(r - rhs.r);
+		setG(g - rhs.g);
+		setB(b - rhs.b);
+		return *this;
+	}
+	MyColor& operator*=(float rhs)
+	{
+		setR(r * rhs);
+		setG(g * rhs);
+		setB(b * rhs);
+		return *this;
 	}
 
-	MyColor & operator*(MyColor& other)
+	MyColor& operator*=(MyColor rhs)
 	{
-		return MyColor(r * other.r, g * other.g, b * other.b);
+		setR(r * rhs.r);
+		setG(g * rhs.g);
+		setB(b * rhs.b);
+		return *this;
 	}
 
-	MyColor & operator*(float s)
+
+	friend MyColor operator+(MyColor lhs, const MyColor& rhs)
 	{
-		return MyColor(r * s, g * s, b * s);
+		lhs += rhs;
+		return lhs;
 	}
 
-
-	MyColor& Pow(float p)
+	friend MyColor operator-(MyColor lhs, const MyColor& rhs)
 	{
-		return MyColor(
-			powf(r, p),
-			powf(g, p),
-			powf(b, p)
-			);
+		lhs -= rhs;
+		return lhs;
+	}
 
+	friend MyColor operator*(MyColor lhs, const MyColor& rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+	friend MyColor operator*(MyColor lhs, float rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+	friend MyColor operator*(float lhs, MyColor rhs)
+	{
+		rhs *= lhs;
+		return rhs;
 	}
 
 
