@@ -31,20 +31,9 @@ public:
 	Point3 getHitPlus() const { return Point3(start + Point3(direction * (intersectDist * 1.01))); }
 	Point3 getHitMin() const { return Point3(start + Point3(direction * (intersectDist * 0.99))); }
 
-	void trans(Transform& transform) {
-		start = Point3(Matrix::Mul44x41(transform.matrix, start));
-		direction = Vec3(Matrix::Mul44x41(transform.matrix, direction)).Normalize();
-	}
-	void transInv(Transform& transform) {
-		start = Point3(Matrix::Mul44x41((Matrix)transform.matrix.Inverse(), start));
-		direction = Vec3(Matrix::Mul44x41((Matrix)transform.matrix.Inverse(), direction)).Normalize();
-
-	}
-	bool isCloser(float dist, Transform& trans)
-	{
-		float newMag = Vec3(Matrix::Mul44x41(trans.matrix, direction * dist)).Magnitude();
-		return (newMag < intersectDist) ? true : false;
-	}
+	void trans(Transform& transform);
+	void transInv(Transform& transform);
+	bool isCloser(float dist, Transform& trans);
 
 	Ray();
 	Ray(Point3 start, Vec3 dir) :start(start), direction(dir) {}

@@ -1,6 +1,86 @@
 #include "BoxContainer.h"
 
 
+BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
+{
+	isLeaf = true;
+	type = BOX;
+	geo = item;
+
+	if (item->type == Geometry::SPHERE)
+	{
+		Sphere* sphere = (Sphere*)item.get();
+
+		min = (sphere->c + Point3());
+		max = (sphere->c + Point3());
+		for (int i = 0; i < 3; i++)
+		{
+			min[i] -= sphere->r;
+			max[i] += sphere->r;
+		}
+
+		Data3D p[8];
+
+		p[0] = (Point3(min.x, min.y, min.z));
+		p[1] = (Point3(min.x, min.y, max.z));
+		p[2] = (Point3(min.x, max.y, min.z));
+		p[3] = (Point3(min.x, max.y, max.z));
+		p[4] = (Point3(max.x, min.y, min.z));
+		p[5] = (Point3(max.x, min.y, max.z));
+		p[6] = (Point3(max.x, max.y, min.z));
+		p[7] = (Point3(max.x, max.y, max.z));
+
+
+		for (int i = 0; i < 8; i++)
+			p[i] = Matrix::Mul44x41(item->getTrans().matrix, p[i]);
+
+		setMinMax(p, 8);
+
+	}
+
+	else //if (item.GetType() == typeof(Triangle))
+	{
+		Triangle* tri = static_cast<Triangle*>(item.get());
+
+		Data3D a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
+		Data3D b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
+		Data3D c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
+
+		setMinMax(new Data3D[3]{ a, b, c }, 3);
+	}
+}
+
+void BoxContainer::setMinMax(Data3D * points, int n)
+{
+	min = Point3(INFINITY, INFINITY, INFINITY);
+	max = Point3(-INFINITY, -INFINITY, -INFINITY);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < 3; j++)
+		{
+			min[j] = std::min(min[j], points[i][j]);
+			max[j] = std::max(max[j], points[i][j]);
+		}
+}
+
+BoxContainer::BoxContainer(std::shared_ptr<BoxContainer> a, std::shared_ptr<BoxContainer>& b)
+{
+	isLeaf = false;
+	type = TYPE::BOX;
+	lChild = (a);
+	rChild = (b);
+
+
+	for (int i = 0; i < 3; i++)
+	{
+		min[i] = std::min(a->min[i], b->min[i]);
+		max[i] = std::max(a->max[i], b->max[i]);
+	}
+	Data3D size = max - min;
+
+	area = 2.f * (size.x * size.y + size.x * size.z + size.y * size.z);
+
+}
+
 BoxContainer::BoxContainer()
 {
 }
@@ -10,7 +90,7 @@ BoxContainer::~BoxContainer()
 {
 }
 
-bool BoxContainer::IsIntersecting(Ray& ray)
+bool BoxContainer::isIntersecting(Ray& ray)
 {
 	float tmin = -INFINITY, tmax = INFINITY;
 

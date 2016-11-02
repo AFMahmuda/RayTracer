@@ -13,23 +13,24 @@ PointLight::~PointLight()
 bool PointLight::isEffective(Point3 & point, Container & bvh)
 {
 	Vec3 pointToLight = getPointToLight(point);
+	Vec3& dir = pointToLight.Normalize();
+	Ray shadowRay(point, dir);
 
-	Ray shadowRay(point, pointToLight.Normalize());
-
-
-	if (bvh.IsIntersecting(shadowRay))
+	if (bvh.isIntersecting(shadowRay))
 	{
 		if (bvh.geo != nullptr)
 		{
+			//transform ray according to each shapes transformation
+			shadowRay.transInv(bvh.geo->getTrans());
 			if (bvh.geo->isIntersecting(shadowRay))
 				if (shadowRay.intersectDist < pointToLight.Magnitude())
 					return false;
 		}
 		else
 		{
-			if (!PointLight::isEffective(point, *bvh.LChild))
+			if (!PointLight::isEffective(point, *bvh.lChild))
 				return false;
-			if (!PointLight::isEffective(point, *bvh.RChild))
+			if (!PointLight::isEffective(point, *bvh.rChild))
 				return false;
 		}
 	}

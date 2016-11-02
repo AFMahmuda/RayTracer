@@ -4,13 +4,12 @@
 class Material
 {
 public:
-	MyColor Specular;
-	MyColor Diffuse;
-	MyColor Emmission;
+	MyColor specular;
+	MyColor diffuse;
+	MyColor emmission;
 	float shininess;
 	float refractIndex;
 	float refractValue;
-
 
 	void setShininess(float val);
 	void setrefIndex(float val);

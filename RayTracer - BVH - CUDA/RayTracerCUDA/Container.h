@@ -11,12 +11,12 @@ public:
 	};
 	TYPE type;
 	bool isLeaf = false;
-	std::shared_ptr<Container> LChild;
-	std::shared_ptr<Container> RChild;
+	std::shared_ptr<Container> lChild;
+	std::shared_ptr<Container> rChild;
 	std::shared_ptr<Geometry> geo;
 	float area;
 
-	virtual bool IsIntersecting(Ray& ray) = 0;
+	virtual bool isIntersecting(Ray& ray) = 0;
 	virtual void showInfo() = 0;
 
 	float areaWithClosest = INFINITY;

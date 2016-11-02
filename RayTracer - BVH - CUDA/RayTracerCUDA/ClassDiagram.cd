@@ -1,63 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Material" Collapsed="true">
-    <Position X="14.5" Y="1.5" Width="1.5" />
+  <Class Name="Material">
+    <Position X="14.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEABAIAAAAAEEAAAAgAAAhAAAAAAAQAAAABAAAAAAAA=</HashCode>
+      <HashCode>AEABAIAAAAAEEAAAEAAAAgIAAAAAAQAAAABAAABAAAA=</HashCode>
       <FileName>Material.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MyColor" Collapsed="true">
-    <Position X="22" Y="1.75" Width="1.5" />
+    <Position X="18.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAAAAAAAAJAAEQAAAAABAAAIAQABAAAAAAA=</HashCode>
       <FileName>MyColor.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Vec3" Collapsed="true">
-    <Position X="14.5" Y="3.5" Width="1.5" />
+    <Position X="16.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAGgAAEAAAA=</HashCode>
       <FileName>Vec3.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Point3" Collapsed="true">
-    <Position X="18" Y="1.5" Width="1.5" />
+    <Position X="20" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
       <FileName>Point3.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Matrix" Collapsed="true">
-    <Position X="16.25" Y="1.5" Width="1.5" />
+    <Position X="16.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAQAgAAAAACAgAAEAICACAAEAQgAAAAAEAgAAhAggE=</HashCode>
       <FileName>Matrix.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Camera" Collapsed="true">
-    <Position X="18" Y="0.5" Width="1.5" />
+    <Position X="18.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAgAAAAAAAAAAYIAgAIAAAABAAAAAQAACAgAaAAA=</HashCode>
       <FileName>Camera.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ViewPlane" Collapsed="true">
-    <Position X="16.25" Y="3.5" Width="1.5" />
+    <Position X="18.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAQAAIAAAAEBAIgBAIAAAABAAAAAwAACAAAIAAA=</HashCode>
       <FileName>ViewPlane.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TraceManager">
-    <Position X="12.5" Y="1.25" Width="1.5" />
+  <Class Name="TraceManager" Collapsed="true">
+    <Position X="14.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAgAgQAAAAAABAQCQAIAAIAAEAAAAAIAAAGCGAAEAAE=</HashCode>
       <FileName>TraceManager.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Ray">
-    <Position X="5.25" Y="3" Width="1.75" />
+  <Class Name="Ray" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
     <NestedTypes>
       <Enum Name="Ray::TYPE" Collapsed="true">
         <TypeIdentifier>
@@ -71,42 +71,42 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Scene" Collapsed="true">
-    <Position X="18" Y="2.5" Width="1.5" />
+    <Position X="20" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAQAAAAAAAAMEAAAgIAAAgEAQAIwBAIAgUAAIADAgAA=</HashCode>
       <FileName>Scene.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Transform">
-    <Position X="23.25" Y="9" Width="1.5" />
+    <Position X="3.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAAAAAIA=</HashCode>
       <FileName>Transform.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Translation">
-    <Position X="23.25" Y="11.5" Width="1.5" />
+    <Position X="3.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Translation.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Rotation">
-    <Position X="25.5" Y="11.5" Width="1.5" />
+    <Position X="5.75" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAgAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Rotation.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Scaling">
-    <Position X="21" Y="11.5" Width="1.5" />
+    <Position X="1.25" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>Scaling.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Geometry">
-    <Position X="7.25" Y="3" Width="1.75" />
+    <Position X="11" Y="0.5" Width="1.75" />
     <NestedTypes>
       <Enum Name="Geometry::TYPE" Collapsed="true">
         <TypeIdentifier>
@@ -120,35 +120,35 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Sphere" Collapsed="true">
-    <Position X="6.25" Y="8.25" Width="1.5" />
+    <Position X="10" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAACAAAAAAAQAAgAAAAAAAACAAAABAAAIAAA=</HashCode>
       <FileName>Sphere.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Triangle" Collapsed="true">
-    <Position X="8.25" Y="8.25" Width="1.5" />
+    <Position X="12.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gggAQAAAAACAAAABAAAgAkAEEADAAACgAQAACAAAAAA=</HashCode>
       <FileName>Triangle.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BoxContainer">
-    <Position X="1" Y="5.25" Width="1.5" />
+    <Position X="6" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAEAAQAAAAgAAAAAQAAAAEAAAAAAAAAAAAACA=</HashCode>
+      <HashCode>AAAAEAAAEACUAAAAAAAAAAQAAAAAAAAAAAAAAAAAACA=</HashCode>
       <FileName>BoxContainer.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BVHBuilder" Collapsed="true">
-    <Position X="16.25" Y="0.5" Width="1.5" />
+    <Position X="16.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEAABAAgAAAAAEAAAABAgBACAQAAAAAAAEAAA=</HashCode>
       <FileName>BVHBuilder.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Container">
-    <Position X="3.5" Y="3" Width="1.5" />
+    <Position X="7.25" Y="5.5" Width="1.5" />
     <NestedTypes>
       <Enum Name="Container::TYPE" Collapsed="true">
         <TypeIdentifier>
@@ -157,64 +157,61 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAQAABAAAAAEgAAAQAQAARABAAAAAAAAAAhAAAE=</HashCode>
+      <HashCode>AAAAAAQAABCAAAAEAAABQAQAABABAAAAAEAAAAgAAAE=</HashCode>
       <FileName>Container.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ContainerFactory" Collapsed="true">
-    <Position X="19.75" Y="0.5" Width="1.5" />
+    <Position X="20" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAgQAAAQAAAAAACAAAAAEAAAAAAAAAAA=</HashCode>
       <FileName>ContainerFactory.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SphereContainer">
-    <Position X="1" Y="2.25" Width="1.5" />
+    <Position X="8.25" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAgAAABAQAAAAAAACAAAABAAAIAAA=</HashCode>
+      <HashCode>AAAAAAAAAACAAAAAAAAABAQAAAAAAACAAAABAAAIAAA=</HashCode>
       <FileName>SphereContainer.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RadixSort" Collapsed="true">
-    <Position X="19.75" Y="1.5" Width="1.5" />
+    <Position X="14.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAQgAAAIIAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>RadixSort.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Attenuation" Collapsed="true">
-    <Position X="14.5" Y="0.5" Width="1.5" />
+  <Class Name="Attenuation">
+    <Position X="13" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAAAAAAAAQAAAAACAAAAAAQAAAQAAAAA=</HashCode>
       <FileName>Attenuation.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DirectionalLight">
-    <Position X="23" Y="5.5" Width="1.5" />
+    <Position X="3.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAQAAACAAAAAQAAAQAAAAAAAAAAEAAIAAAAAAAAA=</HashCode>
       <FileName>DirectionalLight.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Light">
-    <Position X="22" Y="3" Width="1.5" />
+    <Position X="2.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAACQAAAAAgAAAAAAAAGAAIAAAAAAAAA=</HashCode>
       <FileName>Light.h</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="color" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="PointLight">
-    <Position X="20.75" Y="5.5" Width="1.5" />
+    <Position X="1" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABAQAAAAAIAAAAAAAAEAAIAAIAAAAAA=</HashCode>
       <FileName>PointLight.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RayManager" Collapsed="true">
-    <Position X="16.25" Y="2.5" Width="1.5" />
+    <Position X="18.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EABAAAAAAAgAACAAAAAAAAAEAgAAIAAAAAAAgAAAAAA=</HashCode>
       <FileName>RayManager.h</FileName>
