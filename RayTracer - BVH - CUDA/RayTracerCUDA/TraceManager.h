@@ -17,6 +17,7 @@ class TraceManager
 	Container::TYPE binType;
 	Scene scene;
 	FIBITMAP * image;
+	std::string outFileName;
 	int height;
 	int width;
 

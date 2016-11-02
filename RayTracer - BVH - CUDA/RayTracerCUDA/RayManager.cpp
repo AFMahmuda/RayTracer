@@ -1,7 +1,5 @@
 #include "RayManager.h"
 
-
-
 RayManager::RayManager()
 {
 }
@@ -32,7 +30,7 @@ void RayManager::traceRay(Ray & ray, Container & bin)
 		{
 			traceRay(ray, *bin.lChild);
 			traceRay(ray, *bin.rChild);
-		}
+ 		}
 	}
 
 }

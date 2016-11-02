@@ -60,9 +60,11 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 	std::vector<std::shared_ptr<Geometry>> left(primitives.begin(), primitives.begin() + pivot);
 	std::vector<std::shared_ptr<Geometry>> right(primitives.begin() + pivot, primitives.end());// pivot included in right
 
-																							   /*build left and right tree separately*/
+	/*build left and right tree separately*/
 	std::vector<std::shared_ptr< Container>> leftTree = BuildTree(left);
 	std::vector<std::shared_ptr< Container>> rightTree = BuildTree(right);
+
+
 
 	/*combine two vec and create cluster*/
 	leftTree.insert(leftTree.end(), rightTree.begin(), rightTree.end());
