@@ -1,4 +1,5 @@
 #include "RayManager.h"
+#include <thread>
 
 RayManager::RayManager()
 {
@@ -28,9 +29,9 @@ void RayManager::traceRay(Ray & ray, Container & bin)
 		}
 		else
 		{
-			traceRay(ray, *bin.lChild);
-			traceRay(ray, *bin.rChild);
- 		}
+			traceRay( std::ref(ray), *bin.lChild);
+			traceRay( std::ref(ray), *(bin.rChild));
+		}
 	}
 
 }

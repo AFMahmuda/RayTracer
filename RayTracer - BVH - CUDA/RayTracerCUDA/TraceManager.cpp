@@ -56,27 +56,21 @@ void TraceManager::trace() {
 		for (int j = 0; j < horDiv; j++)
 		{
 			int row = i, col = j, n = cnt;
-			//			threads.push_back(std::thread(traceThread, scene, row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
-			traceThread(scene, row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg);
+			threads.push_back(std::thread(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
 			cnt++;
 		}
-	/*cnt--;
-	for (size_t i = 0; i < cnt; i++)
+
+	for (size_t i = 0; i < threads.size(); i++)
 	{
 		threads[i].join();
-	}*/
+	}
+	std::cout << threads.size()<< std::endl;
 
-	//Task.WaitAll(traceTask);
-	//Console.Write("\n");
-	//Console.WriteLine("DONE! " + (DateTime.Now - start) + "\n");
-
-	//traceThread(scene, 0, 0, height / 2, width);
-	//traceThread(scene, height/2, 0, height, width);
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	std::cout << "tracing scene: " << duration << " s" << std::endl;
 }
 
-void TraceManager::traceThread(Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
+void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
 {
 	for (int currRow = rowStart; currRow < rowEnd; currRow++)
 	{

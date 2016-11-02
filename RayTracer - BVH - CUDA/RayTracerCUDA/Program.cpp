@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	{
 		cout << filename << endl;
 		myfile.close();
-		TraceManager(1, Container::BOX, true).traceScene(filename);
+		TraceManager(8, Container::BOX, true).traceScene(filename);
 
 	}
 	else

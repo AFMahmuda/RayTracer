@@ -8,6 +8,7 @@
 #include"RayManager.h"
 
 #include"FreeImage.h"
+#include<thread>
 
 class TraceManager
 {
@@ -30,11 +31,10 @@ class TraceManager
 	void initScene(std::string sceneFile);
 	void buildBVH();
 	void trace();
-	void traceThread(Scene& scene, int rowStart, int colStart, int rowEnd, int colEnd);
+	static	void traceThread(FIBITMAP * image, Scene& scene, int rowStart, int colStart, int rowEnd, int colEnd);
 	void mergeAndSaveImage();
 
 public:
-
 	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true);
 	void traceScene(std::string sceneFile);
 	~TraceManager();
