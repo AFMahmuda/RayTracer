@@ -10,12 +10,10 @@
 
 using namespace std;
 
-
 int main(int argc, char *argv[])
 {
 	char dir[FILENAME_MAX];
 	_getcwd(dir, sizeof(dir));
-	string filename = dir;
 
 	strcat(dir, "\\");
 	if (argc >= 2)
@@ -23,9 +21,8 @@ int main(int argc, char *argv[])
 	else
 		strcat(dir, "default.test");
 
-	filename = dir;
+	string filename = dir;
 	std::replace(filename.begin(), filename.end(), '\\', '/');
-
 
 	ifstream myfile(filename);
 
@@ -33,8 +30,11 @@ int main(int argc, char *argv[])
 	{
 		cout << filename << endl;
 		myfile.close();
-		TraceManager(8, Container::BOX, true).traceScene(filename);
-
+		//		TraceManager(4, Container::BOX, true).traceScene(filename);
+		Data3D v1 = Point3(1, 1, 1);
+		Data3D v2 = Point3(2, 2, 2);
+		v2 += v1;
+		Data3D v3 = Point3(2, 2, 2);
 	}
 	else
 	{

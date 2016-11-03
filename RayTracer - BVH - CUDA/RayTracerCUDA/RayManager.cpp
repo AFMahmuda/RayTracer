@@ -25,12 +25,13 @@ void RayManager::traceRay(Ray & ray, Container & bin)
 			//assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
 			ray.start = *tempStart;
 			ray.direction = *tempDir;
-
 		}
 		else
 		{
-			traceRay( std::ref(ray), *bin.lChild);
-			traceRay( std::ref(ray), *(bin.rChild));
+
+			//not parallelised
+			traceRay(std::ref(ray), *bin.lChild);
+			traceRay(std::ref(ray), *bin.rChild);
 		}
 	}
 
@@ -49,9 +50,10 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 	{
 		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, *scene.bin);
 		MyColor color = calcColor(ray, effectiveLights, scene.getAtt());
-		color += (
-			getRefl(ray, scene, bounce - 1) +
-			getRefr(ray, scene, bounce - 1));
+
+		MyColor refl = getRefl(ray, scene, bounce - 1);
+		MyColor refr = getRefr(ray, scene, bounce - 1);
+		color += (refl + refr);
 		return color;
 	}
 }

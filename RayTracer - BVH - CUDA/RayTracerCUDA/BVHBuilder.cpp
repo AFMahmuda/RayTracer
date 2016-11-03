@@ -9,7 +9,7 @@ BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC) {
 }
 
 void BVHBuilder::BuildBVH(Scene & scene) {
-	rsize_t n = scene.geometries.size();
+	int n = scene.geometries.size();
 
 	/*precalculate mortoncode*/
 	for (rsize_t i = 0; i < n; i++)

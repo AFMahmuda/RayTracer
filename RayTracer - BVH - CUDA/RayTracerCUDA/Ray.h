@@ -25,11 +25,11 @@ public:
 	TYPE type;
 	Point3 start;
 	Vec3 direction;
-	float intersectDist = INT_MAX;
+	float intersectDist = FLT_MAX;
 	std::shared_ptr< Geometry > intersectWith;
 	Point3 getHitReal() const { return Point3(start + Point3(direction * intersectDist)); }
-	Point3 getHitPlus() const { return Point3(start + Point3(direction * (intersectDist * 1.01))); }
-	Point3 getHitMin() const { return Point3(start + Point3(direction * (intersectDist * 0.99))); }
+	Point3 getHitPlus() const { return Point3(start + Point3(direction * (intersectDist * 1.01f))); }
+	Point3 getHitMin() const { return Point3(start + Point3(direction * (intersectDist * 0.99f))); }
 
 	void trans(Transform& transform);
 	void transInv(Transform& transform);

@@ -31,11 +31,13 @@ class TraceManager
 	void initScene(std::string sceneFile);
 	void buildBVH();
 	void trace();
-	static	void traceThread(FIBITMAP * image, Scene& scene, int rowStart, int colStart, int rowEnd, int colEnd);
+	static void traceThread(FIBITMAP * image, Scene& scene, int rowStart, int colStart, int rowEnd, int colEnd);
 	void mergeAndSaveImage();
-
+	static RGBQUAD MyColToRGBQUAD(MyColor & col);
 public:
 	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true);
 	void traceScene(std::string sceneFile);
 	~TraceManager();
 };
+
+

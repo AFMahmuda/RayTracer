@@ -9,7 +9,7 @@ class Matrix
 private:
 	int rowNum;
 	int colNum;
-	float** vals;
+	float* vals;
 
 	bool hasIdentity;
 
@@ -36,7 +36,7 @@ public:
 		{
 			for (int col = 0; col < colNum; col++)
 			{
-				float val = (vals[row][col] * s);
+				float val = (vals[row *colNum + col] * s);
 				newMat(row, col) = (val);
 			}
 		}
@@ -48,10 +48,10 @@ public:
 	static Matrix Mul44x44(Matrix& matA, Matrix& matB);
 	static Matrix Mul44x41(Matrix& mat44, Matrix& mat41);
 	float& operator()(int r, int c) {
-		return vals[r][c];
+		return vals[r*colNum + c];
 	}
 	float& ItemAt(int r, int c) {
-		return vals[r][c];
+		return vals[r*colNum + c];
 	}
 
 	~Matrix();

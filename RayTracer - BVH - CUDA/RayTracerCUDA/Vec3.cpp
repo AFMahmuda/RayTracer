@@ -5,22 +5,22 @@ Vec3::Vec3(float * params) : Vec3(params[0], params[1], params[2]) {}
 
 float Vec3::Magnitude()
 {
-	return sqrtf(x * x + y * y + z * z);
+	return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
 Vec3& Vec3::Normalize()
 {
 	float divMag =1.f/ Magnitude();
 
-	return Vec3(x * divMag, y * divMag, z * divMag);
+	return Vec3(v[0] * divMag, v[1] * divMag, v[2] * divMag);
 
 }
 
 Vec3 Vec3::Cross(const Vec3 & a, const Vec3 & b) {
 	float X, Y, Z;
-	X = (a.y * b.z) - (a.z * b.y);
-	Y = ((a.x * b.z) - (a.z * b.x)) * -1;
-	Z = (a.x * b.y) - (a.y * b.x);
+	X = (a.v[1] * b.v[2]) - (a.v[2] * b.v[1]);
+	Y = ((a.v[0] * b.v[2]) - (a.v[2] * b.v[0])) * -1;
+	Z = (a.v[0] * b.v[1]) - (a.v[1] * b.v[0]);
 
 	Vec3& res = Vec3(X, Y, Z);
 	return res;

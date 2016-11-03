@@ -64,8 +64,6 @@ void TraceManager::trace() {
 	{
 		threads[i].join();
 	}
-	std::cout << threads.size()<< std::endl;
-
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	std::cout << "tracing scene: " << duration << " s" << std::endl;
 }
@@ -89,16 +87,14 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 
 			if (ray.intersectWith != nullptr) {
 				MyColor& col = RayManager().getColor(ray, scene, scene.maxDepth);
-				color.rgbRed = col.r * 255;
-				color.rgbGreen = col.g * 255;
-				color.rgbBlue = col.b * 255;
+				color = MyColToRGBQUAD(col);
 			}
 
 			FreeImage_SetPixelColor(image, currCol, currRow, &color);
 		}
 	}
-
 }
+
 
 void TraceManager::mergeAndSaveImage() {
 	std::clock_t start = std::clock();
@@ -108,6 +104,15 @@ void TraceManager::mergeAndSaveImage() {
 	FreeImage_Save(FIF_BMP, image, outFileName.c_str(), 0);
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	std::cout << "image saved: " << duration << " s" << std::endl;
+}
+
+RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
+{
+	RGBQUAD color;
+	color.rgbRed = col.r * 255;
+	color.rgbGreen = col.g * 255;
+	color.rgbBlue = col.b * 255;
+	return color;
 }
 
 TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC)

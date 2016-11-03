@@ -1,5 +1,5 @@
 #pragma once
-#include"IData3D.h"
+#include"Data3D.h"
 
 class Point3 : public Data3D {
 protected:
@@ -9,10 +9,11 @@ public:
 
 	Point3(float x, float y, float z)
 	{
-		Point3::x = x;
-		Point3::y = y;
-		Point3::z = z;
-		h = 1;
+
+		v[0] = x;
+		v[1] = y;
+		v[2] = z;
+		v[3] = 0;
 	}
 	Point3() : Point3(0, 0, 0) {}
 	Point3(float* params) :Point3(params[0], params[1], params[2]) {}

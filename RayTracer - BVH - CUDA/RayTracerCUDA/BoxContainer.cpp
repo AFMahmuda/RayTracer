@@ -21,14 +21,14 @@ BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
 
 		Data3D p[8];
 
-		p[0] = (Point3(min.x, min.y, min.z));
-		p[1] = (Point3(min.x, min.y, max.z));
-		p[2] = (Point3(min.x, max.y, min.z));
-		p[3] = (Point3(min.x, max.y, max.z));
-		p[4] = (Point3(max.x, min.y, min.z));
-		p[5] = (Point3(max.x, min.y, max.z));
-		p[6] = (Point3(max.x, max.y, min.z));
-		p[7] = (Point3(max.x, max.y, max.z));
+		p[0] = (Point3(min[0], min[1], min[2]));
+		p[1] = (Point3(min[0], min[1], max[2]));
+		p[2] = (Point3(min[0], max[1], min[2]));
+		p[3] = (Point3(min[0], max[1], max[2]));
+		p[4] = (Point3(max[0], min[1], min[2]));
+		p[5] = (Point3(max[0], min[1], max[2]));
+		p[6] = (Point3(max[0], max[1], min[2]));
+		p[7] = (Point3(max[0], max[1], max[2]));
 
 
 		for (int i = 0; i < 8; i++)
@@ -77,7 +77,7 @@ BoxContainer::BoxContainer(std::shared_ptr<BoxContainer> a, std::shared_ptr<BoxC
 	}
 	Data3D size = max - min;
 
-	area = 2.f * (size.x * size.y + size.x * size.z + size.y * size.z);
+	area = 2.f * (size[0] * size[1] + size[0] * size[2] + size[1] * size[2]);
 
 }
 

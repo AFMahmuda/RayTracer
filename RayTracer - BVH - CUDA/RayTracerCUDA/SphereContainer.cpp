@@ -77,7 +77,7 @@ SphereContainer::SphereContainer(std::shared_ptr<SphereContainer> a, std::shared
 
 		aToB = aToB.Normalize();
 		aToB = aToB * (r - a->r);
-		c = (a->c) + Point3(aToB.x, aToB.y, aToB.z);
+		c = (a->c) + Point3(aToB[0], aToB[1], aToB[2]);
 	}
 
 	area = 4.f * (float)M_PI * (float)std::powf(r, 2);
