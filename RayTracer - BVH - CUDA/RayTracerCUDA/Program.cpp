@@ -1,27 +1,26 @@
-#include"TraceManager.h"
+#include <stdio.h>  // defines FILENAME_MAX
+#include<fstream> //file 
+#include <direct.h> // path
+
 
 #include<string>
-#include<iostream>
-#include<fstream>
-
-
-#include <stdio.h>  /* defines FILENAME_MAX */
-#include <direct.h>
-
+#include"TraceManager.h"
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 	char dir[FILENAME_MAX];
 	_getcwd(dir, sizeof(dir));
-
 	strcat(dir, "\\");
-	if (argc >= 2)
-		strcat(dir, argv[1]);
-	else
-		strcat(dir, "default.test");
+	//scene name, default = default.test
+	string filename = (argc >= 2) ? strcat(dir, argv[1]) : strcat(dir, "default.test");
+	//thread number, default = 1
+	int core = (argc >= 3) ? atoi(argv[2]) : 1;
+	//using aac algorithm (1 = yes / 0 = no ), default = no;
+	bool isAAC = (argc >= 4) ? (atoi(argv[3]) == 1) ? true : false : false;
+	//bin type (b = box / s = sphere ), default = box;
+	Container::TYPE binType = (argc >= 5) ? (argv[4][0] == 'b') ? Container::BOX : Container::SPHERE : Container::BOX;
 
-	string filename = dir;
 	std::replace(filename.begin(), filename.end(), '\\', '/');
 
 	ifstream myfile(filename);
@@ -30,11 +29,10 @@ int main(int argc, char *argv[])
 	{
 		cout << filename << endl;
 		myfile.close();
-		//		TraceManager(4, Container::BOX, true).traceScene(filename);
-		Data3D v1 = Point3(1, 1, 1);
-		Data3D v2 = Point3(2, 2, 2);
-		v2 += v1;
-		Data3D v3 = Point3(2, 2, 2);
+		TraceManager tracer(core, binType, isAAC);
+		tracer.traceScene(filename);
+
+
 	}
 	else
 	{

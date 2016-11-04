@@ -13,7 +13,7 @@ public:
 		v[0] = x;
 		v[1] = y;
 		v[2] = z;
-		v[3] = 0;
+		v[3] = 1;
 	}
 	Point3() : Point3(0, 0, 0) {}
 	Point3(float* params) :Point3(params[0], params[1], params[2]) {}

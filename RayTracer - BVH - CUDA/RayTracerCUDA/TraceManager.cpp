@@ -25,7 +25,7 @@ void TraceManager::initScene(std::string sceneFile) {
 	outFileName = scene.outFileName;
 
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "parsing scene file: " << duration << " s" << std::endl;
+	std::cout << "parsing scene file\t: " << duration << " s" << std::endl;
 }
 
 void TraceManager::buildBVH() {
@@ -37,7 +37,7 @@ void TraceManager::buildBVH() {
 
 
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "bulding bvh: " << duration << " s" << std::endl;
+	std::cout << "bulding bvh\t: " << duration << " s" << std::endl;
 }
 
 void TraceManager::trace() {
@@ -65,7 +65,7 @@ void TraceManager::trace() {
 		threads[i].join();
 	}
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "tracing scene: " << duration << " s" << std::endl;
+	std::cout << "tracing scene\t: " << duration << " s" << std::endl;
 }
 
 void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
@@ -103,7 +103,7 @@ void TraceManager::mergeAndSaveImage() {
 	FreeImage_FlipVertical(image);
 	FreeImage_Save(FIF_BMP, image, outFileName.c_str(), 0);
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "image saved: " << duration << " s" << std::endl;
+	std::cout << "image saved\t: " << outFileName << std::endl;
 }
 
 RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
@@ -124,8 +124,20 @@ TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC)
 
 void TraceManager::traceScene(std::string sceneFile)
 {
-	initScene(sceneFile);
 
+	std::cout << "Scene file\t: " << sceneFile << std::endl;
+	std::cout << "#thread(s)\t: " << tn <<std::endl;
+	std::cout << "Using AAC?\t: " << isAAC << std::endl;
+	std::cout << "Bin type\t: " << binType << std::endl;
+	std::cout << "================================" << std::endl;
+
+	initScene(sceneFile);
+	std::cout << "================================"<< std::endl;
+	std::cout << "image size\t: " << ViewPlane::Instance()->pixelW << " x " << ViewPlane::Instance()->pixelH << std::endl;
+	std::cout << "#object(s)\t: " << scene.geometries.size() << std::endl;
+	std::cout << "#light(s)\t: " << scene.lights.size() << std::endl;
+	std::cout << "max depth\t: " << scene.maxDepth << std::endl;
+	std::cout << "================================" << std::endl;
 	buildBVH();
 
 	FreeImage_Initialise();

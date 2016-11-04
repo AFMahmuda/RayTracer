@@ -114,10 +114,7 @@
     <ClCompile Include="RayManager.cpp">
       <Filter>Tracer</Filter>
     </ClCompile>
-    <ClCompile Include="Program.cu" />
-    <ClCompile Include="Data3D.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
+    <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -210,8 +207,15 @@
     <ClInclude Include="Data3D.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="MyCUDAHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Data3D.cpp">
+      <Filter>Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="MyCUDAHandler.cpp" />
   </ItemGroup>
 </Project>

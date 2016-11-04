@@ -170,11 +170,12 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="ContainerFactory.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Geometry.cpp" />
-    <CudaCompile Include="Data3D.cu" />
+    <CudaCompile Include="Data3D.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyColor.cpp" />
+    <CudaCompile Include="MyCUDAHandler.cpp" />
     <ClCompile Include="Point3.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Program.cpp">
@@ -213,6 +214,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyColor.h" />
+    <ClInclude Include="MyCUDAHandler.h" />
     <ClInclude Include="Point3.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RadixSort.h" />
