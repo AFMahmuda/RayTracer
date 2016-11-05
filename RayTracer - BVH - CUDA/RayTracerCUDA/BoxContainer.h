@@ -1,6 +1,5 @@
 #pragma once
 #include "Container.h"
-#include"Point3.h"
 #include"Sphere.h"
 #include"Triangle.h"
 
@@ -9,11 +8,11 @@ class BoxContainer :
 	public Container
 {
 public:
-	Data3D min = Point3(INFINITY, INFINITY, INFINITY);
-	Data3D max = Point3(-INFINITY, -INFINITY, -INFINITY);
+	Data3D min = Data3D(INFINITY, INFINITY, INFINITY,1);
+	Data3D max = Data3D(-INFINITY, -INFINITY, -INFINITY,1);
 	BoxContainer(std::shared_ptr<Geometry> item);
 	void setMinMax(Data3D* points, int n);
-	BoxContainer(std::shared_ptr<BoxContainer> a, std::shared_ptr<BoxContainer>& b);
+	BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<BoxContainer>& b);
 
 	BoxContainer();
 	~BoxContainer();

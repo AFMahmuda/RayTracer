@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
 	{
 		cout << filename << endl;
 		myfile.close();
-			TraceManager tracer(core, binType, isAAC);
-			tracer.traceScene(filename);
+		TraceManager tracer(core, binType, isAAC);
+		tracer.traceScene(filename);
 	}
 	else
 	{

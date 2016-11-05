@@ -48,7 +48,7 @@ private:
 
 	int size[2];//pixel dimension
 	std::vector<std::shared_ptr<Transform>> transforms;
-	std::vector<std::shared_ptr<Point3>> vertices;
+	std::vector<std::shared_ptr<Data3D>> vertices;
 	MyColor ambient;
 	Material material;
 	Attenuation att;

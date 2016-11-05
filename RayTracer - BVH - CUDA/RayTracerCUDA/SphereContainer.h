@@ -1,6 +1,5 @@
 #pragma once
 #include"Container.h"
-#include"Point3.h"
 #include"Sphere.h"
 #include"Triangle.h"
 

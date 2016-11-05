@@ -1,4 +1,9 @@
 #include "ViewPlane.h"
+//#define _USE_MATH_DEFINES
+//#include <cmath>  
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 bool ViewPlane::flag = false;
 ViewPlane * ViewPlane::instance = nullptr;
@@ -21,29 +26,31 @@ void ViewPlane::Precalculate()
 	unitDown = ((Camera::Instance()->V * (worldH / (float)pixelH)) * -1.f);
 }
 
-Point3 & ViewPlane::getUpperLeft()
+Data3D & ViewPlane::getUpperLeft()
 {
-	Point3 c = Camera::Instance()->pos;
-	c = c + Point3(Camera::Instance()->W);
+	Data3D c = Camera::Instance()->pos;
+	c = c + (Camera::Instance()->W);
 	pos = c;
-	Point3 res =
+	Data3D res =
 		c
-		+ Point3(Camera::Instance()->U * (worldW * .5f))
-		+ Point3(Camera::Instance()->V * (worldH * .5f));
-
+		+ (Camera::Instance()->U * (worldW * .5f))
+		+ (Camera::Instance()->V * (worldH * .5f));
+	res[3] = 1;
 	return res;
 }
 
-Point3 ViewPlane::getNewLocation(int col, int row)
+Data3D ViewPlane::getNewLocation(int col, int row)
 {
-	Point3 uleft = upperLeft;
-	Vec3 uRight = unitRight;
-	Vec3 uDown = unitDown;
-
-	return	Point3(uleft +
+	Data3D uleft = upperLeft;
+	Data3D uRight = unitRight;
+	Data3D uDown = unitDown;
+	Data3D res =
+		uleft +
 		uRight * (col + .5f)
-		+ uDown * (row + .5f))
+		+ uDown * (row + .5f)
 		;
+	res[3] = 1;
+	return res;
 
 }
 

@@ -11,8 +11,8 @@ BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
 	{
 		Sphere* sphere = (Sphere*)item.get();
 
-		min = (sphere->c + Point3());
-		max = (sphere->c + Point3());
+		min = (sphere->c + Data3D(0, 0, 0, 1));
+		max = (sphere->c + Data3D(0, 0, 0, 1));
 		for (int i = 0; i < 3; i++)
 		{
 			min[i] -= sphere->r;
@@ -21,14 +21,14 @@ BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
 
 		Data3D p[8];
 
-		p[0] = (Point3(min[0], min[1], min[2]));
-		p[1] = (Point3(min[0], min[1], max[2]));
-		p[2] = (Point3(min[0], max[1], min[2]));
-		p[3] = (Point3(min[0], max[1], max[2]));
-		p[4] = (Point3(max[0], min[1], min[2]));
-		p[5] = (Point3(max[0], min[1], max[2]));
-		p[6] = (Point3(max[0], max[1], min[2]));
-		p[7] = (Point3(max[0], max[1], max[2]));
+		p[0] = (Data3D(min[0], min[1], min[2], 1));
+		p[1] = (Data3D(min[0], min[1], max[2], 1));
+		p[2] = (Data3D(min[0], max[1], min[2], 1));
+		p[3] = (Data3D(min[0], max[1], max[2], 1));
+		p[4] = (Data3D(max[0], min[1], min[2], 1));
+		p[5] = (Data3D(max[0], min[1], max[2], 1));
+		p[6] = (Data3D(max[0], max[1], min[2], 1));
+		p[7] = (Data3D(max[0], max[1], max[2], 1));
 
 
 		for (int i = 0; i < 8; i++)
@@ -52,8 +52,8 @@ BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
 
 void BoxContainer::setMinMax(Data3D * points, int n)
 {
-	min = Point3(INFINITY, INFINITY, INFINITY);
-	max = Point3(-INFINITY, -INFINITY, -INFINITY);
+	min = Data3D(INFINITY, INFINITY, INFINITY,1);
+	max = Data3D(-INFINITY, -INFINITY, -INFINITY,1);
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < 3; j++)
 		{
@@ -62,7 +62,7 @@ void BoxContainer::setMinMax(Data3D * points, int n)
 		}
 }
 
-BoxContainer::BoxContainer(std::shared_ptr<BoxContainer> a, std::shared_ptr<BoxContainer>& b)
+BoxContainer::BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<BoxContainer>& b)
 {
 	isLeaf = false;
 	type = TYPE::BOX;
@@ -95,7 +95,7 @@ bool BoxContainer::isIntersecting(Ray& ray)
 	float tmin = -INFINITY, tmax = INFINITY;
 
 	for (int i = 0; i < 3; i++)
-	{		
+	{
 		if (ray.direction[i] != 0.f)
 		{
 			float invTemp = 1.f / ray.direction[i];

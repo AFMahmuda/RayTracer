@@ -1,7 +1,6 @@
 #pragma once
 #include "Transform.h"
-#define _USE_MATH_DEFINES
-#include <cmath>
+
 
 class Rotation :
 	public Transform

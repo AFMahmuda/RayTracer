@@ -11,19 +11,19 @@ SphereContainer::SphereContainer(std::shared_ptr<Geometry> item) {
 	if (item->type == Geometry::SPHERE)
 	{
 
-		c = ((Sphere*)item.get())->c + Point3();
+		c = ((Sphere*)item.get())->c + Data3D(0,0,0,1);
 		r = ((Sphere*)item.get())->r + 0.f;
 
 	}
 	else //if (item.GetType() == typeof(Triangle))
 	{
 		Triangle& tri = *(Triangle*)item.get();
-		Vec3 ab = Vec3(tri.a, tri.b);
-		Vec3 bc = Vec3(tri.b, tri.c);
-		Vec3 ac = Vec3(tri.a, tri.c);
+		Data3D ab(tri.a, tri.b);
+		Data3D bc(tri.b, tri.c);
+		Data3D ac (tri.a, tri.c);
 
 		float d = 2 * ((ab * ab) * (ac * ac) - (ab * ac) * (ab * ac));
-		Point3 reference = tri.a;
+		Data3D reference = tri.a;
 		float s = ((ab * ab) * (ac * ac) - (ac * ac) * (ab * ac)) / d;
 		float t = ((ac * ac) * (ab * ab) - (ab * ab) * (ab * ac)) / d;
 		if (s <= 0)
@@ -40,11 +40,11 @@ SphereContainer::SphereContainer(std::shared_ptr<Geometry> item) {
 			reference = tri.b;
 		}
 		else c = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
-		r = sqrtf(Vec3(reference, tri.c) * Vec3(reference, tri.c));
+		r = sqrtf(Data3D(reference, tri.c) * Data3D(reference, tri.c));
 	}
 
 	c = Matrix::Mul44x41(item->getTrans().matrix, c);
-	r = Vec3(Matrix::Mul44x41(item->getTrans().matrix, Vec3(r, 0, 0))).Magnitude();
+	r = Matrix::Mul44x41(item->getTrans().matrix, Data3D(r, 0, 0)).Magnitude();
 
 }
 
@@ -55,20 +55,20 @@ SphereContainer::SphereContainer(std::shared_ptr<SphereContainer> a, std::shared
 	lChild = a;
 	rChild = b;
 
-	Vec3 aToB = Vec3(a->c, b->c);
+	Data3D aToB (a->c, b->c);
 	float aToBLength = aToB.Magnitude();
 
 	if (aToB.Magnitude() == 0)
 	{
 		r = std::max(a->r, b->r);
-		c = a->c + Point3();
+		c = a->c + Data3D(0,0,0,1);
 	}
 
 	else if (aToBLength + a->r + b->r < a->r * 2.f ||
 		aToB.Magnitude() + a->r + b->r < b->r * 2.f)
 	{
 		r = std::max(a->r, b->r);
-		c = (a->r > b->r) ? a->c + Point3() : b->c + Point3();
+		c = (a->r > b->r) ? a->c + Data3D(0,0,0,1) : b->c + Data3D(0,0,0,1);
 	}
 
 	else
@@ -77,7 +77,7 @@ SphereContainer::SphereContainer(std::shared_ptr<SphereContainer> a, std::shared
 
 		aToB = aToB.Normalize();
 		aToB = aToB * (r - a->r);
-		c = (a->c) + Point3(aToB[0], aToB[1], aToB[2]);
+		c = (a->c) + Data3D(aToB[0], aToB[1], aToB[2],1);
 	}
 
 	area = 4.f * (float)M_PI * (float)std::powf(r, 2);
@@ -89,7 +89,7 @@ SphereContainer::~SphereContainer()
 
 bool SphereContainer::isIntersecting(Ray& ray)
 {
-	Vec3 rayToSphere = Vec3(ray.start, this->c);
+	Data3D rayToSphere (ray.start, this->c);
 
 	float a = ray.direction * ray.direction;
 	float b = -2 * (rayToSphere * ray.direction);

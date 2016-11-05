@@ -1,11 +1,8 @@
 #pragma once
-#include"Point3.h"
+#include"Data3D.h"
 #include "Camera.h"
-//#define _USE_MATH_DEFINES
-#include <cmath>
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+
+
 
 class ViewPlane
 {
@@ -31,20 +28,20 @@ public:
 
 	void Init(int width, int height);
 
-	Point3 getNewLocation(int col, int row);
+	Data3D getNewLocation(int col, int row);
 private:
 	static bool flag;
 	static ViewPlane* instance;
 
-	Point3 pos;
-	Point3 upperLeft;
-	Point3 unitRight;
-	Point3 unitDown;
+	Data3D pos;
+	Data3D upperLeft;
+	Data3D unitRight;
+	Data3D unitDown;
 
 
 	void Precalculate();
 
-	Point3 &getUpperLeft();
+	Data3D &getUpperLeft();
 
 	ViewPlane(); // Prevent construction
 	ViewPlane(const ViewPlane&); // Prevent construction by copying

@@ -26,9 +26,11 @@ void Scene::parseCommand(std::string filename)
 		{
 			executeCommand(line);
 		}
-		myfile.close();	
+		myfile.close();
 		vertices.clear();
 		transforms.clear();
+		
+
 	}
 	else std::cout << "Unable to open file";
 }
@@ -94,7 +96,10 @@ void Scene::executeCommand(std::string fullcommand)
 
 		Camera::Instance()->Init(&param[0]);
 		ViewPlane::Instance()->Init(size[0], size[1]);
-
+		ViewPlane::Instance()->getNewLocation(0, 0).show();	std::cout << std::endl;
+		Camera::Instance()->U.show();	std::cout << std::endl;
+		Camera::Instance()->V.show();	std::cout << std::endl;
+		Camera::Instance()->W.show();	std::cout << std::endl;
 		return;
 	}
 	if (command.compare("maxdepth") == 0)
@@ -111,7 +116,7 @@ void Scene::executeCommand(std::string fullcommand)
 	}
 	if (command.compare("vertex") == 0)
 	{
-		vertices.push_back(std::make_shared<Point3>(Point3(&param[0])));
+		vertices.push_back(std::make_shared<Data3D>(&param[0], 1));
 		return;
 	}
 
@@ -214,12 +219,12 @@ void Scene::executeCommand(std::string fullcommand)
 	}
 	if (command.compare("directional") == 0)
 	{
-		lights.push_back(std::make_shared<DirectionalLight>(DirectionalLight(new Vec3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))));
+		lights.push_back(std::make_shared<DirectionalLight>(new Data3D(param[0], param[1], param[2], 0), new MyColor(param[3], param[4], param[5])));
 		return;
 	}
 	if (command.compare("point") == 0)
 	{
-		lights.push_back(std::make_shared<PointLight>(PointLight(new Point3(param[0], param[1], param[2]), new MyColor(param[3], param[4], param[5]))));
+		lights.push_back(std::make_shared<PointLight>(new Data3D(param[0], param[1], param[2], 1), new MyColor(param[3], param[4], param[5])));
 		return;
 	}
 }
@@ -249,14 +254,13 @@ Sphere Scene::createSphere(float * param)
 
 Triangle Scene::createTriangle(float * param)
 {
-	Point3 p[3];
+	Data3D p[3];
 	for (size_t i = 0; i < 3; i++)
 	{
-		p[i] = Point3(*vertices[(int)param[i]]);
-		p[i] = Matrix::Mul44x41(Matrix(transforms.back()->matrix), p[i]);
+		p[i] = *vertices[(int)param[i]];
+		p[i] = (Matrix::Mul44x41(transforms.back()->matrix, p[i]));
 		/*p[i].h = 1;*/
 	}
-
 	Triangle tri = Triangle(p[0], p[1], p[2]);
 	applyMaterial(tri);
 	applyAmbient(tri);

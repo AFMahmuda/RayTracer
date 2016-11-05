@@ -1,17 +1,15 @@
 #pragma once
 #include"MyColor.h"
 #include"Ray.h"
-#include"Vec3.h"
-#include"Point3.h"
 #include"Container.h"
 #include"Attenuation.h"
 class Light
 {
 public:
 	MyColor * color;
-	virtual Vec3 getPointToLight(const Point3& point) = 0;
-	virtual bool isEffective(Point3& point, Container& bvh) = 0;
-	virtual float getAttValue(Point3& point, Attenuation&  attenuation) = 0;
+	virtual Data3D getPointToLight(const Data3D& point) = 0;
+	virtual bool isEffective(Data3D& point, Container& bvh) = 0;
+	virtual float getAttValue(Data3D& point, Attenuation&  attenuation) = 0;
 	Light();
 	~Light();
 };

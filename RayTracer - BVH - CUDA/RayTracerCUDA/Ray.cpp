@@ -3,19 +3,18 @@
 
 
 void Ray::trans(Transform & transform) {
-	start = Point3(Matrix::Mul44x41(transform.matrix, start));
-	direction = Vec3(Matrix::Mul44x41(transform.matrix, direction)).Normalize();
+	start = (Matrix::Mul44x41(transform.matrix, start));
+	direction = Data3D(Matrix::Mul44x41(transform.matrix, direction)).Normalize();
 }
 
 void Ray::transInv(Transform & transform) {
-	start = Point3(Matrix::Mul44x41((Matrix)transform.matrix.Inverse(), start));
-	direction = Vec3(Matrix::Mul44x41((Matrix)transform.matrix.Inverse(), direction)).Normalize();
-
+	start = (Matrix::Mul44x41((Matrix)transform.matrix.Inverse(), start));
+	direction = Data3D(Matrix::Mul44x41((Matrix)transform.matrix.Inverse(), direction)).Normalize();
 }
 
 bool Ray::isCloser(float dist, Transform & trans)
 {
-	float newMag = Vec3(Matrix::Mul44x41(trans.matrix, direction * dist)).Magnitude();
+	float newMag = (Matrix::Mul44x41(trans.matrix, direction * dist)).Magnitude();
 	return (newMag < intersectDist) ? true : false;
 }
 

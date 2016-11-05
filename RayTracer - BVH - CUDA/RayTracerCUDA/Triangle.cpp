@@ -2,7 +2,7 @@
 
 
 
-Triangle::Triangle(Point3 a, Point3 b, Point3 c) {
+Triangle::Triangle(Data3D a, Data3D b, Data3D c) {
 	this->a = a;
 	this->b = b;
 	this->c = c;
@@ -17,12 +17,11 @@ void Triangle::preCalculate()
 {
 
 	//for IsInsideTriangle
-	ab = Vec3(a, b);
-	ac = Vec3(a, c);
+	ab = Data3D(a, b);
+	ac = Data3D(a, c);
 
 	//for IsIntersect
-	localNorm = Vec3::Cross(ac, ab);
-	localNorm.Normalize();
+	localNorm = Data3D::Cross(ac, ab).Normalize();
 
 	d_ab_ab = (ab)* (ab);
 	d_ab_ac = (ab)* (ac);
@@ -40,8 +39,8 @@ bool Triangle::isIntersecting(Ray & ray)
 	relative to ray direction
 	*/
 	float distanceToPlane = (
-		(Vec3(a) * localNorm) -
-		(Vec3(ray.start) * localNorm))
+		(a * localNorm) -
+		(ray.start * localNorm))
 		/ (ray.direction * localNorm);
 	/*
 	dist < 0 = behind cam
@@ -50,14 +49,14 @@ bool Triangle::isIntersecting(Ray & ray)
 		if (ray.isCloser(distanceToPlane, trans))
 			if (IsInsideTriangle(ray.start + (ray.direction * distanceToPlane)))
 			{
-				ray.intersectDist = Vec3(Matrix::Mul44x41(trans.matrix, ray.direction * distanceToPlane)).Magnitude();
+				ray.intersectDist = Matrix::Mul44x41(trans.matrix, ray.direction * distanceToPlane).Magnitude();
 				return true;
 			}
 	return false;
 }
 
-bool Triangle::IsInsideTriangle(Point3 point) {
-	Vec3 ap(point - a);
+bool Triangle::IsInsideTriangle(Data3D point) {
+	Data3D ap(point - a);
 
 	d_ab_ap = ab * ap;
 	d_ac_ap = ac * ap;
@@ -68,9 +67,9 @@ bool Triangle::IsInsideTriangle(Point3 point) {
 	return (u >= 0) && (v >= 0) && (u + v <= 1);
 }
 
-Vec3 Triangle::getNormal(Point3 & point)
+Data3D Triangle::getNormal(Data3D & point)
 {
-	Vec3  res = (Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), localNorm));
+	Data3D  res = (Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), localNorm));
 	res = res.Normalize();
 	return res;
 }
@@ -88,7 +87,7 @@ Triangle::~Triangle()
 
 void Triangle::updatePos()
 {
-	Point3 temp = (a + b + c)* (.33f);
+	Data3D temp = (a + b + c)* (.33f);
 	pos = Matrix::Mul44x41(trans.matrix, temp);
 	pos[1] = (pos[0] / 100.f + .5f);
 	pos[1] = (pos[1] / 100.f + .5f);

@@ -11,7 +11,7 @@ DirectionalLight::~DirectionalLight()
 {
 }
 
-bool DirectionalLight::isEffective(Point3 & point, Container & bvh)
+bool DirectionalLight::isEffective(Data3D & point, Container & bvh)
 {
 	Ray shadowRay = Ray(point, (*dir * -1.f));
 	if (bvh.isIntersecting(shadowRay))
@@ -38,7 +38,7 @@ bool DirectionalLight::isEffective(Point3 & point, Container & bvh)
 	return false;
 }
 
-Vec3 DirectionalLight::getPointToLight(const Point3 & point)
+Data3D DirectionalLight::getPointToLight(const Data3D & point)
 {
-	return Vec3(*dir * -1);
+	return Data3D(*dir * -1);
 }

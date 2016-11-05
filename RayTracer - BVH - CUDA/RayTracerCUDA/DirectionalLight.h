@@ -4,9 +4,9 @@ class DirectionalLight :
 	public Light
 {
 public:
-	Vec3 * dir;
+	Data3D * dir;
 	DirectionalLight();
-	DirectionalLight(Vec3 * dir, MyColor * color) {
+	DirectionalLight(Data3D * dir, MyColor * color) {
 		this->color = color;
 		this->dir = dir;
 	}
@@ -16,9 +16,9 @@ public:
 	~DirectionalLight();
 
 	// Inherited via Light
-	virtual bool isEffective(Point3 & point, Container & bvh) override;
-	virtual Vec3 getPointToLight(const Point3 & point) override;
-	virtual float getAttValue(Point3& point, Attenuation& att) override { return 1; }
+	virtual bool isEffective(Data3D & point, Container & bvh) override;
+	virtual Data3D getPointToLight(const Data3D & point) override;
+	virtual float getAttValue(Data3D& point, Attenuation& att) override { return 1; }
 
 };
 

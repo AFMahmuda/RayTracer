@@ -176,7 +176,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyColor.cpp" />
     <CudaCompile Include="MyCUDAHandler.cpp" />
-    <ClCompile Include="Point3.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Program.cpp">
       <FileType>CppCode</FileType>
@@ -194,7 +193,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Translation.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Utils.cpp" />
-    <ClCompile Include="Vec3.cpp" />
     <ClCompile Include="ViewPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +213,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyColor.h" />
     <ClInclude Include="MyCUDAHandler.h" />
-    <ClInclude Include="Point3.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="RadixSort.h" />
     <ClInclude Include="Ray.h" />
@@ -230,7 +227,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Translation.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Vec3.h" />
     <ClInclude Include="ViewPlane.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
