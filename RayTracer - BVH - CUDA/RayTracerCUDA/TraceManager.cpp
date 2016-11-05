@@ -4,10 +4,6 @@
 #include <thread>
 
 void TraceManager::initScene(std::string sceneFile) {
-	std::clock_t start = std::clock();
-	double duration;
-
-
 	scene = Scene(sceneFile);
 
 	//precalculate w and h measurements
@@ -23,32 +19,13 @@ void TraceManager::initScene(std::string sceneFile) {
 	wPerSeg = width / horDiv; //width per segmen
 	hPerSeg = height / verDiv; //height per segmen
 	outFileName = scene.outFileName;
-
-	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "parsing scene file\t: " << duration << " s" << std::endl;
 }
 
 void TraceManager::buildBVH() {
-	std::clock_t start = std::clock();
-	double duration;
-
-
 	BVHBuilder(binType, isAAC).BuildBVH(scene);
-
-
-	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "bulding bvh\t: " << duration << " s" << std::endl;
 }
 
 void TraceManager::trace() {
-	std::clock_t start = std::clock();
-	double duration;
-	//DateTime start = DateTime.Now;
-	//Console.WriteLine("Tracing...Please Wait...");
-	//for (int i = 0; i < tn * 5; i++) Console.Write("-");
-	//Console.WriteLine();
-
-
 	std::vector<std::thread> threads;
 	int cnt = 0;
 	image = FreeImage_Allocate(width, height, 24);
@@ -64,31 +41,27 @@ void TraceManager::trace() {
 	{
 		threads[i].join();
 	}
-	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "tracing scene\t: " << duration << " s" << std::endl;
 }
 
 void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
 {
+	RayManager& rayManager = RayManager();
+	Ray ray;
+	Point3 pixPosition;
+	RGBQUAD color;
 	for (int currRow = rowStart; currRow < rowEnd; currRow++)
 	{
 		for (int currCol = colStart; currCol < colEnd; currCol++)
 		{
-			Ray ray = Ray();
-			Point3 pixPosition = ViewPlane::Instance()->getNewLocation(currCol, currRow);
+			ray = Ray();
+			pixPosition = ViewPlane::Instance()->getNewLocation(currCol, currRow);
 			ray.start = Camera::Instance()->pos;
 			ray.direction = Vec3(ray.start, pixPosition).Normalize();
 
-			RayManager().traceRay(ray, *scene.bin);
-			RGBQUAD color;
-			color.rgbRed = 0;
-			color.rgbGreen = 0;
-			color.rgbBlue = 0;
+			rayManager.traceRay(ray, *scene.bin);
 
-			if (ray.intersectWith != nullptr) {
-				MyColor& col = RayManager().getColor(ray, scene, scene.maxDepth);
-				color = MyColToRGBQUAD(col);
-			}
+			MyColor& col = RayManager().getColor(ray, scene, scene.maxDepth);
+			color = MyColToRGBQUAD(col);
 
 			FreeImage_SetPixelColor(image, currCol, currRow, &color);
 		}
@@ -97,13 +70,8 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 
 
 void TraceManager::mergeAndSaveImage() {
-	std::clock_t start = std::clock();
-	double duration;
-
 	FreeImage_FlipVertical(image);
 	FreeImage_Save(FIF_BMP, image, outFileName.c_str(), 0);
-	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "image saved\t: " << outFileName << std::endl;
 }
 
 RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
@@ -124,28 +92,43 @@ TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC)
 
 void TraceManager::traceScene(std::string sceneFile)
 {
-
+	std::clock_t start;
+	double duration;
 	std::cout << "Scene file\t: " << sceneFile << std::endl;
-	std::cout << "#thread(s)\t: " << tn <<std::endl;
+	std::cout << "#thread(s)\t: " << tn << std::endl;
 	std::cout << "Using AAC?\t: " << isAAC << std::endl;
 	std::cout << "Bin type\t: " << binType << std::endl;
 	std::cout << "================================" << std::endl;
-
+//	system("pause");
+	std::cout << "parsing file\t: ";
+	start = std::clock();
 	initScene(sceneFile);
-	std::cout << "================================"<< std::endl;
+	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	std::cout << duration << " s" << std::endl;
+
+	std::cout << "================================" << std::endl;
 	std::cout << "image size\t: " << ViewPlane::Instance()->pixelW << " x " << ViewPlane::Instance()->pixelH << std::endl;
 	std::cout << "#object(s)\t: " << scene.geometries.size() << std::endl;
 	std::cout << "#light(s)\t: " << scene.lights.size() << std::endl;
 	std::cout << "max depth\t: " << scene.maxDepth << std::endl;
 	std::cout << "================================" << std::endl;
+//	system("pause");
+	std::cout << "bulding bvh\t: ";
+	start = std::clock();
 	buildBVH();
-
+	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	std::cout << duration << " s" << std::endl;
+//	system("pause");
+	std::cout << "tracing scene\t: ";
+	start = std::clock();
 	FreeImage_Initialise();
 	trace();
+	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	std::cout << duration << " s" << std::endl;
 
 	mergeAndSaveImage();
 	FreeImage_DeInitialise();
-
+	std::cout << "image saved\t: " << outFileName << std::endl;
 }
 
 TraceManager::~TraceManager()

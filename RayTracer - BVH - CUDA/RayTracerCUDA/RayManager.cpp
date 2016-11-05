@@ -28,7 +28,6 @@ void RayManager::traceRay(Ray & ray, Container & bin)
 		}
 		else
 		{
-
 			//not parallelised
 			traceRay(std::ref(ray), *bin.lChild);
 			traceRay(std::ref(ray), *bin.rChild);
@@ -40,8 +39,6 @@ void RayManager::traceRay(Ray & ray, Container & bin)
 MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 	if (bounce <= 0 || ray.intersectWith == nullptr)
 	{
-		if (ray.type == Ray::REFRACTION || ray.type == Ray::REFRACTION)
-			return MyColor();
 		return MyColor();
 		//return scene.defColor;
 	}
@@ -101,7 +98,7 @@ MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light
 		result +=
 			attenuationValue * (MyColor)(*(light->color)) *
 			((material.diffuse * (pointToLight * normal)) +
-			(material.specular * std::powf(halfAngleToLight * normal, material.shininess)));
+				(material.specular * std::powf(halfAngleToLight * normal, material.shininess)));
 	}
 	return result;
 }

@@ -1,8 +1,5 @@
 #include "Scene.h"
 
-
-
-
 Scene::Scene()
 {
 
@@ -29,7 +26,7 @@ void Scene::parseCommand(std::string filename)
 		{
 			executeCommand(line);
 		}
-		myfile.close();
+		myfile.close();	
 		vertices.clear();
 		transforms.clear();
 	}
