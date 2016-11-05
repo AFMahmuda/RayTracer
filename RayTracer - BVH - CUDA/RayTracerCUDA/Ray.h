@@ -11,7 +11,7 @@
 
 #include"Transform.h"
 
-#include"Data3D.h"
+#include "Vec3.h"
 
 class Geometry;//forward declaration
 class Ray
@@ -22,20 +22,20 @@ public:
 	};
 
 	TYPE type;
-	Data3D start;
-	Data3D direction;
+	vec3 start;
+	vec3 direction;
 	float intersectDist = FLT_MAX;
 	std::shared_ptr< Geometry > intersectWith;
-	Data3D getHitReal() const { return Data3D(start + Data3D(direction * intersectDist)); }
-	Data3D getHitPlus() const { return Data3D(start + Data3D(direction * (intersectDist * 1.01f))); }
-	Data3D getHitMin() const { return Data3D(start + Data3D(direction * (intersectDist * 0.99f))); }
+	vec3 getHitReal() const { return vec3(start + vec3(direction * intersectDist)); }
+	vec3 getHitPlus() const { return vec3(start + vec3(direction * (intersectDist * 1.01f))); }
+	vec3 getHitMin() const { return vec3(start + vec3(direction * (intersectDist * 0.99f))); }
 
 	void trans(Transform& transform);
 	void transInv(Transform& transform);
 	bool isCloser(float dist, Transform& trans);
 
 	Ray();
-	Ray(Data3D start, Data3D dir) :start(start), direction(dir) {}
+	Ray(vec3 start, vec3 dir) :start(start), direction(dir) {}
 	~Ray();
 };
 

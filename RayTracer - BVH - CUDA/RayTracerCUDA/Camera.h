@@ -1,9 +1,5 @@
 #pragma once
-#include"Data3D.h"
-
-//#ifndef M_PI
-//#define M_PI 3.14159265358979323846
-//#endif
+#include "Vec3.h"
 class Camera
 {
 private:
@@ -22,20 +18,20 @@ public:
 		return instance;
 	}
 
-	Data3D U;
-	Data3D V;
-	Data3D W;
+	vec3 U;
+	vec3 V;
+	vec3 W;
 
 	float fov;
 
-	Data3D up;
-	Data3D pos;
-	Data3D lookAt;
+	vec3 up;
+	vec3 pos;
+	vec3 lookAt;
 
 	void Init(float * vals);
-	void Init(Data3D& pos, Data3D& lookAt, Data3D& up, float fov);
+	void Init(vec3& pos, vec3& lookAt, vec3& up, float fov);
 
-	Data3D& CameraViewPosition();
+	vec3& CameraViewPosition();
 
 protected:
 

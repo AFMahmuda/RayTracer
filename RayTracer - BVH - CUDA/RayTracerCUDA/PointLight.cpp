@@ -10,10 +10,10 @@ PointLight::~PointLight()
 {
 }
 
-bool PointLight::isEffective(Data3D & point, Container & bvh)
+bool PointLight::isEffective(vec3 & point, Container & bvh)
 {
-	Data3D pointToLight = getPointToLight(point);
-	Data3D dir = pointToLight;
+	vec3 pointToLight = getPointToLight(point);
+	vec3 dir = pointToLight;
 	dir = dir.Normalize();
 	Ray shadowRay(point, dir);
 
@@ -39,13 +39,13 @@ bool PointLight::isEffective(Data3D & point, Container & bvh)
 	return true;
 }
 
-float PointLight::getAttValue(Data3D & point, Attenuation & att)
+float PointLight::getAttValue(vec3 & point, Attenuation & att)
 {
-	float d = getPointToLight(Data3D(point)).Magnitude();
+	float d = getPointToLight(vec3(point)).Magnitude();
 	return 1.f / (att.cons + (att.line * d) + (att.line * d * d));
 }
 
-Data3D PointLight::getPointToLight(const Data3D & point)
+vec3 PointLight::getPointToLight(const vec3 & point)
 {
-	return Data3D(point, (*pos));
+	return vec3(point, (*pos));
 }

@@ -4,9 +4,9 @@ class PointLight :
 	public Light
 {
 public:
-	Data3D * pos;
+	vec3 * pos;
 	PointLight();
-	PointLight(Data3D * dir, MyColor * color) {
+	PointLight(vec3 * dir, MyColor * color) {
 		this->color = color;
 		this->pos = dir;
 	}
@@ -14,8 +14,8 @@ public:
 	~PointLight();
 
 	// Inherited via Light
-	virtual bool isEffective(Data3D & point, Container & bvh) override;
-	virtual Data3D getPointToLight(const Data3D & point) override;
-	virtual float getAttValue(Data3D & point, Attenuation & attenuation) override;
+	virtual bool isEffective(vec3 & point, Container & bvh) override;
+	virtual vec3 getPointToLight(const vec3 & point) override;
+	virtual float getAttValue(vec3 & point, Attenuation & attenuation) override;
 };
 

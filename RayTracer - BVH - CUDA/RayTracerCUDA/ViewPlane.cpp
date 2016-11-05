@@ -26,12 +26,12 @@ void ViewPlane::Precalculate()
 	unitDown = ((Camera::Instance()->V * (worldH / (float)pixelH)) * -1.f);
 }
 
-Data3D & ViewPlane::getUpperLeft()
+vec3 & ViewPlane::getUpperLeft()
 {
-	Data3D c = Camera::Instance()->pos;
+	vec3 c = Camera::Instance()->pos;
 	c = c + (Camera::Instance()->W);
 	pos = c;
-	Data3D res =
+	vec3 res =
 		c
 		+ (Camera::Instance()->U * (worldW * .5f))
 		+ (Camera::Instance()->V * (worldH * .5f));
@@ -39,12 +39,12 @@ Data3D & ViewPlane::getUpperLeft()
 	return res;
 }
 
-Data3D ViewPlane::getNewLocation(int col, int row)
+vec3 ViewPlane::getNewLocation(int col, int row)
 {
-	Data3D uleft = upperLeft;
-	Data3D uRight = unitRight;
-	Data3D uDown = unitDown;
-	Data3D res =
+	vec3 uleft = upperLeft;
+	vec3 uRight = unitRight;
+	vec3 uDown = unitDown;
+	vec3 res =
 		uleft +
 		uRight * (col + .5f)
 		+ uDown * (row + .5f)

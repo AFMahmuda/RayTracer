@@ -2,7 +2,7 @@
 
 
 
-Triangle::Triangle(Data3D a, Data3D b, Data3D c) {
+Triangle::Triangle(vec3 a, vec3 b, vec3 c) {
 	this->a = a;
 	this->b = b;
 	this->c = c;
@@ -17,11 +17,11 @@ void Triangle::preCalculate()
 {
 
 	//for IsInsideTriangle
-	ab = Data3D(a, b);
-	ac = Data3D(a, c);
+	ab = vec3(a, b);
+	ac = vec3(a, c);
 
 	//for IsIntersect
-	localNorm = Data3D::Cross(ac, ab).Normalize();
+	localNorm = vec3::Cross(ac, ab).Normalize();
 
 	d_ab_ab = (ab)* (ab);
 	d_ab_ac = (ab)* (ac);
@@ -55,8 +55,8 @@ bool Triangle::isIntersecting(Ray & ray)
 	return false;
 }
 
-bool Triangle::IsInsideTriangle(Data3D point) {
-	Data3D ap(point - a);
+bool Triangle::IsInsideTriangle(vec3 point) {
+	vec3 ap(point - a);
 
 	d_ab_ap = ab * ap;
 	d_ac_ap = ac * ap;
@@ -67,9 +67,9 @@ bool Triangle::IsInsideTriangle(Data3D point) {
 	return (u >= 0) && (v >= 0) && (u + v <= 1);
 }
 
-Data3D Triangle::getNormal(Data3D & point)
+vec3 Triangle::getNormal(vec3 & point)
 {
-	Data3D  res = (Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), localNorm));
+	vec3  res = (Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), localNorm));
 	res = res.Normalize();
 	return res;
 }
@@ -87,7 +87,7 @@ Triangle::~Triangle()
 
 void Triangle::updatePos()
 {
-	Data3D temp = (a + b + c)* (.33f);
+	vec3 temp = (a + b + c)* (.33f);
 	pos = Matrix::Mul44x41(trans.matrix, temp);
 	pos[1] = (pos[0] / 100.f + .5f);
 	pos[1] = (pos[1] / 100.f + .5f);

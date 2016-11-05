@@ -5,7 +5,7 @@
 #include<iostream>
 
 
-#include"Data3D.h"
+#include "Vec3.h"
 #include"Transform.h"
 #include"Material.h"
 #include"Translation.h"
@@ -19,7 +19,7 @@ protected:
 	bool hasMorton = false;
 	unsigned int mortonCode;
 	Transform trans;
-	Data3D pos;
+	vec3 pos;
 
 public:
 
@@ -34,7 +34,7 @@ public:
 
 	virtual void updatePos() = 0;
 	virtual bool isIntersecting(Ray& ray) = 0;
-	virtual Data3D getNormal(Data3D& point) = 0;
+	virtual vec3 getNormal(vec3& point) = 0;
 
 
 	unsigned int getMortonPos();

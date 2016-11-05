@@ -11,24 +11,24 @@ BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
 	{
 		Sphere* sphere = (Sphere*)item.get();
 
-		min = (sphere->c + Data3D(0, 0, 0, 1));
-		max = (sphere->c + Data3D(0, 0, 0, 1));
+		min = (sphere->c + vec3(0, 0, 0, 1));
+		max = (sphere->c + vec3(0, 0, 0, 1));
 		for (int i = 0; i < 3; i++)
 		{
 			min[i] -= sphere->r;
 			max[i] += sphere->r;
 		}
 
-		Data3D p[8];
+		vec3 p[8];
 
-		p[0] = (Data3D(min[0], min[1], min[2], 1));
-		p[1] = (Data3D(min[0], min[1], max[2], 1));
-		p[2] = (Data3D(min[0], max[1], min[2], 1));
-		p[3] = (Data3D(min[0], max[1], max[2], 1));
-		p[4] = (Data3D(max[0], min[1], min[2], 1));
-		p[5] = (Data3D(max[0], min[1], max[2], 1));
-		p[6] = (Data3D(max[0], max[1], min[2], 1));
-		p[7] = (Data3D(max[0], max[1], max[2], 1));
+		p[0] = (vec3(min[0], min[1], min[2], 1));
+		p[1] = (vec3(min[0], min[1], max[2], 1));
+		p[2] = (vec3(min[0], max[1], min[2], 1));
+		p[3] = (vec3(min[0], max[1], max[2], 1));
+		p[4] = (vec3(max[0], min[1], min[2], 1));
+		p[5] = (vec3(max[0], min[1], max[2], 1));
+		p[6] = (vec3(max[0], max[1], min[2], 1));
+		p[7] = (vec3(max[0], max[1], max[2], 1));
 
 
 		for (int i = 0; i < 8; i++)
@@ -42,18 +42,18 @@ BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
 	{
 		Triangle* tri = static_cast<Triangle*>(item.get());
 
-		Data3D a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
-		Data3D b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
-		Data3D c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
+		vec3 a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
+		vec3 b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
+		vec3 c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
 
-		setMinMax(new Data3D[3]{ a, b, c }, 3);
+		setMinMax(new vec3[3]{ a, b, c }, 3);
 	}
 }
 
-void BoxContainer::setMinMax(Data3D * points, int n)
+void BoxContainer::setMinMax(vec3 * points, int n)
 {
-	min = Data3D(INFINITY, INFINITY, INFINITY,1);
-	max = Data3D(-INFINITY, -INFINITY, -INFINITY,1);
+	min = vec3(INFINITY, INFINITY, INFINITY,1);
+	max = vec3(-INFINITY, -INFINITY, -INFINITY,1);
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < 3; j++)
 		{
@@ -75,7 +75,7 @@ BoxContainer::BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<Box
 		min[i] = std::min(a->min[i], b->min[i]);
 		max[i] = std::max(a->max[i], b->max[i]);
 	}
-	Data3D size = max - min;
+	vec3 size = max - min;
 
 	area = 2.f * (size[0] * size[1] + size[0] * size[2] + size[1] * size[2]);
 

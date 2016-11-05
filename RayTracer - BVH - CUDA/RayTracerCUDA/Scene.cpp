@@ -116,7 +116,7 @@ void Scene::executeCommand(std::string fullcommand)
 	}
 	if (command.compare("vertex") == 0)
 	{
-		vertices.push_back(std::make_shared<Data3D>(&param[0], 1));
+		vertices.push_back(std::make_shared<vec3>(&param[0], 1));
 		return;
 	}
 
@@ -219,12 +219,12 @@ void Scene::executeCommand(std::string fullcommand)
 	}
 	if (command.compare("directional") == 0)
 	{
-		lights.push_back(std::make_shared<DirectionalLight>(new Data3D(param[0], param[1], param[2], 0), new MyColor(param[3], param[4], param[5])));
+		lights.push_back(std::make_shared<DirectionalLight>(new vec3(param[0], param[1], param[2], 0), new MyColor(param[3], param[4], param[5])));
 		return;
 	}
 	if (command.compare("point") == 0)
 	{
-		lights.push_back(std::make_shared<PointLight>(new Data3D(param[0], param[1], param[2], 1), new MyColor(param[3], param[4], param[5])));
+		lights.push_back(std::make_shared<PointLight>(new vec3(param[0], param[1], param[2], 1), new MyColor(param[3], param[4], param[5])));
 		return;
 	}
 }
@@ -254,7 +254,7 @@ Sphere Scene::createSphere(float * param)
 
 Triangle Scene::createTriangle(float * param)
 {
-	Data3D p[3];
+	vec3 p[3];
 	for (size_t i = 0; i < 3; i++)
 	{
 		p[i] = *vertices[(int)param[i]];

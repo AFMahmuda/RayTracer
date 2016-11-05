@@ -1,5 +1,5 @@
 #pragma once
-#include "Data3D.h"
+#include "Vec3.h"
 #include <stdio.h>
 
 class Matrix
@@ -43,7 +43,7 @@ public:
 	}
 	Matrix& Identity();
 	Matrix& Inverse();
-	static Data3D Mul44x41(Matrix& m, Data3D& v);
+	static vec3 Mul44x41(Matrix& m, vec3& v);
 	static Matrix Mul44x44(Matrix& matA, Matrix& matB);
 	static Matrix Mul44x41(Matrix& mat44, Matrix& mat41);
 	float& operator()(int r, int c) {

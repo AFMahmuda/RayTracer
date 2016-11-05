@@ -192,18 +192,18 @@
     <ClInclude Include="RayManager.h">
       <Filter>Tracer</Filter>
     </ClInclude>
-    <ClInclude Include="Data3D.h">
+    <ClInclude Include="MyCUDAHandler.h" />
+    <ClInclude Include="Vec3.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="MyCUDAHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="Data3D.cpp">
+    <CudaCompile Include="MyCUDAHandler.cpp" />
+    <CudaCompile Include="Vec3.cpp">
       <Filter>Common</Filter>
     </CudaCompile>
-    <CudaCompile Include="MyCUDAHandler.cpp" />
   </ItemGroup>
 </Project>

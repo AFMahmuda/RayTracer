@@ -1,5 +1,5 @@
 #pragma once
-#include"Data3D.h"
+#include "Vec3.h"
 #include "Camera.h"
 
 
@@ -28,20 +28,20 @@ public:
 
 	void Init(int width, int height);
 
-	Data3D getNewLocation(int col, int row);
+	vec3 getNewLocation(int col, int row);
 private:
 	static bool flag;
 	static ViewPlane* instance;
 
-	Data3D pos;
-	Data3D upperLeft;
-	Data3D unitRight;
-	Data3D unitDown;
+	vec3 pos;
+	vec3 upperLeft;
+	vec3 unitRight;
+	vec3 unitDown;
 
 
 	void Precalculate();
 
-	Data3D &getUpperLeft();
+	vec3 &getUpperLeft();
 
 	ViewPlane(); // Prevent construction
 	ViewPlane(const ViewPlane&); // Prevent construction by copying

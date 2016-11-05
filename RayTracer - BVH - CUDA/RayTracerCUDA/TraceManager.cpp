@@ -47,7 +47,7 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 {
 	RayManager& rayManager = RayManager();
 	Ray ray;
-	Data3D pixPosition;
+	vec3 pixPosition;
 	RGBQUAD color;
 	for (int currRow = rowStart; currRow < rowEnd; currRow++)
 	{
@@ -56,7 +56,7 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 			ray = Ray();
 			pixPosition = ViewPlane::Instance()->getNewLocation(currCol, currRow);
 			ray.start = Camera::Instance()->pos;
-			ray.direction = Data3D(ray.start, pixPosition).Normalize();
+			ray.direction = vec3(ray.start, pixPosition).Normalize();
 
 			rayManager.traceRay(ray, *scene.bin);
 

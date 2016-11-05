@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Sphere::Sphere(Data3D & center, float radius) {
+Sphere::Sphere(vec3 & center, float radius) {
 	c = center;
 	r = radius;
 	trans.matrix = Matrix(4, 4).Identity();
@@ -11,7 +11,7 @@ Sphere::Sphere(Data3D & center, float radius) {
 
 bool Sphere::isIntersecting(Ray & ray)
 {
-	Data3D rayToSphere = Data3D(ray.start, this->c);
+	vec3 rayToSphere = vec3(ray.start, this->c);
 
 	//sphere is behind ray
 	//if (rayToSphere * ray.Direction <= 0)
@@ -44,10 +44,10 @@ bool Sphere::isIntersecting(Ray & ray)
 	return false;
 }
 
-Data3D Sphere::getNormal(Data3D & point)
+vec3 Sphere::getNormal(vec3 & point)
 {
-	Data3D p = Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), point);
-	Data3D res = Data3D(c, p);
+	vec3 p = Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), point);
+	vec3 res = vec3(c, p);
 	res = res.Normalize();
 	return res;
 }
@@ -59,10 +59,10 @@ Sphere::~Sphere()
 void Sphere::updatePos()
 {
 
-	pos = Data3D();
+	pos = vec3();
 	pos = Matrix::Mul44x41(trans.matrix, c);
 
-	Data3D p = pos;
+	vec3 p = pos;
 	p[0] = (p[0] / 100.f) + .5f;
 	p[1] = (p[1] / 100.f) + .5f;
 	p[2] = (p[2] / 100.f) + .5f;

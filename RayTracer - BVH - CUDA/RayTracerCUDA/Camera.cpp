@@ -5,36 +5,36 @@ Camera * Camera::instance = nullptr;
 
 void Camera::Init(float * vals) {
 	Init(
-		Data3D(vals[0], vals[1], vals[2], 1),
-		Data3D(vals[3], vals[4], vals[5], 1),
-		Data3D(vals[6], vals[7], vals[8], 0),
+		vec3(vals[0], vals[1], vals[2], 1),
+		vec3(vals[3], vals[4], vals[5], 1),
+		vec3(vals[6], vals[7], vals[8], 0),
 		vals[9]
 		);
 }
 
-void Camera::Init(Data3D& pos, Data3D& lookAt, Data3D& up, float fov) {
+void Camera::Init(vec3& pos, vec3& lookAt, vec3& up, float fov) {
 	this->pos = pos;
 	this->lookAt = lookAt;
 	this->up = up;
 	this->fov = fov;
 
-	W = Data3D(pos, lookAt).Normalize();
-	U = Data3D::Cross(this->up, W);
+	W = vec3(pos, lookAt).Normalize();
+	U = vec3::Cross(this->up, W);
 	U = U.Normalize();
-	V = Data3D::Cross(W, U);
+	V = vec3::Cross(W, U);
 }
 
-Data3D& Camera::CameraViewPosition()
+vec3& Camera::CameraViewPosition()
 {
 	float	x = pos[0];
 	float	y = pos[1];
 	float	z = pos[2];
-	return Data3D((U * x) + (V * y) + (W * z));
+	return vec3((U * x) + (V * y) + (W * z));
 }
 
 Camera::Camera()
 {
-	Init(Data3D(0, 0, 0, 1), Data3D(0, 0, 0, 1), Data3D(0, 0, 0, 0), 15);
+	Init(vec3(0, 0, 0, 1), vec3(0, 0, 0, 1), vec3(0, 0, 0, 0), 15);
 }
 
 Camera::Camera(const Camera &)

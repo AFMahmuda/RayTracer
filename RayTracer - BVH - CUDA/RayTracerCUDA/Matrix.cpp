@@ -130,13 +130,13 @@ Matrix & Matrix::Inverse() {
 	return Matrix(*inverse);
 }
 
-Data3D Matrix::Mul44x41(Matrix & m, Data3D & v) {
+vec3 Matrix::Mul44x41(Matrix & m, vec3 & v) {
 	float newX = m(0, 0) * v[0] + m(0, 1) * v[1] + m(0, 2) * v[2] + m(0, 3) * v[3];
 	float newY = m(1, 0) * v[0] + m(1, 1) * v[1] + m(1, 2) * v[2] + m(1, 3) * v[3];
 	float newZ = m(2, 0) * v[0] + m(2, 1) * v[1] + m(2, 2) * v[2] + m(2, 3) * v[3];
 
 
-	return Data3D(newX, newY, newZ, v[3]);
+	return vec3(newX, newY, newZ, v[3]);
 
 }
 

@@ -11,8 +11,8 @@ void RayManager::traceRay(Ray & ray, Container & bin)
 	{
 		if (bin.geo != nullptr)
 		{
-			auto tempStart = std::make_shared<Data3D>(ray.start);
-			auto tempDir = std::make_shared<Data3D>(ray.direction);
+			auto tempStart = std::make_shared<vec3>(ray.start);
+			auto tempDir = std::make_shared<vec3>(ray.direction);
 
 			//transform ray according to each shapes transformation
 			ray.transInv(bin.geo->getTrans());
@@ -57,13 +57,13 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 
 MyColor RayManager::getRefl(const Ray & ray, Scene & scene, int bounce) {
 	float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
-	Data3D normal = ray.intersectWith->getNormal(ray.getHitReal());
+	vec3 normal = ray.intersectWith->getNormal(ray.getHitReal());
 	if (cosI < 0)
 	{
 		normal *= -1.f;
 	}
 
-	Data3D newDir = ray.direction + (normal * 2.0f * -(normal * ray.direction));
+	vec3 newDir = ray.direction + (normal * 2.0f * -(normal * ray.direction));
 	Ray reflectRay(ray.getHitMin(), newDir);
 	reflectRay.type = Ray::REFLECTION;
 	traceRay(reflectRay, *scene.bin);
@@ -78,7 +78,7 @@ MyColor RayManager::getRefr(const Ray & ray, Scene & scene, int bounce) {
 MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light>> effectiveLights, Attenuation & attenuation)
 {
 	MyColor result = ray.intersectWith->ambient + ray.intersectWith->mat.emmission;
-	Data3D normal = ray.intersectWith->getNormal(ray.getHitMin());
+	vec3 normal = ray.intersectWith->getNormal(ray.getHitMin());
 	float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
 	if (cosI > 0)
 	{
@@ -88,8 +88,8 @@ MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light
 	for (int i = 0; i < effectiveLights.size(); i++)
 	{
 		std::shared_ptr< Light> light = effectiveLights[i];
-		Data3D pointToLight = light->getPointToLight(ray.getHitMin());
-		Data3D halfAngleToLight = ((ray.direction * -1.0f) + pointToLight);
+		vec3 pointToLight = light->getPointToLight(ray.getHitMin());
+		vec3 halfAngleToLight = ((ray.direction * -1.0f) + pointToLight);
 			halfAngleToLight = halfAngleToLight.Normalize();
 
 		Material material = ray.intersectWith->mat;

@@ -1,6 +1,8 @@
 #pragma once
 #include<vector>
 #include<memory>
+
+#include"Vec3.h"
 #include"Geometry.h"
 #include"Ray.h"
 class Container
