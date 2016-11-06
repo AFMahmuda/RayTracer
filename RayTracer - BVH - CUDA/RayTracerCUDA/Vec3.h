@@ -1,19 +1,18 @@
 #pragma once
-#include<iostream>	
 
 
-class vec3
+class Vec3
 {
 
 public:
 	int n = 3;
 	float* v; //values
 
-	vec3(float * vals);
-	vec3(float * vals, float h) : vec3(new float[4]{ vals[0], vals[1], vals[2], h }) {}
-	vec3(float x, float y, float z, float h = 0) :vec3(new float[4]{ x, y, z, h }) {}
-	vec3(vec3 a, vec3 b) :vec3(b - a) { v[3] = 0; }
-	vec3(const vec3& ori) :vec3(ori.v) {}
+	Vec3(float * vals);
+	Vec3(float x, float y, float z, float h = 0);
+	Vec3(float * vals, float h);
+	Vec3(Vec3 a, Vec3 b);
+	Vec3(const Vec3& ori);
 	float& operator[](int index)
 	{
 		return v[index];
@@ -22,54 +21,47 @@ public:
 	{
 		return v[index];
 	}
-	float Magnitude();
-	vec3 Normalize();
+	float magnitude();
+	Vec3 normalize();
 
-	vec3& operator+=(const vec3& rhs);
-	vec3& operator-=(const vec3& rhs);
-	vec3& operator*=(float rhs);
+	Vec3& operator+=(const Vec3& rhs);
+	Vec3& operator-=(const Vec3& rhs);
+	Vec3& operator*=(float rhs);
+	Vec3& operator=(const Vec3& other);
 
-
-	float operator*(const vec3 & b)
+	float operator*(const Vec3 & b)
 	{
 		return v[0] * b.v[0] + v[1] * b.v[1] + v[2] * b.v[2];
 	}
 
-	static vec3 Cross(const vec3 & a, const vec3 & b);
-	friend vec3 operator+(const vec3 lhs, const vec3& rhs)
+	static Vec3 Cross(const Vec3 & a, const Vec3 & b);
+	friend Vec3 operator+(const Vec3& lhs, const Vec3& rhs)
 	{
-		vec3 res(lhs.v);
+		Vec3 res(lhs.v);
 		res += rhs;
 		return res;
 	}
 
-	friend vec3 operator-(const vec3 lhs, const vec3& rhs)
+	friend Vec3 operator-(const Vec3& lhs, const Vec3& rhs)
 	{
-		vec3 res(lhs.v);
+		Vec3 res(lhs.v);
 		res -= rhs;
 		return res;
 	}
-	friend vec3 operator*(const vec3 lhs, float rhs)
+	friend Vec3 operator*(const Vec3& lhs, float rhs)
 	{
-		vec3 res(lhs.v);
+		Vec3 res(lhs.v);
 		res *= rhs;
 		return res;
 	}
-	friend vec3 operator*(float lhs, const vec3 rhs)
+	friend Vec3 operator*(float lhs, const Vec3& rhs)
 	{
 		return rhs * lhs;
 	}
 
-	vec3() {
-		v = new float[4];
-	}
+	void show();
 
-	void show() {
-		std::cout << v[0] << " " << v[1] << " " << v[2];
-	}
-
-
-	~vec3() {
-	}
+	Vec3();
+	~Vec3();
 };
 

@@ -3,10 +3,10 @@
 class Triangle : public Geometry
 {
 private:
-	vec3 localNorm;
+	Vec3 localNorm;
 
-	vec3 ab;
-	vec3 ac;
+	Vec3 ab;
+	Vec3 ac;
 
 	//dot products
 	float d_ab_ab;
@@ -17,18 +17,18 @@ private:
 
 	float invDenom;
 	void preCalculate();
-	bool IsInsideTriangle(vec3 point);
+	bool IsInsideTriangle(Vec3 point);
 public:
-	vec3 a;
-	vec3 b;
-	vec3 c;
-	Triangle(vec3 a, vec3 b, vec3 c);
+	Vec3 a;
+	Vec3 b;
+	Vec3 c;
+	Triangle(Vec3 a, Vec3 b, Vec3 c);
 	Triangle();
 	~Triangle();
 
 	// Inherited via Geometry
 	virtual void updatePos() override;
 	virtual	bool isIntersecting(Ray & ray) override;
-	virtual vec3 getNormal(vec3 &point) override;
+	virtual Vec3 getNormal(Vec3 &point) override;
 };
 

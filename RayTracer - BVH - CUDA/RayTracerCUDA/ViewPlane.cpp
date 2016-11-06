@@ -1,9 +1,9 @@
 #include "ViewPlane.h"
-//#define _USE_MATH_DEFINES
-//#include <cmath>  
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#define _USE_MATH_DEFINES
+#include <cmath>
+//#ifndef M_PI
+//#define M_PI 3.14159265358979323846
+//#endif
 
 bool ViewPlane::flag = false;
 ViewPlane * ViewPlane::instance = nullptr;
@@ -15,36 +15,35 @@ void ViewPlane::Init(int width, int height)
 	worldH = 2.f * tanf((Camera::Instance()->fov / 2.f) * (float)M_PI / 180.f);
 	worldW = worldH * (pixelW / (float)pixelH);
 
-	Precalculate();
+	precalculate();
 
 }
 
-void ViewPlane::Precalculate()
+void ViewPlane::precalculate()
 {
-	upperLeft = getUpperLeft();
+	setUpperleft();
 	unitRight = ((Camera::Instance()->U * (worldW / (float)pixelW)) * -1.f);
 	unitDown = ((Camera::Instance()->V * (worldH / (float)pixelH)) * -1.f);
 }
 
-vec3 & ViewPlane::getUpperLeft()
+void ViewPlane::setUpperleft()
 {
-	vec3 c = Camera::Instance()->pos;
+	Vec3 c = Camera::Instance()->pos;
 	c = c + (Camera::Instance()->W);
 	pos = c;
-	vec3 res =
+	upperLeft =
 		c
 		+ (Camera::Instance()->U * (worldW * .5f))
 		+ (Camera::Instance()->V * (worldH * .5f));
-	res[3] = 1;
-	return res;
+	upperLeft[3] = 1;
 }
 
-vec3 ViewPlane::getNewLocation(int col, int row)
+Vec3 ViewPlane::getNewLocation(int col, int row)
 {
-	vec3 uleft = upperLeft;
-	vec3 uRight = unitRight;
-	vec3 uDown = unitDown;
-	vec3 res =
+	Vec3 uleft = upperLeft;
+	Vec3 uRight = unitRight;
+	Vec3 uDown = unitDown;
+	Vec3 res =
 		uleft +
 		uRight * (col + .5f)
 		+ uDown * (row + .5f)
@@ -56,7 +55,7 @@ vec3 ViewPlane::getNewLocation(int col, int row)
 
 ViewPlane::ViewPlane()
 {
-	Init(1, 1);
+//	Init(1, 1);
 }
 
 ViewPlane::ViewPlane(const ViewPlane &)

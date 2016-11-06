@@ -8,10 +8,10 @@ class BoxContainer :
 	public Container
 {
 public:
-	vec3 min = vec3(INFINITY, INFINITY, INFINITY,1);
-	vec3 max = vec3(-INFINITY, -INFINITY, -INFINITY,1);
+	Vec3 min = Vec3(INFINITY, INFINITY, INFINITY,1);
+	Vec3 max = Vec3(-INFINITY, -INFINITY, -INFINITY,1);
 	BoxContainer(std::shared_ptr<Geometry> item);
-	void setMinMax(vec3* points, int n);
+	void setMinMax(Vec3* points, int n);
 	BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<BoxContainer>& b);
 
 	BoxContainer();

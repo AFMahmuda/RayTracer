@@ -109,6 +109,9 @@
       <Filter>Tracer</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Vec3.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -192,18 +195,11 @@
     <ClInclude Include="RayManager.h">
       <Filter>Tracer</Filter>
     </ClInclude>
-    <ClInclude Include="MyCUDAHandler.h" />
     <ClInclude Include="Vec3.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="MyCUDAHandler.cpp" />
-    <CudaCompile Include="Vec3.cpp">
-      <Filter>Common</Filter>
-    </CudaCompile>
   </ItemGroup>
 </Project>

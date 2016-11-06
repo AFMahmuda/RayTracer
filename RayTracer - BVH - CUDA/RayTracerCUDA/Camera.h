@@ -18,20 +18,20 @@ public:
 		return instance;
 	}
 
-	vec3 U;
-	vec3 V;
-	vec3 W;
+	Vec3 U;
+	Vec3 V;
+	Vec3 W;
 
 	float fov;
 
-	vec3 up;
-	vec3 pos;
-	vec3 lookAt;
+	Vec3 up;
+	Vec3 pos;
+	Vec3 lookAt;
 
 	void Init(float * vals);
-	void Init(vec3& pos, vec3& lookAt, vec3& up, float fov);
+	void Init(Vec3& pos, Vec3& lookAt, Vec3& up, float fov);
 
-	vec3& CameraViewPosition();
+	Vec3& CameraViewPosition();
 
 protected:
 

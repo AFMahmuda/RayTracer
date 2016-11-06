@@ -4,9 +4,9 @@ class PointLight :
 	public Light
 {
 public:
-	vec3 * pos;
+	Vec3 * pos;
 	PointLight();
-	PointLight(vec3 * dir, MyColor * color) {
+	PointLight(Vec3 * dir, MyColor * color) {
 		this->color = color;
 		this->pos = dir;
 	}
@@ -14,8 +14,8 @@ public:
 	~PointLight();
 
 	// Inherited via Light
-	virtual bool isEffective(vec3 & point, std::shared_ptr<Container> bvh) override;
-	virtual vec3 getPointToLight(const vec3 & point) override; 
-	virtual float getAttValue(vec3 & point, Attenuation & attenuation) override;
+	virtual bool isEffective(Vec3 & point, std::shared_ptr<Container> bvh) override;
+	virtual Vec3 getPointToLight(const Vec3 & point) override; 
+	virtual float getAttValue(Vec3 & point, Attenuation & attenuation) override;
 };
  

@@ -22,20 +22,20 @@ public:
 	};
 
 	TYPE type;
-	vec3 start;
-	vec3 direction;
+	Vec3 start;
+	Vec3 direction;
 	float intersectDist = FLT_MAX;
 	std::shared_ptr< Geometry > intersectWith;
-	vec3 getHitReal() const { return vec3(start + vec3(direction * intersectDist)); }
-	vec3 getHitPlus() const { return vec3(start + vec3(direction * (intersectDist * 1.01f))); }
-	vec3 getHitMin() const { return vec3(start + vec3(direction * (intersectDist * 0.99f))); }
+	Vec3 getHitReal() const { return Vec3(start + Vec3(direction * intersectDist)); }
+	Vec3 getHitPlus() const { return Vec3(start + Vec3(direction * (intersectDist * 1.01f))); }
+	Vec3 getHitMin() const { return Vec3(start + Vec3(direction * (intersectDist * 0.99f))); }
 
 	void trans(Transform& transform);
 	void transInv(Transform& transform);
 	bool isCloser(float dist, Transform& trans);
 
 	Ray();
-	Ray(vec3 start, vec3 dir) :start(start), direction(dir) {}
+	Ray(Vec3 start, Vec3 dir) :start(start), direction(dir) {}
 	~Ray();
 };
 

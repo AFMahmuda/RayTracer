@@ -1,10 +1,9 @@
 #include "Vec3.h"
-#include <cuda_runtime.h>
-#include "cublas_v2.h"
 #include <iostream>
-#include "MyCUDAHandler.h"
 
-vec3& vec3::operator+=(const vec3& rhs) {
+
+
+Vec3& Vec3::operator+=(const Vec3& rhs) {
 
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -13,7 +12,7 @@ vec3& vec3::operator+=(const vec3& rhs) {
 	return *this;
 }
 
-vec3& vec3::operator-=(const vec3& rhs) {
+Vec3& Vec3::operator-=(const Vec3& rhs) {
 
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -24,7 +23,7 @@ vec3& vec3::operator-=(const vec3& rhs) {
 }
 
 
-vec3& vec3::operator*=(float rhs) {
+Vec3& Vec3::operator*=(float rhs) {
 
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -34,28 +33,63 @@ vec3& vec3::operator*=(float rhs) {
 	return *this;
 }
 
-vec3::vec3(float * vals) :vec3()
-{
-	memcpy(v, vals, 4 * sizeof(float));
-}
 
-float vec3::Magnitude()
+float Vec3::magnitude()
 {
 	return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-vec3 vec3::Normalize()
+Vec3 Vec3::normalize()
 {
-	float divMag = 1.f / Magnitude();
+	float divMag = 1.f / magnitude();
 
-	return vec3(v[0] * divMag, v[1] * divMag, v[2] * divMag, 1);
+	return Vec3(v[0] * divMag, v[1] * divMag, v[2] * divMag, 0);
 
 }
 
-vec3 vec3::Cross(const vec3 & a, const vec3 & b)
+Vec3 Vec3::Cross(const Vec3 & a, const Vec3 & b)
 {
 	float newX = a[1] * b[2] - a[2] * b[1];
 	float newY = a[2] * b[0] - a[0] * b[2];
 	float newZ = a[0] * b[1] - a[1] * b[0];
-	return vec3(newX, newY, newZ, 0);
+	return Vec3(newX, newY, newZ, 0);
+}
+
+void Vec3::show() {
+	std::cout << v[0] << " " << v[1] << " " << v[2];
+}
+
+Vec3& Vec3::operator=(const Vec3& other){
+	memcpy(v, other.v, 4 * sizeof(float));
+	return *this;
+}
+Vec3::Vec3(float * vals) :Vec3()
+{
+	memcpy(v, vals, 4 * sizeof(float));
+}
+Vec3::Vec3(const Vec3 & ori) : Vec3() 
+{
+	memcpy(v, ori.v, 4 * sizeof(float));
+}
+
+Vec3::Vec3(float x, float y, float z, float h) : Vec3()
+{
+	v[0] = x; v[1] = y; v[2] = z; v[3] = h;
+}
+
+Vec3::Vec3(float * vals, float h) : Vec3(vals[0], vals[1], vals[2], h)
+{
+}
+Vec3::Vec3(Vec3 a, Vec3 b) : Vec3(b - a)
+{
+	v[3] = 0;
+}
+
+Vec3::Vec3() : v(new float[4]) {
+	v[0] = 0; v[1] = 0; v[2] = 0; v[3] = 0;
+}
+
+Vec3::~Vec3()
+{
+	delete[]v;
 }

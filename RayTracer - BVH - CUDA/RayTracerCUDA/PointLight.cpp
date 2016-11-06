@@ -10,54 +10,48 @@ PointLight::~PointLight()
 {
 }
 
-bool PointLight::isEffective(vec3 & point, std::shared_ptr< Container> bvh)
+bool PointLight::isEffective(Vec3 & point, std::shared_ptr< Container> bvh)
 {
-	vec3 pointToLight = getPointToLight(point);
-	vec3 dir = pointToLight;
-	dir = dir.Normalize();
+	Vec3 pointToLight = getPointToLight(point);
+	Vec3 dir = pointToLight.normalize();
 	Ray shadowRay(point, dir);
 	std::vector<std::shared_ptr< Container>> bins;
-
 	bins.push_back(bvh);
 	while (bins.size() > 0)
 	{
 		std::shared_ptr< Container> currBin = bins.back();
+		bins.pop_back();
 		if (currBin->isIntersecting(shadowRay))
 		{
 			if (currBin->geo != nullptr)
 			{
+				Vec3 tempStart = shadowRay.start;
+				Vec3 tempDir = shadowRay.direction;
 				shadowRay.transInv(currBin->geo->getTrans());
 
 				if (currBin->geo->isIntersecting(shadowRay))
-					if (shadowRay.intersectDist < pointToLight.Magnitude())
+					if (shadowRay.intersectDist < pointToLight.magnitude())
 						return false;
+				shadowRay.start = tempStart;
+				shadowRay.direction = tempDir;
 			}
 			else
 			{
-				//if (!PointLight::isEffective(point, *bvh.lChild))
-				//	return false;
-				//if (!PointLight::isEffective(point, *bvh.rChild))
-				//	return false;
 				bins.push_back(currBin->rChild);
 				bins.push_back(currBin->lChild);
-				std::vector<std::shared_ptr <Container>>::iterator lPos = std::find(bins.begin(), bins.end(), currBin->lChild);
-				std::vector<std::shared_ptr <Container>>::iterator currPos = std::find(bins.begin(), bins.end(), currBin);
-				std::swap(*lPos, *currPos);
-
 			}
 		}
-		bins.pop_back();
 	}
 	return true;
 }
 
-float PointLight::getAttValue(vec3 & point, Attenuation & att)
+float PointLight::getAttValue(Vec3 & point, Attenuation & att)
 {
-	float d = getPointToLight(vec3(point)).Magnitude();
+	float d = getPointToLight(Vec3(point)).magnitude();
 	return 1.f / (att.cons + (att.line * d) + (att.line * d * d));
 }
 
-vec3 PointLight::getPointToLight(const vec3 & point)
+Vec3 PointLight::getPointToLight(const Vec3 & point)
 {
-	return vec3(point, (*pos));
+	return Vec3(point, (*pos));
 }

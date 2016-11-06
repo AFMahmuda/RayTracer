@@ -2,6 +2,8 @@
 #include <ctime>
 #include <iostream>
 #include <thread>
+#include<string>
+
 
 void TraceManager::initScene(std::string sceneFile) {
 	scene = Scene(sceneFile);
@@ -46,24 +48,30 @@ void TraceManager::trace() {
 void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
 {
 	RayManager& rayManager = RayManager();
-	Ray ray;
-	vec3 pixPosition;
+	Ray* ray;
+	Vec3 pixPosition;
 	RGBQUAD color;
 	for (int currRow = rowStart; currRow < rowEnd; currRow++)
 	{
 		for (int currCol = colStart; currCol < colEnd; currCol++)
 		{
-			ray = Ray();
+			ray = new Ray();
+			ray->type = Ray::RAY;
 			pixPosition = ViewPlane::Instance()->getNewLocation(currCol, currRow);
-			ray.start = Camera::Instance()->pos;
-			ray.direction = vec3(ray.start, pixPosition).Normalize();
+			ray->start = Camera::Instance()->pos;
+			ray->direction = Vec3(ray->start, pixPosition).normalize();
 
-			rayManager.traceRay(ray, scene.bin);
+			if (currRow == rowEnd / 2 && currCol == colEnd / 2)
+			{
+				int i = 7;
+			}
+			rayManager.traceRay(*ray, scene.bin);
 
-			MyColor& col = RayManager().getColor(ray, scene, scene.maxDepth);
+			MyColor& col = RayManager().getColor(*ray, scene, scene.maxDepth);
 			color = MyColToRGBQUAD(col);
 
 			FreeImage_SetPixelColor(image, currCol, currRow, &color);
+			delete(ray);
 		}
 	}
 }
@@ -99,7 +107,7 @@ void TraceManager::traceScene(std::string sceneFile)
 	std::cout << "Using AAC?\t: " << isAAC << std::endl;
 	std::cout << "Bin type\t: " << binType << std::endl;
 	std::cout << "================================" << std::endl;
-//	system("pause");
+	//	system("pause");
 	std::cout << "parsing file\t: ";
 	start = std::clock();
 	initScene(sceneFile);
@@ -112,13 +120,13 @@ void TraceManager::traceScene(std::string sceneFile)
 	std::cout << "#light(s)\t: " << scene.lights.size() << std::endl;
 	std::cout << "max depth\t: " << scene.maxDepth << std::endl;
 	std::cout << "================================" << std::endl;
-//	system("pause");
+	//	system("pause");
 	std::cout << "bulding bvh\t: ";
 	start = std::clock();
 	buildBVH();
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	std::cout << duration << " s" << std::endl;
-//	system("pause");
+	//	system("pause");
 	std::cout << "tracing scene\t: ";
 	start = std::clock();
 	FreeImage_Initialise();

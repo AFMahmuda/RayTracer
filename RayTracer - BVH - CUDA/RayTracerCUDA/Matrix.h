@@ -43,7 +43,7 @@ public:
 	}
 	Matrix& Identity();
 	Matrix& Inverse();
-	static vec3 Mul44x41(Matrix& m, vec3& v);
+	static Vec3 Mul44x41(Matrix& m, Vec3& v);
 	static Matrix Mul44x44(Matrix& matA, Matrix& matB);
 	static Matrix Mul44x41(Matrix& mat44, Matrix& mat41);
 	float& operator()(int r, int c) {

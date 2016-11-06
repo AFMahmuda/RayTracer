@@ -19,7 +19,7 @@ protected:
 	bool hasMorton = false;
 	unsigned int mortonCode;
 	Transform trans;
-	vec3 pos;
+	Vec3 pos;
 
 public:
 
@@ -34,7 +34,7 @@ public:
 
 	virtual void updatePos() = 0;
 	virtual bool isIntersecting(Ray& ray) = 0;
-	virtual vec3 getNormal(vec3& point) = 0;
+	virtual Vec3 getNormal(Vec3& point) = 0;
 
 
 	unsigned int getMortonPos();

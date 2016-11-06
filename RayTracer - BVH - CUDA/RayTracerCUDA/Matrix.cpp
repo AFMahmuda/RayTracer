@@ -130,14 +130,12 @@ Matrix & Matrix::Inverse() {
 	return Matrix(*inverse);
 }
 
-vec3 Matrix::Mul44x41(Matrix & m, vec3 & v) {
+Vec3 Matrix::Mul44x41(Matrix & m, Vec3 & v) {
 	float newX = m(0, 0) * v[0] + m(0, 1) * v[1] + m(0, 2) * v[2] + m(0, 3) * v[3];
 	float newY = m(1, 0) * v[0] + m(1, 1) * v[1] + m(1, 2) * v[2] + m(1, 3) * v[3];
 	float newZ = m(2, 0) * v[0] + m(2, 1) * v[1] + m(2, 2) * v[2] + m(2, 3) * v[3];
 
-
-	return vec3(newX, newY, newZ, v[3]);
-
+	return Vec3(newX, newY, newZ, v[3]);
 }
 
 Matrix Matrix::Mul44x44(Matrix & matA, Matrix & matB) {

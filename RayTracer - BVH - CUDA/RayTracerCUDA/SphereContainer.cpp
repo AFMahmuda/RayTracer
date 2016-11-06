@@ -11,19 +11,21 @@ SphereContainer::SphereContainer(std::shared_ptr<Geometry> item) {
 	if (item->type == Geometry::SPHERE)
 	{
 
-		c = ((Sphere*)item.get())->c + vec3(0,0,0,1);
-		r = ((Sphere*)item.get())->r + 0.f;
+		c = ((Sphere*)item.get())->c;
+		r = ((Sphere*)item.get())->r;
 
+		//c = Matrix::Mul44x41(item->getTrans().matrix, c);
+		//r = Matrix::Mul44x41(item->getTrans().matrix, Vec3(r, 0, 0, 1)).Magnitude();
 	}
 	else //if (item.GetType() == typeof(Triangle))
 	{
 		Triangle& tri = *(Triangle*)item.get();
-		vec3 ab(tri.a, tri.b);
-		vec3 bc(tri.b, tri.c);
-		vec3 ac (tri.a, tri.c);
+		Vec3 ab(tri.a, tri.b);
+		Vec3 bc(tri.b, tri.c);
+		Vec3 ac(tri.a, tri.c);
 
 		float d = 2 * ((ab * ab) * (ac * ac) - (ab * ac) * (ab * ac));
-		vec3 reference = tri.a;
+		Vec3 reference = tri.a;
 		float s = ((ab * ab) * (ac * ac) - (ac * ac) * (ab * ac)) / d;
 		float t = ((ac * ac) * (ab * ab) - (ab * ab) * (ab * ac)) / d;
 		if (s <= 0)
@@ -40,12 +42,9 @@ SphereContainer::SphereContainer(std::shared_ptr<Geometry> item) {
 			reference = tri.b;
 		}
 		else c = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
-		r = sqrtf(vec3(reference, tri.c) * vec3(reference, tri.c));
+		r = sqrtf(Vec3(reference, tri.c) * Vec3(reference, tri.c));
+		//Transform already calculated in vertex init
 	}
-
-	c = Matrix::Mul44x41(item->getTrans().matrix, c);
-	r = Matrix::Mul44x41(item->getTrans().matrix, vec3(r, 0, 0)).Magnitude();
-
 }
 
 SphereContainer::SphereContainer(std::shared_ptr<SphereContainer> a, std::shared_ptr<SphereContainer> b)
@@ -55,29 +54,29 @@ SphereContainer::SphereContainer(std::shared_ptr<SphereContainer> a, std::shared
 	lChild = a;
 	rChild = b;
 
-	vec3 aToB (a->c, b->c);
-	float aToBLength = aToB.Magnitude();
+	Vec3 aToB(a->c, b->c);
+	float aToBLength = aToB.magnitude();
 
-	if (aToB.Magnitude() == 0)
+	if (aToB.magnitude() == 0)
 	{
 		r = std::max(a->r, b->r);
-		c = a->c + vec3(0,0,0,1);
+		c = a->c + Vec3(0, 0, 0, 1);
 	}
 
 	else if (aToBLength + a->r + b->r < a->r * 2.f ||
-		aToB.Magnitude() + a->r + b->r < b->r * 2.f)
+		aToB.magnitude() + a->r + b->r < b->r * 2.f)
 	{
 		r = std::max(a->r, b->r);
-		c = (a->r > b->r) ? a->c + vec3(0,0,0,1) : b->c + vec3(0,0,0,1);
+		c = (a->r > b->r) ? a->c + Vec3(0, 0, 0, 1) : b->c + Vec3(0, 0, 0, 1);
 	}
 
 	else
 	{
-		r = (a->r + b->r + aToB.Magnitude()) * .5f;
+		r = (a->r + b->r + aToB.magnitude()) * .5f;
 
-		aToB = aToB.Normalize();
+		aToB = aToB.normalize();
 		aToB = aToB * (r - a->r);
-		c = (a->c) + vec3(aToB[0], aToB[1], aToB[2],1);
+		c = (a->c) + Vec3(aToB[0], aToB[1], aToB[2], 1);
 	}
 
 	area = 4.f * (float)M_PI * (float)std::powf(r, 2);
@@ -89,7 +88,7 @@ SphereContainer::~SphereContainer()
 
 bool SphereContainer::isIntersecting(Ray& ray)
 {
-	vec3 rayToSphere (ray.start, this->c);
+	Vec3 rayToSphere(ray.start, this->c);
 
 	float a = ray.direction * ray.direction;
 	float b = -2 * (rayToSphere * ray.direction);

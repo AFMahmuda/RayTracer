@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Sphere::Sphere(vec3 & center, float radius) {
+Sphere::Sphere(Vec3 & center, float radius) {
 	c = center;
 	r = radius;
 	trans.matrix = Matrix(4, 4).Identity();
@@ -11,7 +11,7 @@ Sphere::Sphere(vec3 & center, float radius) {
 
 bool Sphere::isIntersecting(Ray & ray)
 {
-	vec3 rayToSphere = vec3(ray.start, this->c);
+	Vec3 rayToSphere = Vec3(ray.start, this->c);
 
 	//sphere is behind ray
 	//if (rayToSphere * ray.Direction <= 0)
@@ -37,18 +37,18 @@ bool Sphere::isIntersecting(Ray & ray)
 
 		if (ray.isCloser(distance, trans))
 		{
-			ray.intersectDist = Matrix::Mul44x41(trans.matrix, ray.direction * distance).Magnitude();
+			ray.intersectDist = Matrix::Mul44x41(trans.matrix, ray.direction * distance).magnitude();
 			return true;
 		}
 	}
 	return false;
 }
 
-vec3 Sphere::getNormal(vec3 & point)
+Vec3 Sphere::getNormal(Vec3 & point)
 {
-	vec3 p = Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), point);
-	vec3 res = vec3(c, p);
-	res = res.Normalize();
+	Vec3 p = Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), point);
+	Vec3 res = Vec3(c, p);
+	res = res.normalize();
 	return res;
 }
 
@@ -59,10 +59,10 @@ Sphere::~Sphere()
 void Sphere::updatePos()
 {
 
-	pos = vec3();
+	pos = Vec3();
 	pos = Matrix::Mul44x41(trans.matrix, c);
 
-	vec3 p = pos;
+	Vec3 p = pos;
 	p[0] = (p[0] / 100.f) + .5f;
 	p[1] = (p[1] / 100.f) + .5f;
 	p[2] = (p[2] / 100.f) + .5f;

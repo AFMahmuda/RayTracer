@@ -11,7 +11,7 @@ DirectionalLight::~DirectionalLight()
 {
 }
 
-bool DirectionalLight::isEffective(vec3 & point, std::shared_ptr< Container> bvh)
+bool DirectionalLight::isEffective(Vec3 & point, std::shared_ptr< Container> bvh)
 {
 	Ray shadowRay = Ray(point, (*dir * -1.f));
 
@@ -21,38 +21,32 @@ bool DirectionalLight::isEffective(vec3 & point, std::shared_ptr< Container> bvh
 	while (bins.size() > 0)
 	{
 		std::shared_ptr< Container> currBin = bins.back();
+		bins.pop_back();
 		if (currBin->isIntersecting(shadowRay))
 		{
 			if (currBin->geo != nullptr)
 			{
+				Vec3 tempStart = shadowRay.start;
+				Vec3 tempDir = shadowRay.direction;
 				shadowRay.transInv(currBin->geo->getTrans());
 
 				if (currBin->geo->isIntersecting(shadowRay))
 					return false;
-				//no need to transform ray back as ray no longer needed
+				shadowRay.start = tempStart;
+				shadowRay.direction = tempDir;
 			}
 			else
 			{
-
-				//if (!DirectionalLight::isEffective(point, *bvh.lChild))
-				//	return false;
-				//if (!DirectionalLight::isEffective(point, *bvh.rChild))
-				//	return false;
 				bins.push_back(currBin->rChild);
 				bins.push_back(currBin->lChild);
-				std::vector<std::shared_ptr <Container>>::iterator lPos = std::find(bins.begin(), bins.end(), currBin->lChild);
-				std::vector<std::shared_ptr <Container>>::iterator currPos = std::find(bins.begin(), bins.end(), currBin);
-				std::swap(*lPos, *currPos);
 			}
 		}
-		bins.pop_back();
-
 	}
 
 	return true;
 }
 
-vec3 DirectionalLight::getPointToLight(const vec3 & point)
+Vec3 DirectionalLight::getPointToLight(const Vec3 & point)
 {
-	return vec3(*dir * -1);
+	return Vec3(*dir * -1);
 }

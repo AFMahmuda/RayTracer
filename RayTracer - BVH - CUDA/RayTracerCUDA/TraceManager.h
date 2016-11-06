@@ -1,14 +1,9 @@
 #pragma once
-#include<string>
-#include<cmath>
-#include<iostream>
-
 #include"Scene.h"
 #include"BVHBuilder.h"
 #include"RayManager.h"
 
 #include"FreeImage.h"
-#include<thread>
 
 class TraceManager
 {

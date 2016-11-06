@@ -28,20 +28,19 @@ public:
 
 	void Init(int width, int height);
 
-	vec3 getNewLocation(int col, int row);
+	Vec3 getNewLocation(int col, int row);
 private:
 	static bool flag;
 	static ViewPlane* instance;
 
-	vec3 pos;
-	vec3 upperLeft;
-	vec3 unitRight;
-	vec3 unitDown;
+	Vec3 pos;
+	Vec3 upperLeft;
+	Vec3 unitRight;
+	Vec3 unitDown;
 
 
-	void Precalculate();
-
-	vec3 &getUpperLeft();
+	void precalculate();
+	void setUpperleft();
 
 	ViewPlane(); // Prevent construction
 	ViewPlane(const ViewPlane&); // Prevent construction by copying
