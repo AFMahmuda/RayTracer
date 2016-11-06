@@ -10,32 +10,44 @@ PointLight::~PointLight()
 {
 }
 
-bool PointLight::isEffective(vec3 & point, Container & bvh)
+bool PointLight::isEffective(vec3 & point, std::shared_ptr< Container> bvh)
 {
 	vec3 pointToLight = getPointToLight(point);
 	vec3 dir = pointToLight;
 	dir = dir.Normalize();
 	Ray shadowRay(point, dir);
+	std::vector<std::shared_ptr< Container>> bins;
 
-	if (bvh.isIntersecting(shadowRay))
+	bins.push_back(bvh);
+	while (bins.size() > 0)
 	{
-		if (bvh.geo != nullptr)
+		std::shared_ptr< Container> currBin = bins.back();
+		if (currBin->isIntersecting(shadowRay))
 		{
-			//transform ray according to each shapes transformation
-			shadowRay.transInv(bvh.geo->getTrans());
-			if (bvh.geo->isIntersecting(shadowRay))
-				if (shadowRay.intersectDist < pointToLight.Magnitude())
-					return false;
-		}
-		else
-		{
-			if (!PointLight::isEffective(point, *bvh.lChild))
-				return false;
-			if (!PointLight::isEffective(point, *bvh.rChild))
-				return false;
-		}
-	}
+			if (currBin->geo != nullptr)
+			{
+				shadowRay.transInv(currBin->geo->getTrans());
 
+				if (currBin->geo->isIntersecting(shadowRay))
+					if (shadowRay.intersectDist < pointToLight.Magnitude())
+						return false;
+			}
+			else
+			{
+				//if (!PointLight::isEffective(point, *bvh.lChild))
+				//	return false;
+				//if (!PointLight::isEffective(point, *bvh.rChild))
+				//	return false;
+				bins.push_back(currBin->rChild);
+				bins.push_back(currBin->lChild);
+				std::vector<std::shared_ptr <Container>>::iterator lPos = std::find(bins.begin(), bins.end(), currBin->lChild);
+				std::vector<std::shared_ptr <Container>>::iterator currPos = std::find(bins.begin(), bins.end(), currBin);
+				std::swap(*lPos, *currPos);
+
+			}
+		}
+		bins.pop_back();
+	}
 	return true;
 }
 

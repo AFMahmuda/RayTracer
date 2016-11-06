@@ -96,10 +96,6 @@ void Scene::executeCommand(std::string fullcommand)
 
 		Camera::Instance()->Init(&param[0]);
 		ViewPlane::Instance()->Init(size[0], size[1]);
-		ViewPlane::Instance()->getNewLocation(0, 0).show();	std::cout << std::endl;
-		Camera::Instance()->U.show();	std::cout << std::endl;
-		Camera::Instance()->V.show();	std::cout << std::endl;
-		Camera::Instance()->W.show();	std::cout << std::endl;
 		return;
 	}
 	if (command.compare("maxdepth") == 0)

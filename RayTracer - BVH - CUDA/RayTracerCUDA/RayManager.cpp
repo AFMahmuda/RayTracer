@@ -5,33 +5,54 @@ RayManager::RayManager()
 {
 }
 
-void RayManager::traceRay(Ray & ray, Container & bin)
+void RayManager::traceRay(Ray & ray, std::shared_ptr<Container> bin)
 {
-	if (bin.isIntersecting(ray))
+
+	std::vector<std::shared_ptr<Container>> bins;
+	bins.push_back(bin);
+	while (bins.size() > 0)
 	{
-		if (bin.geo != nullptr)
+		std::shared_ptr<Container> currBin = bins.back();
+		if (currBin->isIntersecting(ray))
 		{
-			auto tempStart = std::make_shared<vec3>(ray.start);
-			auto tempDir = std::make_shared<vec3>(ray.direction);
 
-			//transform ray according to each shapes transformation
-			ray.transInv(bin.geo->getTrans());
-
-			if (bin.geo->isIntersecting(ray))
+			if (currBin->geo != nullptr)
 			{
-				ray.intersectWith = bin.geo;
-			}
+				auto tempStart = std::make_shared<vec3>(ray.start);
+				auto tempDir = std::make_shared<vec3>(ray.direction);
 
-			//assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
-			ray.start = *tempStart;
-			ray.direction = *tempDir;
+				//transform ray according to each shapes transformation
+				ray.transInv(currBin->geo->getTrans());
+
+				if (currBin->geo->isIntersecting(ray))
+				{
+					ray.intersectWith = currBin->geo;
+				}
+
+				//assign original value for start and direction by memory equivalent to Transform(geometry.Trans);
+				ray.start = *tempStart;
+				ray.direction = *tempDir;
+			}
+			else
+			{
+				//not parallelised
+				//traceRay(std::ref(ray), *currBin.lChild);
+				//traceRay(std::ref(ray), *currBin.rChild);
+
+
+				//e r	//push r
+				//e r l	//push l
+				//l r e //swap l & e
+				//l r	//pop e
+				bins.push_back(currBin->rChild);
+				bins.push_back(currBin->lChild);
+				std::vector<std::shared_ptr <Container>>::iterator lPos = std::find(bins.begin(), bins.end(), currBin->lChild);
+				std::vector<std::shared_ptr <Container>>::iterator currPos = std::find(bins.begin(), bins.end(), currBin);
+				std::swap(*lPos, *currPos);
+			}
 		}
-		else
-		{
-			//not parallelised
-			traceRay(std::ref(ray), *bin.lChild);
-			traceRay(std::ref(ray), *bin.rChild);
-		}
+		bins.pop_back();
+
 	}
 
 }
@@ -45,7 +66,7 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 
 	else
 	{
-		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, *scene.bin);
+		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, scene.bin);
 		MyColor color = calcColor(ray, effectiveLights, scene.getAtt());
 
 		MyColor refl = getRefl(ray, scene, bounce - 1);
@@ -66,7 +87,7 @@ MyColor RayManager::getRefl(const Ray & ray, Scene & scene, int bounce) {
 	vec3 newDir = ray.direction + (normal * 2.0f * -(normal * ray.direction));
 	Ray reflectRay(ray.getHitMin(), newDir);
 	reflectRay.type = Ray::REFLECTION;
-	traceRay(reflectRay, *scene.bin);
+	traceRay(reflectRay, scene.bin);
 	return ray.intersectWith->mat.specular * getColor(reflectRay, scene, bounce);
 }
 
@@ -90,7 +111,7 @@ MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light
 		std::shared_ptr< Light> light = effectiveLights[i];
 		vec3 pointToLight = light->getPointToLight(ray.getHitMin());
 		vec3 halfAngleToLight = ((ray.direction * -1.0f) + pointToLight);
-			halfAngleToLight = halfAngleToLight.Normalize();
+		halfAngleToLight = halfAngleToLight.Normalize();
 
 		Material material = ray.intersectWith->mat;
 
@@ -104,7 +125,7 @@ MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light
 	return result;
 }
 
-std::vector<std::shared_ptr<Light>> RayManager::populateLights(const Ray & ray, std::vector<std::shared_ptr<Light>> allLights, Container & bvh)
+std::vector<std::shared_ptr<Light>> RayManager::populateLights(const Ray & ray, std::vector<std::shared_ptr<Light>> allLights, std::shared_ptr<Container> bvh)
 {
 	std::vector <std::shared_ptr<Light>> res;
 	for (size_t i = 0; i < allLights.size(); i++)

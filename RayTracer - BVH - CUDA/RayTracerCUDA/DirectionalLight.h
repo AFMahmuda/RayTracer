@@ -16,7 +16,7 @@ public:
 	~DirectionalLight();
 
 	// Inherited via Light
-	virtual bool isEffective(vec3 & point, Container & bvh) override;
+	virtual bool isEffective(vec3 & point, std::shared_ptr< Container> bvh) override;
 	virtual vec3 getPointToLight(const vec3 & point) override;
 	virtual float getAttValue(vec3& point, Attenuation& att) override { return 1; }
 

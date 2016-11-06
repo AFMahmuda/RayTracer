@@ -19,8 +19,7 @@ void Camera::Init(vec3& pos, vec3& lookAt, vec3& up, float fov) {
 	this->fov = fov;
 
 	W = vec3(pos, lookAt).Normalize();
-	U = vec3::Cross(this->up, W);
-	U = U.Normalize();
+	U = vec3::Cross(this->up, W).Normalize();
 	V = vec3::Cross(W, U);
 }
 

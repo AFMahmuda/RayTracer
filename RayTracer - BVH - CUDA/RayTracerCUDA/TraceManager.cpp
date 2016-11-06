@@ -58,7 +58,7 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 			ray.start = Camera::Instance()->pos;
 			ray.direction = vec3(ray.start, pixPosition).Normalize();
 
-			rayManager.traceRay(ray, *scene.bin);
+			rayManager.traceRay(ray, scene.bin);
 
 			MyColor& col = RayManager().getColor(ray, scene, scene.maxDepth);
 			color = MyColToRGBQUAD(col);
