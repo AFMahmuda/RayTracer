@@ -39,6 +39,7 @@ std::string Scene::CleanCommand(std::string command)
 {
 
 	command = std::regex_replace(command, std::regex("\t"), " "); //replace tab w/ space
+	command = std::regex_replace(command, std::regex(" + "), " "); //replace multiple spaces w/ sigle space
 	command = std::regex_replace(command, std::regex("^ +| +$"), ""); //replce leading and trailing space with nothing
 	return command;
 }
