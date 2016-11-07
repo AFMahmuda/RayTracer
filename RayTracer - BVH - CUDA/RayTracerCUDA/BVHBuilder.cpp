@@ -22,6 +22,7 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 	std::vector<std::shared_ptr< Container>> temp;
 	if (!isAAC)//not optimized agglomerative clustering
 	{
+		temp.reserve(n);
 		for (int i = 0; i < n; i++)
 		{
 			temp.push_back((ContainerFactory().CreateContainer(scene.geometries[i], type)));
@@ -38,7 +39,6 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 	scene.bin = temp[0];
 }
 
-//4 or 20
 
 std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::shared_ptr<Triangle>> primitives)
 {
@@ -54,20 +54,18 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 		return CombineCluster(bins, f(threshold));
 	}
 
-
 	/*split primitives into two groups besed on pivot*/
 	int pivot = getPivot(primitives);
-	std::vector<std::shared_ptr<Triangle>> left(primitives.begin(), primitives.begin() + pivot);
-	std::vector<std::shared_ptr<Triangle>> right(primitives.begin() + pivot, primitives.end());// pivot included in right
+	std::vector<std::shared_ptr<Triangle>> left;
+	std::vector<std::shared_ptr<Triangle>> right;
+	std::move(primitives.begin(), primitives.begin() + pivot, std::inserter(left, left.end()));
+	std::move(primitives.begin() + pivot, primitives.end(), std::inserter(right, right.end()));// pivot included in right
 
 	/*build left and right tree separately*/
 	std::vector<std::shared_ptr< Container>> leftTree = BuildTree(left);
 	std::vector<std::shared_ptr< Container>> rightTree = BuildTree(right);
-
-
-
 	/*combine two vec and create cluster*/
-	leftTree.insert(leftTree.end(), rightTree.begin(), rightTree.end());
+	std::move(rightTree.begin(), rightTree.end(), std::inserter(leftTree, leftTree.end()));
 	return CombineCluster(leftTree, f(leftTree.size()));
 }
 
@@ -79,7 +77,6 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 *      [3] 00100000
 *      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
 */
-
 int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>> geo)
 {
 	for (int i = 0; i < 30; i++)
@@ -97,7 +94,6 @@ int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>> geo)
 
 
 //combine [bins] cluster to [limit] cluster
-
 std::vector<std::shared_ptr<Container>> BVHBuilder::CombineCluster(std::vector<std::shared_ptr<Container>> bins, int limit)
 {
 	/*precalculate bestmatch to be used in next iteration*/

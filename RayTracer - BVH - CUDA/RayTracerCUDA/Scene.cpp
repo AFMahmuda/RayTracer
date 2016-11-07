@@ -154,6 +154,13 @@ void Scene::executeCommand(std::string fullcommand)
 		material.back()->name = words[1];
 		return;
 	}
+	if (command.compare("Ka") == 0)
+	{
+		std::vector<float> param;
+		for (int i = 0; i < 3; i++) { param.push_back(stof(words[i + 1])); }
+		material.back()->ambient = MyColor(param[0], param[1], param[2]);
+		return;
+	}
 	if (command.compare("Kd") == 0)
 	{
 		std::vector<float> param;
@@ -192,16 +199,7 @@ void Scene::executeCommand(std::string fullcommand)
 		material.back()->setRefValue(stof(words[1]));
 		return;
 	}
-	if (command.compare("Ka") == 0)
-	{
-		std::vector<float> param;
-		for (int i = 0; i < 3; i++)
-		{
-			param.push_back(stof(words[i + 1]));
-		}
-		material.back()->ambient = MyColor(param[0], param[1], param[2]);
-		return;
-	}
+
 
 	//light
 	/*if (command.compare("attenuation") == 0)
@@ -250,15 +248,11 @@ Triangle Scene::createTriangle(float * param)
 		p[i] = *vertices[(int)param[i] - 1];
 	}
 	Triangle tri = Triangle(p[0], p[1], p[2]);
-	applyMaterial(tri);
+	tri.mat = **currMat;
+
 	return tri;
 }
 
-
-void Scene::applyMaterial(Triangle & shape)
-{
-	shape.mat = **currMat;
-}
 
 Scene::~Scene()
 {

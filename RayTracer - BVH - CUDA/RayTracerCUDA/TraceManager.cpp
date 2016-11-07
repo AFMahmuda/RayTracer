@@ -61,15 +61,16 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 			ray->start = Camera::Instance()->pos;
 			ray->direction = Vec3(ray->start, pixPosition).normalize();
 
-			if (currRow == rowEnd / 2 && currCol == colEnd / 2)
-			{
-				int i = 7;
-			}
 			rayManager.traceRay(*ray, scene.bin);
 
-			MyColor& col = RayManager().getColor(*ray, scene, scene.maxDepth);
-			color = MyColToRGBQUAD(col);
-
+			
+			if (ray->intersectWith == nullptr) {
+				color = MyColToRGBQUAD(MyColor(.2, .2, .2));
+			}
+			else {
+				MyColor& col = RayManager().getColor(*ray, scene, scene.maxDepth);
+				color = MyColToRGBQUAD(col);
+			}
 			FreeImage_SetPixelColor(image, currCol, currRow, &color);
 			delete(ray);
 		}

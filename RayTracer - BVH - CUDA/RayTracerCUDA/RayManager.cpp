@@ -18,7 +18,7 @@ void RayManager::traceRay(Ray & ray, std::shared_ptr<Container> bvh)
 
 			if (currBin->geo != nullptr)
 			{
-				
+
 				if (currBin->geo->isIntersecting(ray))
 					ray.intersectWith = currBin->geo;
 			}
@@ -42,13 +42,10 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 	else
 	{
 		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, scene.bin);
-		MyColor color = calcColor(ray, effectiveLights, scene.getAtt());
-		//effectiveLights.clear();
-
-		MyColor refl = getRefl(ray, scene, bounce - 1);
-		MyColor refr = getRefr(ray, scene, bounce - 1);
-
-		color += (refl + refr);
+		MyColor color =
+			calcColor(ray, effectiveLights, scene.getAtt()) +
+			getRefl(ray, scene, bounce - 1) +
+			getRefr(ray, scene, bounce - 1);
 		return color;
 	}
 }
@@ -95,7 +92,7 @@ MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light
 		float attenuationValue = light->getAttValue(ray.getHitMin(), attenuation);
 		pointToLight = pointToLight.normalize();
 		result +=
-			attenuationValue * (MyColor)(*(light->color)) *
+			attenuationValue * (*(light->color)) *
 			((material.diffuse * (pointToLight * normal)) +
 				(material.specular * std::powf(halfAngleToLight * normal, material.shininess)));
 	}

@@ -84,7 +84,7 @@ Triangle::~Triangle()
 
 void Triangle::updatePos()
 {
-	Vec3 temp = (a + b + c)* (.33f);
+	Vec3 temp = (a + b + c) *(1/ 3.0f);
 	pos[0] = (temp[0] / 100.f + .5f);
 	pos[1] = (temp[1] / 100.f + .5f);
 	pos[2] = (temp[2] / 100.f + .5f);
