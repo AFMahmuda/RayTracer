@@ -7,6 +7,8 @@ Material::Material()
 	specular = MyColor();
 	diffuse = MyColor();
 	emmission = MyColor();
+	ambient = MyColor();
+
 }
 
 void Material::setShininess(float val)

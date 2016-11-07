@@ -3,7 +3,7 @@
 #include<memory>
 
 #include"Vec3.h"
-#include"Geometry.h"
+#include"Triangle.h"
 #include"Ray.h"
 class Container
 {
@@ -15,7 +15,7 @@ public:
 	bool isLeaf = false;
 	std::shared_ptr<Container> lChild;
 	std::shared_ptr<Container> rChild;
-	std::shared_ptr<Geometry> geo;
+	std::shared_ptr<Triangle> geo;
 	float area;
 
 	virtual bool isIntersecting(Ray& ray) = 0;

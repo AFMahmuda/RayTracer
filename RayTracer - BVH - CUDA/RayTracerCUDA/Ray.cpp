@@ -2,19 +2,9 @@
 
 
 
-void Ray::trans(Transform & transform) {
-	start = (Matrix::Mul44x41(transform.matrix, start));
-	direction = Vec3(Matrix::Mul44x41(transform.matrix, direction)).normalize();
-}
-
-void Ray::transInv(Transform & transform) {
-	start = (Matrix::Mul44x41(Matrix(transform.matrix.Inverse()), start));
-	direction = Vec3(Matrix::Mul44x41(Matrix(transform.matrix.Inverse()), direction)).normalize();
-}
-
-bool Ray::isCloser(float dist, Transform & trans)
+bool Ray::isCloser(float dist)
 {
-	float newMag = (Matrix::Mul44x41(trans.matrix, direction * dist)).magnitude();
+	float newMag =  (direction * dist).magnitude();
 	return (newMag < intersectDist) ? true : false;
 }
 

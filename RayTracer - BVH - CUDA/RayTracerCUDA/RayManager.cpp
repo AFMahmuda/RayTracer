@@ -18,17 +18,9 @@ void RayManager::traceRay(Ray & ray, std::shared_ptr<Container> bvh)
 
 			if (currBin->geo != nullptr)
 			{
-				Vec3 tempStart = ray.start;
-				Vec3 tempDir = ray.direction;
-
-				//transform ray according to each shapes transformation
-				ray.transInv(currBin->geo->getTrans());
-
+				
 				if (currBin->geo->isIntersecting(ray))
 					ray.intersectWith = currBin->geo;
-
-				ray.start = tempStart;
-				ray.direction = tempDir;
 			}
 			else
 			{
@@ -83,7 +75,7 @@ MyColor RayManager::getRefr(const Ray & ray, Scene & scene, int bounce) {
 
 MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light>> effectiveLights, Attenuation & attenuation)
 {
-	MyColor result = ray.intersectWith->ambient + ray.intersectWith->mat.emmission;
+	MyColor result = ray.intersectWith->mat.ambient + ray.intersectWith->mat.emmission;
 	Vec3 normal = ray.intersectWith->getNormal(ray.getHitMin());
 	float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
 	if (cosI > 0)

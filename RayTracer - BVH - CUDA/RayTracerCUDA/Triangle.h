@@ -1,8 +1,17 @@
 #pragma once
-#include"Geometry.h"
-class Triangle : public Geometry
+#include <string>
+
+#include "Material.h"
+#include "Vec3.h"
+#include "Ray.h"
+
+class Triangle
 {
 private:
+	bool hasMorton = false;
+	unsigned int mortonCode;
+	Vec3 pos;
+
 	Vec3 localNorm;
 
 	Vec3 ab;
@@ -26,9 +35,17 @@ public:
 	Triangle();
 	~Triangle();
 
-	// Inherited via Geometry
-	virtual void updatePos() override;
-	virtual	bool isIntersecting(Ray & ray) override;
-	virtual Vec3 getNormal(Vec3 &point) override;
+	Material mat;
+
+	virtual void updatePos();
+	virtual bool isIntersecting(Ray& ray);
+	virtual Vec3 getNormal(Vec3& point);
+
+
+	unsigned int getMortonPos();
+
+	unsigned int expandBits(unsigned int v);
+
+	std::string getMortonBitString();
 };
 

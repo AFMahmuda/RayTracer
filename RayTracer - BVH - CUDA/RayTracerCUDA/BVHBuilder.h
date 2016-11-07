@@ -15,7 +15,7 @@ public:
 	int threshold = 4; //4 or 20, smaller = higher Q. 
 	BVHBuilder(Container::TYPE _type = Container::BOX, bool _isAAC = true);
 	void BuildBVH(Scene& scene);
-	std::vector<std::shared_ptr< Container>> BuildTree(std::vector<	std::shared_ptr< Geometry>> primitives);
+	std::vector<std::shared_ptr< Container>> BuildTree(std::vector<	std::shared_ptr< Triangle>> primitives);
 	/*cluster reduction function
 	* n -> number of input clusters
 	* return -> number of max output cluster
@@ -29,7 +29,7 @@ public:
 	*      [3] 00100000
 	*      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
 	*/
-	int getPivot(std::vector<std::shared_ptr< Geometry>> geo);
+	int getPivot(std::vector<std::shared_ptr< Triangle>> geo);
 
 	//combine [bins] cluster to [limit] cluster
 	std::vector<std::shared_ptr< Container>> CombineCluster(std::vector<std::shared_ptr< Container>> bins, int limit);

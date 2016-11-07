@@ -2,22 +2,16 @@
 
 Scene::Scene()
 {
-
-	auto trans = std::make_shared<Transform>(Translation(0, 0, 0));
-	transforms.push_back(trans);
-	ambient = MyColor();
 	att = Attenuation(new float[3]{ 1,0,0 });
-	material = Material();
 }
 
 Scene::Scene(std::string filename) :Scene()
 {
-	parseCommand(filename);
+	parseFile(filename);
 }
 
-void Scene::parseCommand(std::string filename)
+void Scene::parseFile(std::string filename)
 {
-
 	std::string line;
 	std::ifstream myfile(filename);
 	if (myfile.is_open())
@@ -28,16 +22,12 @@ void Scene::parseCommand(std::string filename)
 		}
 		myfile.close();
 		vertices.clear();
-		transforms.clear();
-		
-
 	}
 	else std::cout << "Unable to open file";
 }
 
 std::string Scene::CleanCommand(std::string command)
 {
-
 	command = std::regex_replace(command, std::regex("\t"), " "); //replace tab w/ space
 	command = std::regex_replace(command, std::regex(" + "), " "); //replace multiple spaces w/ sigle space
 	command = std::regex_replace(command, std::regex("^ +| +$"), ""); //replce leading and trailing space with nothing
@@ -120,86 +110,45 @@ void Scene::executeCommand(std::string fullcommand)
 	//geometry
 	if (command.compare("tri") == 0)
 	{
-		auto geo = createShape(Geometry::TRIANGLE, &param[0]);
+		auto geo = createShape(&param[0]);
 		geometries.push_back(geo);
 		return;
 
 	}
-	if (command.compare("sphere") == 0)
-	{
-		auto geo = createShape(Geometry::SPHERE, &param[0]);
-		geometries.push_back(geo);
-		return;
-	}
 
 
-	//transforms 
-	if (command.compare("pushtransform") == 0)
-	{
-		Transform& trans = *transforms.back();
-		transforms.push_back(std::make_shared<Transform>(trans));
-		return;
-	}
-	if (command.compare("poptransform") == 0)
-	{
-		transforms.pop_back();
-		return;
-	}
-
-	if (command.compare("translate") == 0)
-	{
-		Transform& trans = Translation(&param[0]);
-		Transform& last = *transforms.back();
-		last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
-		return;
-	}
-	if (command.compare("scale") == 0)
-	{
-		Transform& trans = Scaling(&param[0]);
-		Transform& last = *transforms.back();
-		last.matrix = Matrix::Mul44x44(last.matrix, (trans.matrix));
-		return;
-	}
-	if (command.compare("rotate") == 0)
-	{
-		Transform& trans = Rotation(&param[0]);
-		Transform& last = *transforms.back();
-		last.matrix = Matrix::Mul44x44(last.matrix, trans.matrix);
-		return;
-	}
 	//material
 
 	if (command.compare("diffuse") == 0)
 	{
-		material.diffuse = (MyColor(param[0], param[1], param[2]));
+		material.back()->diffuse = (MyColor(param[0], param[1], param[2]));
 		return;
 	}
 
 	if (command.compare("specular") == 0)
 	{
-		material.specular = (MyColor(param[0], param[1], param[2]));
+		material.back()->specular = (MyColor(param[0], param[1], param[2]));
 		return;
 	}
 	if (command.compare("emission") == 0)
 	{
-
-		material.emmission = (MyColor(param[0], param[1], param[2]));
+		material.back()->emmission = (MyColor(param[0], param[1], param[2]));
 		return;
 	}
 	if (command.compare("shininess") == 0)
 	{
-		material.setShininess(param[0]);
+		material.back()->setShininess(param[0]);
 		return;
 	}
 
 	if (command.compare("refindex") == 0)
 	{
-		material.setrefIndex(param[0]);
+		material.back()->setrefIndex(param[0]);
 		return;
 	}
 	if (command.compare("refvalue") == 0)
 	{
-		material.setRefValue(param[0]);
+		material.back()->setRefValue(param[0]);
 		return;
 	}
 
@@ -211,7 +160,7 @@ void Scene::executeCommand(std::string fullcommand)
 	}
 	if (command.compare("ambient") == 0)
 	{
-		ambient = MyColor(param[0], param[1], param[2]);
+		material.back()->ambient = MyColor(param[0], param[1], param[2]);
 		return;
 	}
 	if (command.compare("directional") == 0)
@@ -226,27 +175,9 @@ void Scene::executeCommand(std::string fullcommand)
 	}
 }
 
-std::shared_ptr<Geometry> Scene::createShape(Geometry::TYPE type, float * param)
+std::shared_ptr<Triangle> Scene::createShape(float * param)
 {
-	switch (type)
-	{
-	case Geometry::SPHERE:
-		return std::make_shared<Sphere>(createSphere(param));
-		break;
-	case Geometry::TRIANGLE:
-		return std::make_shared<Triangle>(createTriangle(param));
-		break;
-	}
-}
-
-Sphere Scene::createSphere(float * param)
-{
-	Sphere sphere = Sphere(param);
-	applyTransform(sphere);
-
-	applyMaterial(sphere);
-	applyAmbient(sphere);
-	return sphere;
+	return std::make_shared<Triangle>(createTriangle(param));
 }
 
 Triangle Scene::createTriangle(float * param)
@@ -255,29 +186,16 @@ Triangle Scene::createTriangle(float * param)
 	for (size_t i = 0; i < 3; i++)
 	{
 		p[i] = *vertices[(int)param[i]];
-		p[i] = (Matrix::Mul44x41(transforms.back()->matrix, p[i]));
-		/*p[i].h = 1;*/
 	}
 	Triangle tri = Triangle(p[0], p[1], p[2]);
 	applyMaterial(tri);
-	applyAmbient(tri);
 	return tri;
 }
 
-void Scene::applyTransform(Geometry & shape)
-{
-	Transform& currTrans = *transforms.back();
-	shape.setTrans(currTrans);
-}
 
-void Scene::applyMaterial(Geometry & shape)
+void Scene::applyMaterial(Triangle & shape)
 {
-	shape.mat = *std::make_shared<Material>(material);
-}
-
-void Scene::applyAmbient(Geometry & shape)
-{
-	shape.ambient = *std::make_shared<MyColor>(ambient);
+	shape.mat = *material.back();
 }
 
 Scene::~Scene()

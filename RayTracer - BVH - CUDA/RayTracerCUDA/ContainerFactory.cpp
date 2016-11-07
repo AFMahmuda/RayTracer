@@ -9,10 +9,7 @@ ContainerFactory::~ContainerFactory()
 {
 }
 
-std::shared_ptr<Container> ContainerFactory::CreateContainer(std::shared_ptr<Geometry> geo, Container::TYPE type) {
-	if (type == Container::SPHERE)
-		return std::make_shared<SphereContainer>(SphereContainer(geo));
-	else// if (type == Container.TYPE.BOX)
+std::shared_ptr<Container> ContainerFactory::CreateContainer(std::shared_ptr<Triangle> geo, Container::TYPE type) {
 		return std::make_shared<BoxContainer>(BoxContainer(geo));
 }
 

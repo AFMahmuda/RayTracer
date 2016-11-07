@@ -22,9 +22,6 @@
     <Filter Include="Shape">
       <UniqueIdentifier>{7e3f0884-4ffb-4cb5-9710-cb1a858866b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Transform">
-      <UniqueIdentifier>{daa9f653-aaac-4a90-80a8-653491d1c148}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -42,13 +39,7 @@
     <ClCompile Include="ViewPlane.cpp">
       <Filter>Tracer</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
     <ClCompile Include="Triangle.cpp">
-      <Filter>Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
       <Filter>Shape</Filter>
     </ClCompile>
     <ClCompile Include="BoxContainer.cpp">
@@ -78,12 +69,6 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="RadixSort.cpp">
       <Filter>Algorithm</Filter>
     </ClCompile>
@@ -92,18 +77,6 @@
     </ClCompile>
     <ClCompile Include="MyColor.cpp">
       <Filter>Material</Filter>
-    </ClCompile>
-    <ClCompile Include="Rotation.cpp">
-      <Filter>Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="Scaling.cpp">
-      <Filter>Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="Translation.cpp">
-      <Filter>Transform</Filter>
     </ClCompile>
     <ClCompile Include="RayManager.cpp">
       <Filter>Tracer</Filter>
@@ -129,13 +102,7 @@
     <ClInclude Include="ViewPlane.h">
       <Filter>Tracer</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Shape</Filter>
-    </ClInclude>
     <ClInclude Include="Triangle.h">
-      <Filter>Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
       <Filter>Shape</Filter>
     </ClInclude>
     <ClInclude Include="BoxContainer.h">
@@ -165,12 +132,6 @@
     <ClInclude Include="PointLight.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="RadixSort.h">
       <Filter>Algorithm</Filter>
     </ClInclude>
@@ -179,18 +140,6 @@
     </ClInclude>
     <ClInclude Include="MyColor.h">
       <Filter>Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Rotation.h">
-      <Filter>Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Scaling.h">
-      <Filter>Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Translation.h">
-      <Filter>Transform</Filter>
     </ClInclude>
     <ClInclude Include="RayManager.h">
       <Filter>Tracer</Filter>

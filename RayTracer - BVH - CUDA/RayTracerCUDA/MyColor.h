@@ -11,10 +11,16 @@ public:
 	void setG(float val);
 	void setB(float val);
 
+	MyColor& operator=(const MyColor& other) {
+		setR(other.r);
+		setG(other.g);
+		setB(other.b);
+	}
+
 	MyColor& operator+=(const MyColor& rhs)
 	{
 		setR(r + rhs.r);
-		setG(g + rhs.g);	
+		setG(g + rhs.g);
 		setB(b + rhs.b);
 		return *this;
 	}

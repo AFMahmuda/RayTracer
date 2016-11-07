@@ -33,9 +33,6 @@ int main(int argc, char *argv[])
 		myfile.close();
 		TraceManager tracer(threads, binType, isAAC);
 		tracer.traceScene(filename);
-
-		Vec3 a = Matrix::Mul44x41(Matrix(Translation(1,1,1).matrix.Inverse()),Vec3(0,0,0,1) );
-
 	}
 	else
 	{

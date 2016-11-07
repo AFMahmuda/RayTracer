@@ -1,15 +1,12 @@
 #include "Triangle.h"
+#include<bitset>
 
-
-
-Triangle::Triangle(Vec3 a, Vec3 b, Vec3 c) {
+Triangle::Triangle(Vec3 a, Vec3 b, Vec3 c) : Triangle() {
 	this->a = a;
 	this->b = b;
 	this->c = c;
-	trans.matrix = Matrix(4, 4).Identity();
 	hasMorton = false;
 	updatePos();
-	type = TRIANGLE;
 	preCalculate();
 }
 
@@ -46,10 +43,10 @@ bool Triangle::isIntersecting(Ray & ray)
 	dist < 0 = behind cam
 	*/
 	if (distanceToPlane > 0)
-		if (ray.isCloser(distanceToPlane, trans))
+		if (ray.isCloser(distanceToPlane))
 			if (IsInsideTriangle(ray.start + (ray.direction * distanceToPlane)))
 			{
-				ray.intersectDist = Matrix::Mul44x41(trans.matrix, ray.direction * distanceToPlane).magnitude();
+				ray.intersectDist = (ray.direction * distanceToPlane).magnitude();
 				return true;
 			}
 	return false;
@@ -69,12 +66,12 @@ bool Triangle::IsInsideTriangle(Vec3 point) {
 
 Vec3 Triangle::getNormal(Vec3 & point)
 {
-	Vec3  res = (Matrix::Mul44x41(Matrix(trans.matrix.Inverse()), localNorm));
+	Vec3  res = localNorm;
 	res = res.normalize();
 	return res;
 }
 
-Triangle::Triangle()
+Triangle::Triangle() :mat(Material())
 {
 }
 
@@ -88,10 +85,36 @@ Triangle::~Triangle()
 void Triangle::updatePos()
 {
 	Vec3 temp = (a + b + c)* (.33f);
-	pos = Matrix::Mul44x41(trans.matrix, temp);
-	pos[1] = (pos[0] / 100.f + .5f);
-	pos[1] = (pos[1] / 100.f + .5f);
-	pos[1] = (pos[1] / 100.f + .5f);
+	pos[0] = (temp[0] / 100.f + .5f);
+	pos[1] = (temp[1] / 100.f + .5f);
+	pos[2] = (temp[2] / 100.f + .5f);
 
 	getMortonPos();
+}
+
+unsigned int Triangle::getMortonPos()
+{
+	if (!hasMorton)
+	{
+		unsigned int x = expandBits(fminf(fmaxf(pos[0] * 1024.f, 0.f), 1023.f));
+		unsigned int y = expandBits(fminf(fmaxf(pos[1] * 1024.f, 0.f), 1023.f));
+		unsigned int z = expandBits(fminf(fmaxf(pos[2] * 1024.f, 0.f), 1023.f));
+		mortonCode = x * 4 + y * 2 + z;
+		hasMorton = true;
+	}
+	return mortonCode;
+}
+
+unsigned int Triangle::expandBits(unsigned int v)
+{
+	v = (v * 0x00010001u) & 0xFF0000FFu;
+	v = (v * 0x00000101u) & 0x0F00F00Fu;
+	v = (v * 0x00000011u) & 0xC30C30C3u;
+	v = (v * 0x00000005u) & 0x49249249u;
+	return v;
+}
+
+std::string Triangle::getMortonBitString()
+{
+	return std::bitset<30>(getMortonPos()).to_string();
 }

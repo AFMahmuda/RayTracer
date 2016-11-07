@@ -12,11 +12,6 @@
 #include"Material.h"
 #include"MyColor.h"
 
-#include"Translation.h"
-#include"Scaling.h"
-#include"Rotation.h"
-
-#include"Sphere.h"
 #include"Triangle.h"
 
 #include"PointLight.h"
@@ -34,7 +29,7 @@ public:
 
 	std::string outFileName = "default.bmp";
 	std::shared_ptr<Container> bin;
-	std::vector<std::shared_ptr<Geometry>> geometries;
+	std::vector<std::shared_ptr<Triangle>> geometries;
 	std::vector<std::shared_ptr<Light>> lights;
 
 	Scene();
@@ -47,23 +42,18 @@ public:
 private:
 
 	int size[2];//pixel dimension
-	std::vector<std::shared_ptr<Transform>> transforms;
 	std::vector<std::shared_ptr<Vec3>> vertices;
-	MyColor ambient;
-	Material material;
+	std::vector<std::shared_ptr<Material>> material;
 	Attenuation att;
 
 	std::vector<std::string> splitString(std::string fullcommand, char delimiter);
-	void parseCommand(std::string filename);
+	void parseFile(std::string filename);
 	std::string CleanCommand(std::string command);
 	void executeCommand(std::string fullcommand);
 
 	/*shape factory method*/
-	std::shared_ptr<Geometry> createShape(Geometry::TYPE type, float* param);
-	Sphere createSphere(float* param);
+	std::shared_ptr<Triangle> createShape(float* param);
 	Triangle createTriangle(float* param);
-	void applyTransform(Geometry& shape);
-	void applyMaterial(Geometry& shape);
-	void applyAmbient(Geometry& shape);
+	void applyMaterial(Triangle& shape);
 	/*-----------------------*/
 };

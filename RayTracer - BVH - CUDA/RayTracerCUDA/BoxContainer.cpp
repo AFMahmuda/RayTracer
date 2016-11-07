@@ -1,52 +1,17 @@
+#include <iostream>
 #include "BoxContainer.h"
-
-
-BoxContainer::BoxContainer(std::shared_ptr<Geometry> item)
+BoxContainer::BoxContainer(std::shared_ptr<Triangle> item)
 {
 	isLeaf = true;
 	type = BOX;
 	geo = item;
 
-	if (item->type == Geometry::SPHERE)
-	{
-		Sphere* sphere = (Sphere*)item.get();
-
-		min = (sphere->c);
-		max = (sphere->c);
-		for (int i = 0; i < 3; i++)
-		{
-			min[i] -= sphere->r;
-			max[i] += sphere->r;
-		}
-
-		Vec3 p[8];
-
-		p[0] = (Vec3(min[0], min[1], min[2], 1));
-		p[1] = (Vec3(min[0], min[1], max[2], 1));
-		p[2] = (Vec3(min[0], max[1], min[2], 1));
-		p[3] = (Vec3(min[0], max[1], max[2], 1));
-		p[4] = (Vec3(max[0], min[1], min[2], 1));
-		p[5] = (Vec3(max[0], min[1], max[2], 1));
-		p[6] = (Vec3(max[0], max[1], min[2], 1));
-		p[7] = (Vec3(max[0], max[1], max[2], 1));
-
-
-		for (int i = 0; i < 8; i++)
-			p[i] = Matrix::Mul44x41(item->getTrans().matrix, p[i]);
-
-		setMinMax(p, 8);
-
-	}
-
-	else //if (item.GetType() == typeof(Triangle))
+	
 	{
 		Triangle* tri = static_cast<Triangle*>(item.get());
 
-		Vec3 a = Matrix::Mul44x41(item->getTrans().matrix, tri->a);
-		Vec3 b = Matrix::Mul44x41(item->getTrans().matrix, tri->b);
-		Vec3 c = Matrix::Mul44x41(item->getTrans().matrix, tri->c);
-
-		setMinMax(new Vec3[3]{ a, b, c }, 3);
+		
+		setMinMax(new Vec3[3]{ tri->a,tri-> b,tri->c }, 3);
 	}
 }
 

@@ -40,7 +40,7 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 
 //4 or 20
 
-std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::shared_ptr<Geometry>> primitives)
+std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::shared_ptr<Triangle>> primitives)
 {
 	/*create cluster if primitives number is below threshold*/
 	if (primitives.size() < threshold)
@@ -57,8 +57,8 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 
 	/*split primitives into two groups besed on pivot*/
 	int pivot = getPivot(primitives);
-	std::vector<std::shared_ptr<Geometry>> left(primitives.begin(), primitives.begin() + pivot);
-	std::vector<std::shared_ptr<Geometry>> right(primitives.begin() + pivot, primitives.end());// pivot included in right
+	std::vector<std::shared_ptr<Triangle>> left(primitives.begin(), primitives.begin() + pivot);
+	std::vector<std::shared_ptr<Triangle>> right(primitives.begin() + pivot, primitives.end());// pivot included in right
 
 	/*build left and right tree separately*/
 	std::vector<std::shared_ptr< Container>> leftTree = BuildTree(left);
@@ -80,7 +80,7 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 *      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
 */
 
-int BVHBuilder::getPivot(std::vector<std::shared_ptr<Geometry>> geo)
+int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>> geo)
 {
 	for (int i = 0; i < 30; i++)
 	{

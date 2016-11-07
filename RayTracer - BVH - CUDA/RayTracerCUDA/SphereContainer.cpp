@@ -1,25 +1,17 @@
 #include "SphereContainer.h"
+#include<algorithm>
+#include <iostream>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
-
-
-
-
-SphereContainer::SphereContainer(std::shared_ptr<Geometry> item) {
+SphereContainer::SphereContainer(std::shared_ptr<Triangle> item) {
 	isLeaf = true;
 	type = SPHERE;
 	geo = item;
-	if (item->type == Geometry::SPHERE)
-	{
 
-		c = ((Sphere*)item.get())->c;
-		r = ((Sphere*)item.get())->r;
-
-		//c = Matrix::Mul44x41(item->getTrans().matrix, c);
-		//r = Matrix::Mul44x41(item->getTrans().matrix, Vec3(r, 0, 0, 1)).Magnitude();
-	}
-	else //if (item.GetType() == typeof(Triangle))
 	{
-		Triangle& tri = *(Triangle*)item.get();
+		Triangle& tri = *item;
 		Vec3 ab(tri.a, tri.b);
 		Vec3 bc(tri.b, tri.c);
 		Vec3 ac(tri.a, tri.c);
@@ -43,7 +35,6 @@ SphereContainer::SphereContainer(std::shared_ptr<Geometry> item) {
 		}
 		else c = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
 		r = sqrtf(Vec3(reference, tri.c) * Vec3(reference, tri.c));
-		//Transform already calculated in vertex init
 	}
 }
 

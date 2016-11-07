@@ -26,14 +26,10 @@ bool DirectionalLight::isEffective(Vec3 & point, std::shared_ptr< Container> bvh
 		{
 			if (currBin->geo != nullptr)
 			{
-				Vec3 tempStart = shadowRay.start;
-				Vec3 tempDir = shadowRay.direction;
-				shadowRay.transInv(currBin->geo->getTrans());
-
+				
 				if (currBin->geo->isIntersecting(shadowRay))
 					return false;
-				shadowRay.start = tempStart;
-				shadowRay.direction = tempDir;
+				
 			}
 			else
 			{
