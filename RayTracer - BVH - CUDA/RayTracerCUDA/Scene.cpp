@@ -38,7 +38,7 @@ std::vector<std::string> Scene::splitString(std::string fullcommand, char delimi
 	std::vector<std::string> results;
 	size_t pos = 0;
 	std::string token;
-	while ((pos = fullcommand.find(delimiter)) != std::string::npos) {
+	while ((pos = fullcommand.find_first_of(delimiter)) != std::string::npos) {
 		token = fullcommand.substr(0, pos);
 		results.push_back(token);
 		fullcommand.erase(0, pos + 1);
@@ -59,7 +59,7 @@ void Scene::executeCommand(std::string fullcommand)
 
 	std::vector<std::string> words = splitString(fullcommand, ' ');
 	std::string command = words[0];
-	std::transform(command.begin(), command.end(), command.begin(), ::tolower);
+	//	std::transform(command.begin(), command.end(), command.begin(), ::tolower);
 
 	if (command.compare("output") == 0)
 	{
@@ -67,109 +67,171 @@ void Scene::executeCommand(std::string fullcommand)
 		return;
 	}
 
-	std::vector<float> param;
-	for (int i = 0; i < words.size() - 1; i++)
+	if (command.compare("geo") == 0)
 	{
-		param.push_back(stof(words[i + 1]));
+		parseFile(words[1]);
+		return;
+	}
+	if (command.compare("mtllib") == 0)
+	{
+		parseFile(words[1]);
+		return;
 	}
 
-
-	//	case "defColor":
-	//		defColor = new MyColor(param[0], param[1], param[2]);
-	//		break;
 	if (command.compare("size") == 0) {
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		size[0] = (int)param[0];
 		size[1] = (int)param[1];
 		return;
 	}
 
 	if (command.compare("camera") == 0) {
-
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		Camera::Instance()->Init(&param[0]);
 		ViewPlane::Instance()->Init(size[0], size[1]);
 		return;
 	}
 	if (command.compare("maxdepth") == 0)
 	{
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		maxDepth = (int)param[0];
 		return;
 	}
 
-	if (command.compare("maxvertex") == 0)
+	//geometry
+	if (command.compare("v") == 0)
 	{
-		//no need		
-		//vertices.reserve((int)param[0]);
-		return;
-	}
-	if (command.compare("vertex") == 0)
-	{
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		vertices.push_back(std::make_shared<Vec3>(&param[0], 1));
 		return;
 	}
 
-	//geometry
-	if (command.compare("tri") == 0)
+	if (command.compare("f") == 0)
 	{
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			std::string temp = splitString(words[i + 1], '/')[0];
+			param.push_back(stof(temp));
+		}
+
 		auto geo = createShape(&param[0]);
 		geometries.push_back(geo);
 		return;
 
 	}
 
+	if (command.compare("usemtl") == 0)
+	{
+		for each (auto var in material)
+		{
+			if (var->name == words[1])
+				currMat = std::find(material.begin(), material.end(), var);
+		}
+		return;
+	}
 
 	//material
-
-	if (command.compare("diffuse") == 0)
+	if (command.compare("newmtl") == 0)
 	{
+		material.push_back(std::make_shared<Material>());
+		material.back()->name = words[1];
+		return;
+	}
+	if (command.compare("Kd") == 0)
+	{
+		std::vector<float> param;
+		for (int i = 0; i < 3; i++) { param.push_back(stof(words[i + 1])); }
 		material.back()->diffuse = (MyColor(param[0], param[1], param[2]));
 		return;
 	}
 
-	if (command.compare("specular") == 0)
+	if (command.compare("Ks") == 0)
 	{
+		std::vector<float> param;
+		for (int i = 0; i < 3; i++) { param.push_back(stof(words[i + 1])); }
 		material.back()->specular = (MyColor(param[0], param[1], param[2]));
 		return;
 	}
-	if (command.compare("emission") == 0)
+	if (command.compare("Ke") == 0)
 	{
+		std::vector<float> param;
+		for (int i = 0; i < 3; i++) { param.push_back(stof(words[i + 1])); }
 		material.back()->emmission = (MyColor(param[0], param[1], param[2]));
 		return;
 	}
-	if (command.compare("shininess") == 0)
+	if (command.compare("Ns") == 0)
 	{
-		material.back()->setShininess(param[0]);
+		material.back()->setShininess(stof(words[1]));
 		return;
 	}
 
 	if (command.compare("refindex") == 0)
 	{
-		material.back()->setrefIndex(param[0]);
+		material.back()->setrefIndex(stof(words[1]));
 		return;
 	}
-	if (command.compare("refvalue") == 0)
+	if (command.compare("d") == 0)
 	{
-		material.back()->setRefValue(param[0]);
+		material.back()->setRefValue(stof(words[1]));
 		return;
 	}
-
-	//		//light
-	if (command.compare("attenuation") == 0)
+	if (command.compare("Ka") == 0)
 	{
-		att = Attenuation(&param[0]);
-		return;
-	}
-	if (command.compare("ambient") == 0)
-	{
+		std::vector<float> param;
+		for (int i = 0; i < 3; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		material.back()->ambient = MyColor(param[0], param[1], param[2]);
 		return;
 	}
+
+	//light
+	/*if (command.compare("attenuation") == 0)
+	{
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
+		att = Attenuation(&param[0]);
+		return;
+	}*/
+
 	if (command.compare("directional") == 0)
 	{
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		lights.push_back(std::make_shared<DirectionalLight>(new Vec3(param[0], param[1], param[2], 0), new MyColor(param[3], param[4], param[5])));
 		return;
 	}
 	if (command.compare("point") == 0)
 	{
+		std::vector<float> param;
+		for (int i = 0; i < words.size() - 1; i++)
+		{
+			param.push_back(stof(words[i + 1]));
+		}
 		lights.push_back(std::make_shared<PointLight>(new Vec3(param[0], param[1], param[2], 1), new MyColor(param[3], param[4], param[5])));
 		return;
 	}
@@ -185,7 +247,7 @@ Triangle Scene::createTriangle(float * param)
 	Vec3 p[3];
 	for (size_t i = 0; i < 3; i++)
 	{
-		p[i] = *vertices[(int)param[i]];
+		p[i] = *vertices[(int)param[i] - 1];
 	}
 	Triangle tri = Triangle(p[0], p[1], p[2]);
 	applyMaterial(tri);
@@ -195,7 +257,7 @@ Triangle Scene::createTriangle(float * param)
 
 void Scene::applyMaterial(Triangle & shape)
 {
-	shape.mat = *material.back();
+	shape.mat = **currMat;
 }
 
 Scene::~Scene()

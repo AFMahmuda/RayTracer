@@ -35,6 +35,7 @@ public:
 	Scene();
 	Scene(std::string filename);
 
+	std::vector<std::shared_ptr<Material>>::iterator currMat;
 	Attenuation& getAtt() { return att; }
 	~Scene();
 
@@ -44,6 +45,7 @@ private:
 	int size[2];//pixel dimension
 	std::vector<std::shared_ptr<Vec3>> vertices;
 	std::vector<std::shared_ptr<Material>> material;
+
 	Attenuation att;
 
 	std::vector<std::string> splitString(std::string fullcommand, char delimiter);

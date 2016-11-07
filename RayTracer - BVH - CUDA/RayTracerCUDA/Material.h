@@ -1,5 +1,6 @@
 #pragma once
 #include "MyColor.h"
+#include <string>
 class Material
 {
 public:
@@ -10,6 +11,7 @@ public:
 	float shininess;
 	float refractIndex;
 	float refractValue;
+	std::string name;
 	Material& operator=(const Material& material) {
 		diffuse = material.diffuse;
 		specular = material.specular;
@@ -18,6 +20,8 @@ public:
 		shininess = material.shininess;
 		refractIndex = material.refractIndex;
 		refractValue = material.refractValue;
+		name = material.name;
+		return *this;
 	}
 
 	void setShininess(float val);

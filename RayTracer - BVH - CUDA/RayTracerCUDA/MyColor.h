@@ -15,6 +15,8 @@ public:
 		setR(other.r);
 		setG(other.g);
 		setB(other.b);
+		return *this;
+
 	}
 
 	MyColor& operator+=(const MyColor& rhs)

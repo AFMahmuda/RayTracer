@@ -11,11 +11,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	char dir[FILENAME_MAX];
-	_getcwd(dir, sizeof(dir));
-	strcat(dir, "\\");
-	//scene name, default = default.test
-	string filename = (argc >= 2) ? strcat(dir, argv[1]) : strcat(dir, "default.test");
+	string filename = (argc >= 2) ? argv[1] : "default.scene";
 	//thread number, default = 1
 	int threads = (argc >= 3) ? atoi(argv[2]) : 1;
 	//using aac algorithm (1 = yes / 0 = no ), default = no;
