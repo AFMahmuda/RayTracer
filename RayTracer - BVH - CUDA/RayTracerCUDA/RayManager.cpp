@@ -43,8 +43,8 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 	{
 		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, scene.bin);
 		MyColor color =
-			calcColor(ray, effectiveLights, scene.getAtt()) +
-			getRefl(ray, scene, bounce - 1) +
+			ray.intersectWith->mat.refractValue * calcColor(ray, effectiveLights, scene.getAtt()) +
+			ray.intersectWith->mat.reflectValue * getRefl(ray, scene, bounce - 1) +
 			getRefr(ray, scene, bounce - 1);
 		return color;
 	}
@@ -57,17 +57,60 @@ MyColor RayManager::getRefl(const Ray & ray, Scene & scene, int bounce) {
 	{
 		normal *= -1.f;
 	}
-
 	Vec3 newDir = ray.direction + (normal * 2.0f * -(normal * ray.direction));
 	Ray reflectRay(ray.getHitMin(), newDir);
 	reflectRay.type = Ray::REFLECTION;
 	traceRay(reflectRay, scene.bin);
-	return ray.intersectWith->mat.specular * getColor(reflectRay, scene, bounce);
+	return getColor(reflectRay, scene, bounce);
 }
 
 MyColor RayManager::getRefr(const Ray & ray, Scene & scene, int bounce) {
-	//TODO : IMPLEMENT
-	return MyColor();
+	if (ray.intersectWith->mat.refractValue != 1)
+	{
+		float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
+		Vec3 normal;
+		float n1, n2, n;
+		normal = ray.intersectWith->getNormal(ray.getHitReal());
+		if (cosI > 0)
+		{
+			n1 = ray.intersectWith->mat.refractIndex;
+			n2 = 1;
+			normal *= -1.0f;
+		}
+		else
+		{
+			n1 = 1;
+			n2 = ray.intersectWith->mat.refractIndex;
+			cosI = -cosI;
+		}
+		n = n1 / n2;
+		float sinT2 = n * n * (1.0f - cosI * cosI);
+		float cosT2 = (1.0f - sinT2);
+		float cosT = (float)sqrtf(1.0f - sinT2);
+
+
+
+		float rn = (n1 * cosI - n2 * cosT) / (n1 * cosI + n2 * cosT);
+		float rt = (n2 * cosI - n1 * cosT) / (n2 * cosI + n2 * cosT);
+		rn *= rn;
+		rt *= rt;
+		float refl = (rn + rt) * .5f;
+		float trans = 1.0f - refl;
+
+		if (cosT2 < 0)
+		{
+			//if (bounce - 1 == 0)
+			//    return scene.defColor;
+			return ray.intersectWith->mat.reflectValue *getRefl(ray, scene, bounce - 1);
+		}
+
+		Vec3 newDir = ray.direction * n + normal * (n * cosI - cosT);
+		Ray refractRay(ray.getHitPlus(), newDir);
+		refractRay.type = Ray::REFRACTION;
+		traceRay(refractRay, scene.bin);
+		return (getColor(refractRay, scene, bounce - 1));
+	}
+	else return MyColor();
 }
 
 MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light>> effectiveLights, Attenuation & attenuation)

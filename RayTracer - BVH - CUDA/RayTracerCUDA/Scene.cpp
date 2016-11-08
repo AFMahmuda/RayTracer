@@ -158,7 +158,7 @@ void Scene::executeCommand(std::string fullcommand)
 	{
 		std::vector<float> param;
 		for (int i = 0; i < 3; i++) { param.push_back(stof(words[i + 1])); }
-		material.back()->ambient = MyColor(param[0], param[1], param[2]);
+		material.back()->reflectValue = MyColor(param[0], param[1], param[2]);
 		return;
 	}
 	if (command.compare("Kd") == 0)
@@ -194,6 +194,13 @@ void Scene::executeCommand(std::string fullcommand)
 		material.back()->setrefIndex(stof(words[1]));
 		return;
 	}
+
+	if (command.compare("Ni") == 0)
+	{
+		material.back()->setrefIndex(stof(words[1]));
+		return;
+	}
+
 	if (command.compare("d") == 0)
 	{
 		material.back()->setRefValue(stof(words[1]));
