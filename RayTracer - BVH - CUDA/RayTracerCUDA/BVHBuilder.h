@@ -12,10 +12,10 @@ class BVHBuilder
 public:
 	bool isAAC;
 	Container::TYPE type;
-	static const int threshold = 4; //4 or 20, smaller = higher Q.
+	static const int threshold = 20;
 	BVHBuilder(Container::TYPE _type = Container::BOX, bool _isAAC = true);
 	void BuildBVH(Scene& scene);
-	static	std::vector<std::shared_ptr< Container>> BuildTree(std::vector<	std::shared_ptr< Triangle>> primitives, Container::TYPE _type);
+	static void buildTree(std::vector<std::shared_ptr< Container>>& bins, std::vector<	std::shared_ptr< Triangle>>& primitives, Container::TYPE _type);
 	/*cluster reduction function
 	* n -> number of input clusters
 	* return -> number of max output cluster
@@ -29,11 +29,10 @@ public:
 	*      [3] 00100000
 	*      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
 	*/
-	static	int getPivot(std::vector<std::shared_ptr< Triangle>> geo);
+	static	int getPivot(std::vector<std::shared_ptr< Triangle>>& geo);
 
 	//combine [bins] cluster to [limit] cluster
-	static std::vector<std::shared_ptr< Container>> CombineCluster(std::vector<std::shared_ptr< Container>> bins, int limit);
-
+	static void CombineCluster(std::vector<std::shared_ptr< Container>>& bins, int limit);
 	~BVHBuilder();
 };
 

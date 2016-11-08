@@ -38,11 +38,8 @@ void TraceManager::trace() {
 			threads.push_back(std::thread(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
 			cnt++;
 		}
+	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
-	for (size_t i = 0; i < threads.size(); i++)
-	{
-		threads[i].join();
-	}
 }
 
 void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
@@ -61,9 +58,8 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 			ray->start = Camera::Instance()->pos;
 			ray->direction = Vec3(ray->start, pixPosition).normalize();
 
-			rayManager.traceRay(*ray, scene.bin);
+			rayManager.traceRayIter(*ray, scene.bin);
 
-			
 			if (ray->intersectWith == nullptr) {
 				color = MyColToRGBQUAD(MyColor(.2, .2, .2));
 			}
@@ -138,6 +134,8 @@ void TraceManager::traceScene(std::string sceneFile)
 	mergeAndSaveImage();
 	FreeImage_DeInitialise();
 	std::cout << "image saved\t: " << outFileName << std::endl;
+
+	//	BVHBuilder::traceTree(scene.bin, 0);
 }
 
 TraceManager::~TraceManager()

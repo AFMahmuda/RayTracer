@@ -10,8 +10,8 @@ public:
 	MyColor ambient;
 	float shininess;
 	float refractIndex;
-	float refractValue;
-	MyColor reflectValue;
+	float refrVal;
+	MyColor reflVal;
 	std::string name;
 	Material& operator=(const Material& material) {
 		diffuse = material.diffuse;
@@ -20,9 +20,9 @@ public:
 		ambient = material.ambient;
 		shininess = material.shininess;
 		refractIndex = material.refractIndex;
-		refractValue = material.refractValue;
+		refrVal = material.refrVal;
 		name = material.name;
-		reflectValue = material.reflectValue;
+		reflVal = material.reflVal;
 		return *this;
 	}
 

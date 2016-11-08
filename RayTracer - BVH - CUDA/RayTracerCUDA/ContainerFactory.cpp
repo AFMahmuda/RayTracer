@@ -9,11 +9,11 @@ ContainerFactory::~ContainerFactory()
 {
 }
 
-std::shared_ptr<Container> ContainerFactory::CreateContainer(std::shared_ptr<Triangle> geo, Container::TYPE type) {
+std::shared_ptr<Container> ContainerFactory::CreateContainer(std::shared_ptr<Triangle> &geo, Container::TYPE type) {
 		return std::make_shared<BoxContainer>(BoxContainer(geo));
 }
 
-std::shared_ptr<Container> ContainerFactory::CombineContainer(std::shared_ptr<Container> a, std::shared_ptr<Container> b)
+std::shared_ptr<Container> ContainerFactory::CombineContainer(std::shared_ptr<Container> &a, std::shared_ptr<Container> &b)
 {
 	if (a->type != b->type)
 		return nullptr;
@@ -24,7 +24,7 @@ std::shared_ptr<Container> ContainerFactory::CombineContainer(std::shared_ptr<Co
 	return nullptr;
 }
 
-void ContainerFactory::FindBestMatch(std::shared_ptr<Container> bin, std::vector<std::shared_ptr<Container>> others)
+void ContainerFactory::FindBestMatch(std::shared_ptr<Container>& bin, std::vector<std::shared_ptr<Container>>& others)
 {
 	float bestDist = INFINITY;
 	std::shared_ptr< Container> bestmatch = nullptr;

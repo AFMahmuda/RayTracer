@@ -10,8 +10,8 @@ BoxContainer::BoxContainer(std::shared_ptr<Triangle> item)
 	{
 		Triangle* tri = static_cast<Triangle*>(item.get());
 
-
-		setMinMax(new Vec3[3]{ tri->a,tri->b,tri->c }, 3);
+		Vec3 temp[3]{ tri->a,tri->b,tri->c };
+		setMinMax(temp, 3);
 	}
 }
 

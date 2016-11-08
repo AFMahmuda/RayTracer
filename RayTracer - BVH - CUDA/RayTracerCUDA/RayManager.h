@@ -11,7 +11,8 @@ class RayManager
 {
 public:
 	RayManager();
-	static void traceRay(Ray& ray, std::shared_ptr<Container> bin);
+	static void traceRayIter(Ray& ray, std::shared_ptr<Container> bin);	
+	static void traceRayRecur(Ray& ray, std::shared_ptr<Container> bin); 
 	static MyColor& getColor(const Ray& ray, Scene& scene, int bounce);
 	static MyColor getRefl(const Ray& ray, Scene& scene, int bounce);
 	static	MyColor getRefr(const Ray& ray, Scene& scene, int bounce);
