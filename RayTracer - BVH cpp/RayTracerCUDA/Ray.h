@@ -27,8 +27,8 @@ public:
 	float intersectDist = FLT_MAX;
 	std::shared_ptr< Geometry > intersectWith;
 	Vec3 getHitReal() const { return Vec3(start + Vec3(direction * intersectDist)); }
-	Vec3 getHitPlus() const { return Vec3(start + Vec3(direction * (intersectDist * 1.01f))); }
-	Vec3 getHitMin() const { return Vec3(start + Vec3(direction * (intersectDist * 0.99f))); }
+	Vec3 getHitPlus() const { return Vec3(start + Vec3(direction * (intersectDist * 1.0001f))); }
+	Vec3 getHitMin() const { return Vec3(start + Vec3(direction * (intersectDist * 0.9999f))); }
 
 	void trans(Transform& transform);
 	void transInv(Transform& transform);

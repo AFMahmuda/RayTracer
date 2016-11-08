@@ -26,10 +26,10 @@ void RayManager::traceRay(Ray & ray, std::shared_ptr<Container> bvh)
 			{
 				bins.push_back(currBin->rChild);
 				bins.push_back(currBin->lChild);
+
 			}
 		}
 	}
-
 }
 
 MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
@@ -43,9 +43,9 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 	{
 		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, scene.bin);
 		MyColor color =
-			ray.intersectWith->mat.refractValue * calcColor(ray, effectiveLights, scene.getAtt()) +
-			ray.intersectWith->mat.reflectValue * getRefl(ray, scene, bounce - 1) +
-			getRefr(ray, scene, bounce - 1);
+			ray.intersectWith->mat.refractValue *((MyColor(1, 1, 1) - ray.intersectWith->mat.reflectValue)* calcColor(ray, effectiveLights, scene.getAtt()) +
+				ray.intersectWith->mat.reflectValue * getRefl(ray, scene, bounce - 1)) +
+			(1 - ray.intersectWith->mat.refractValue) * getRefr(ray, scene, bounce - 1);
 		return color;
 	}
 }
@@ -108,7 +108,7 @@ MyColor RayManager::getRefr(const Ray & ray, Scene & scene, int bounce) {
 		Ray refractRay(ray.getHitPlus(), newDir);
 		refractRay.type = Ray::REFRACTION;
 		traceRay(refractRay, scene.bin);
-		return (getColor(refractRay, scene, bounce - 1));
+		return (getColor(refractRay, scene, bounce));
 	}
 	else return MyColor();
 }
