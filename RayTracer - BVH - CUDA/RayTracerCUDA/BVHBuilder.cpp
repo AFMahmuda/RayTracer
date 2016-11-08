@@ -29,7 +29,7 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 		}
 	}
 	else {//using optimized agglomerative clustering
-		temp = BuildTree(scene.geometries);
+		temp = BuildTree(scene.geometries, type);
 	}
 
 	//create cluster
@@ -40,7 +40,7 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 }
 
 
-std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::shared_ptr<Triangle>> primitives)
+std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::shared_ptr<Triangle>> primitives, Container::TYPE _type)
 {
 	/*create cluster if primitives number is below threshold*/
 	if (primitives.size() < threshold)
@@ -49,7 +49,7 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 
 		for (int i = 0; i < primitives.size(); i++)
 		{
-			bins.push_back(ContainerFactory().CreateContainer(primitives[i], type));
+			bins.push_back(ContainerFactory().CreateContainer(primitives[i], _type));
 		}
 		return CombineCluster(bins, f(threshold));
 	}
@@ -62,8 +62,8 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::BuildTree(std::vector<std::s
 	std::move(primitives.begin() + pivot, primitives.end(), std::inserter(right, right.end()));// pivot included in right
 
 	/*build left and right tree separately*/
-	std::vector<std::shared_ptr< Container>> leftTree = BuildTree(left);
-	std::vector<std::shared_ptr< Container>> rightTree = BuildTree(right);
+	std::vector<std::shared_ptr< Container>> leftTree = BuildTree(left, _type);
+	std::vector<std::shared_ptr< Container>> rightTree = BuildTree(right, _type);
 	/*combine two vec and create cluster*/
 	std::move(rightTree.begin(), rightTree.end(), std::inserter(leftTree, leftTree.end()));
 	return CombineCluster(leftTree, f(leftTree.size()));
@@ -101,16 +101,20 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::CombineCluster(std::vector<s
 	{
 		ContainerFactory().FindBestMatch(bins[i], bins);
 	}
-
+	float bestDist;
+	std::shared_ptr< Container> left;
+	std::shared_ptr< Container> right;
 	while (bins.size() > limit)
 	{
-		float bestDist = INFINITY;
-		std::shared_ptr< Container> left = nullptr;
-		std::shared_ptr< Container> right = nullptr;
+		bestDist = INFINITY;
+		left = nullptr;
+		right = nullptr;
 
 		/*iterate to search best match*/
 		for (int i = 0; i < bins.size(); i++)
 		{
+			if (bins[i] == right)
+				continue;
 			if (bins[i]->areaWithClosest < bestDist)
 			{
 				bestDist = bins[i]->areaWithClosest;
@@ -121,24 +125,22 @@ std::vector<std::shared_ptr<Container>> BVHBuilder::CombineCluster(std::vector<s
 
 		/*
 		delete L and R from bins, push new bin [N]:
-		swap [L] and [last]	:: xx[L][R]xxxx
-		add [N]				:: xxx[R]xxx[L]
-		swap [R] and [last]	:: xxx[R]xxx[L][N]
-		pop [last] twice	:: xxx[N]xxx[L][R]
+		init				:: xx[L]x[R]xxxx
+		swap [L] and [last]	:: xxx[R]xxxx[L]
+		add [N]				:: xxx[R]xxxx[L][N]
+		swap [R] and [last]	:: xxx[N]xxxx[L][R]
+		pop [last] twice	:: xxx[N]xxxx
 		:: xxx[N]xxx
 		*/
 		std::shared_ptr< Container> newBin = ContainerFactory().CombineContainer(left, right);
+		bins.push_back(newBin);
 		std::vector<std::shared_ptr <Container>>::iterator indexL = std::find(bins.begin(), bins.end(), left);
 		std::swap(*indexL, bins.back());
-		bins.push_back(newBin);
+		bins.pop_back();
 		std::vector<std::shared_ptr <Container>>::iterator indexR = std::find(bins.begin(), bins.end(), right);
-		std::swap(*indexR, bins.back());
-		bins.pop_back();
-		bins.pop_back();
+		bins.erase(indexR);
 
-		/*
-		change bestmatch of bin if its bestmatch is [l] or [r]
-		*/
+		/*change bestmatch of bin if its bestmatch is [L] or [R]*/
 		ContainerFactory().FindBestMatch(newBin, bins);
 		for (int i = 0; i < bins.size(); i++)
 		{

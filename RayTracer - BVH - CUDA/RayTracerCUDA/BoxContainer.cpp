@@ -6,12 +6,12 @@ BoxContainer::BoxContainer(std::shared_ptr<Triangle> item)
 	type = BOX;
 	geo = item;
 
-	
+
 	{
 		Triangle* tri = static_cast<Triangle*>(item.get());
 
-		
-		setMinMax(new Vec3[3]{ tri->a,tri-> b,tri->c }, 3);
+
+		setMinMax(new Vec3[3]{ tri->a,tri->b,tri->c }, 3);
 	}
 }
 
@@ -42,7 +42,7 @@ BoxContainer::BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<Box
 	}
 	Vec3 size = max - min;
 
-	area = 2.f * (size[0] * size[1] + size[0] * size[2] + size[1] * size[2]);
+	area = 2.f * ((size[0] * size[1]) + (size[0] * size[2]) + (size[1] * size[2]));
 
 }
 
