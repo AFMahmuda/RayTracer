@@ -23,7 +23,8 @@ public:
 
 	float areaWithClosest = INFINITY;
 	std::shared_ptr<Container> closest = nullptr;
-
+	std::vector<std::shared_ptr<Container>> calculatedPair;
+	std::vector<float> calculatedPairArea;
 
 	Container();
 	~Container();
