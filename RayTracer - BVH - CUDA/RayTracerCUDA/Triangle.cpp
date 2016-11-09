@@ -1,5 +1,4 @@
 #include "Triangle.h"
-#include<bitset>
 
 Triangle::Triangle(Vec3 a, Vec3 b, Vec3 c) : Triangle() {
 	this->a = a;
@@ -75,16 +74,13 @@ Triangle::Triangle() :mat(Material())
 {
 }
 
-
-
-
 Triangle::~Triangle()
 {
 }
 
 void Triangle::updatePos()
 {
-	Vec3 temp = (a + b + c) *(1/ 3.0f);
+	Vec3 temp = (a + b + c) *(1 / 3.0f);
 	pos[0] = (temp[0] / 100.f + .5f);
 	pos[1] = (temp[1] / 100.f + .5f);
 	pos[2] = (temp[2] / 100.f + .5f);
@@ -99,7 +95,8 @@ unsigned int Triangle::getMortonPos()
 		unsigned int x = expandBits(fminf(fmaxf(pos[0] * 1024.f, 0.f), 1023.f));
 		unsigned int y = expandBits(fminf(fmaxf(pos[1] * 1024.f, 0.f), 1023.f));
 		unsigned int z = expandBits(fminf(fmaxf(pos[2] * 1024.f, 0.f), 1023.f));
-		mortonCode = x * 4 + y * 2 + z;
+		mortonCode = (  x * 4 + y * 2 + z);
+		mortonBitset = std::bitset<30>(mortonCode);
 		hasMorton = true;
 	}
 	return mortonCode;
@@ -114,7 +111,9 @@ unsigned int Triangle::expandBits(unsigned int v)
 	return v;
 }
 
-std::string Triangle::getMortonBitString()
+std::bitset<30> Triangle::getMortonBits()
 {
-	return std::bitset<30>(getMortonPos()).to_string();
+	if (!hasMorton)
+		getMortonPos();
+	return mortonBitset;
 }

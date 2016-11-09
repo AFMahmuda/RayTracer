@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include<bitset>
 
 #include "Material.h"
 #include "Vec3.h"
@@ -9,8 +10,8 @@ class Triangle
 {
 private:
 	bool hasMorton = false;
+	std::bitset<30> mortonBitset;
 	unsigned int mortonCode;
-	Vec3 pos;
 
 	Vec3 localNorm;
 
@@ -28,6 +29,7 @@ private:
 	void preCalculate();
 	bool IsInsideTriangle(Vec3 point);
 public:
+	Vec3 pos;
 	Vec3 a;
 	Vec3 b;
 	Vec3 c;
@@ -43,9 +45,8 @@ public:
 
 
 	unsigned int getMortonPos();
-
 	unsigned int expandBits(unsigned int v);
 
-	std::string getMortonBitString();
+	std::bitset<30>  getMortonBits();
 };
 

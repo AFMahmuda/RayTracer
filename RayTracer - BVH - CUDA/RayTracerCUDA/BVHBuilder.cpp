@@ -12,13 +12,15 @@ BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC) {
 void BVHBuilder::BuildBVH(Scene & scene) {
 	int n = scene.geometries.size();
 
-	/*precalculate mortoncode*/
-	for (rsize_t i = 0; i < n; i++)
-		scene.geometries[i]->getMortonPos();
-
 	/*sort primitives with radix sort*/
 	RadixSort::radixsort(scene.geometries, n);
 
+	//for (size_t i = 0; i < n; i++)
+	//{
+	//	std::cout << i << "\t" <<
+	//	scene.geometries[i]->getMortonBits() << std::endl;
+	//}
+	//std::cout << getPivot(scene.geometries) << std::endl;
 
 	std::vector<std::shared_ptr< Container>> temp;
 	if (!isAAC)//not optimized agglomerative clustering
@@ -82,9 +84,9 @@ int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>>& geo)
 	{
 		for (int j = 1; j < geo.size(); j++)
 		{
-			std::string last = geo[j - 1]->getMortonBitString();
-			std::string curr = geo[j]->getMortonBitString();
-			if (curr[i] != last[i])
+			auto last = geo[j - 1]->getMortonBits() <<= 1;
+			auto curr = geo[j]->getMortonBits() <<= 1;
+			if ((curr[0] != last[0]))
 				return j;
 		}
 	}
@@ -130,10 +132,9 @@ void BVHBuilder::CombineCluster(std::vector<std::shared_ptr<Container>>& bins, i
 		auto newBin(ContainerFactory().CombineContainer(left, right));
 		bins.push_back(newBin);
 		auto indexL = std::find(bins.begin(), bins.end(), left);
-		std::swap(*indexL, bins.back());
-		bins.pop_back();
+		std::swap(*indexL, bins.back()); bins.pop_back();
 		auto indexR = std::find(bins.begin(), bins.end(), right);
-		bins.erase(indexR);
+		std::swap(*indexR, bins.back()); bins.pop_back();
 
 		/*change bestmatch of bin if its bestmatch is [L] or [R]*/
 		ContainerFactory::FindBestMatch(newBin, bins);

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	//thread number, default = 1
 	int threads = (argc >= 3) ? atoi(argv[2]) : 1;
 	//using aac algorithm (1 = yes / 0 = no ), default = no;
-	bool isAAC = (argc >= 4) ? (atoi(argv[3]) == 1) ? true : false : false;
+	bool isAAC = (argc >= 4) ? (atoi(argv[3]) == 1) ? true : false : true;
 	//bin type (b = box / s = sphere ), default = box;
 	Container::TYPE binType = (argc >= 5) ? (argv[4][0] == 'b') ? Container::BOX : Container::SPHERE : Container::BOX;
 

@@ -134,8 +134,6 @@ void TraceManager::traceScene(std::string sceneFile)
 	mergeAndSaveImage();
 	FreeImage_DeInitialise();
 	std::cout << "image saved\t: " << outFileName << std::endl;
-
-	//	BVHBuilder::traceTree(scene.bin, 0);
 }
 
 TraceManager::~TraceManager()

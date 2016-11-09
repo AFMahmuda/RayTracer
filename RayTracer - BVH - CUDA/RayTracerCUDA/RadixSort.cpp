@@ -2,7 +2,7 @@
 
 
 
-int RadixSort::getMax(std::vector<std::shared_ptr<Triangle>> arr, int n)
+int RadixSort::getMax(std::vector<std::shared_ptr<Triangle>>& arr, int n)
 {
 	unsigned int max = arr[0].get()->getMortonPos();
 	for (int i = 1; i < n; i++)
@@ -16,7 +16,7 @@ int RadixSort::getMax(std::vector<std::shared_ptr<Triangle>> arr, int n)
 * count sort of arr[]
 */
 
-void RadixSort::countSort(std::vector<std::shared_ptr<Triangle>> arr, int n, int exp)
+void RadixSort::countSort(std::vector<std::shared_ptr<Triangle>>& arr, int n, int exp)
 {
 	std::vector<std::shared_ptr< Triangle>> output;
 	output.resize(n);
@@ -46,7 +46,7 @@ RadixSort::RadixSort()
 
 /*sorts arr[] of size n using Radix Sort	*/
 
-void RadixSort::radixsort(std::vector<std::shared_ptr<Triangle>> arr, int n)
+void RadixSort::radixsort(std::vector<std::shared_ptr<Triangle>>& arr, int n)
 {
 	int m = getMax(arr, n);
 	for (int exp = 1; m / exp > 0; exp *= 10)
