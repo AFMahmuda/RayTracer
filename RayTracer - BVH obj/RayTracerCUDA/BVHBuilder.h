@@ -7,6 +7,7 @@
 #include<vector>
 
 #include<memory>
+
 class BVHBuilder
 {
 private:
@@ -15,9 +16,7 @@ private:
 	* n -> number of input clusters
 	* return -> number of max output cluster*/
 	static	int f(int n) { return (n <= 2) ? 1 : n / 2; }
-
 	static	int getPivot(std::vector<std::shared_ptr< Triangle>>& geo);
-
 	static void CombineCluster(std::vector<std::shared_ptr< Container>>& bins, int limit);
 public:
 	bool isAAC;

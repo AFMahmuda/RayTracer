@@ -2,7 +2,7 @@
 #include <ctime>
 #include <iostream>
 #include <thread>
-#include<string>
+#include <string>
 
 
 void TraceManager::initScene(std::string sceneFile) {

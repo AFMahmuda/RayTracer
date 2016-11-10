@@ -1,7 +1,6 @@
 #include "BVHBuilder.h"
 #include <thread>
 
-
 int BVHBuilder::threshold = 20;
 
 BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
@@ -78,6 +77,7 @@ void BVHBuilder::buildTree(std::vector<std::shared_ptr<Container>>& bins, std::v
 	CombineCluster(bins, f(bins.size()));
 }
 
+
 /*list partition function,
 * pivot is the frst bit 'flip'
 * ex : [0] 00000111
@@ -113,6 +113,7 @@ void BVHBuilder::CombineCluster(std::vector<std::shared_ptr<Container>>& bins, i
 		t.push_back(std::thread(ContainerFactory::FindBestMatch, bins[i], bins));
 	}
 	std::for_each(t.begin(), t.end(), std::mem_fn(&std::thread::join));
+	t.clear();
 
 	float bestDist;
 	std::shared_ptr< Container> left;
