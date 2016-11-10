@@ -11,6 +11,7 @@ class TraceManager
 	int tn = 1;
 	bool isAAC = false;
 	Container::TYPE binType;
+	int aacThres;
 	Scene scene;
 	FIBITMAP * image;
 	std::string outFileName;
@@ -30,7 +31,7 @@ class TraceManager
 	void mergeAndSaveImage();
 	static RGBQUAD MyColToRGBQUAD(MyColor & col);
 public:
-	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true);
+	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true, int aacThreshold=20);
 	void traceScene(std::string sceneFile);
 	~TraceManager();
 };

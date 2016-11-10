@@ -24,7 +24,7 @@ void TraceManager::initScene(std::string sceneFile) {
 }
 
 void TraceManager::buildBVH() {
-	BVHBuilder(binType, isAAC).BuildBVH(scene);
+	BVHBuilder(binType, isAAC, aacThres).BuildBVH(scene);
 }
 
 void TraceManager::trace() {
@@ -88,11 +88,12 @@ RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
 	return color;
 }
 
-TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC)
+TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC, int aacThreshold)
 {
 	tn = threadNumber;
 	isAAC = _isAAC;
 	binType = _type;
+	aacThres = aacThreshold;
 }
 
 void TraceManager::traceScene(std::string sceneFile)
@@ -102,9 +103,11 @@ void TraceManager::traceScene(std::string sceneFile)
 	std::cout << "Scene file\t: " << sceneFile << std::endl;
 	std::cout << "#thread(s)\t: " << tn << std::endl;
 	std::cout << "Using AAC?\t: " << isAAC << std::endl;
-	std::cout << "Bin type\t: " << binType << std::endl;
+	if (isAAC) std::cout << "AAC threshold?\t: " << aacThres << std::endl;
+	std::string type = (binType == Container::BOX) ? "BOX" : "SPHERE";
+	std::cout << "Bin type\t: " << type << std::endl;
 	std::cout << "================================" << std::endl;
-	//	system("pause");
+
 	std::cout << "parsing file\t: ";
 	start = std::clock();
 	initScene(sceneFile);
@@ -117,7 +120,7 @@ void TraceManager::traceScene(std::string sceneFile)
 	std::cout << "#light(s)\t: " << scene.lights.size() << std::endl;
 	std::cout << "max depth\t: " << scene.maxDepth << std::endl;
 	std::cout << "================================" << std::endl;
-	//	system("pause");
+
 	std::cout << "bulding bvh\t: ";
 	start = std::clock();
 	buildBVH();

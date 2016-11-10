@@ -2,11 +2,12 @@
 #include <thread>
 
 
+int BVHBuilder::threshold = 20;
 
-
-BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC) {
+BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 	type = _type;
 	isAAC = _isAAC;
+	threshold = _threshold;
 }
 
 void BVHBuilder::BuildBVH(Scene & scene) {
@@ -77,13 +78,22 @@ void BVHBuilder::buildTree(std::vector<std::shared_ptr<Container>>& bins, std::v
 	CombineCluster(bins, f(bins.size()));
 }
 
-
+/*list partition function,
+* pivot is the frst bit 'flip'
+* ex : [0] 00000111
+*      [1] 00001000
+*      [2] 00001000
+*      [3] 00100000
+*      pivot -> 3 (flipped on third element 000xxxxx to 001xxxxx)
+*/
 int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>>& geo)
 {
 	for (int i = 0; i < 30; i++)
 	{
 		for (int j = 1; j < geo.size(); j++)
 		{
+
+			//we shift for better performance and bcz morton code is no longer needed;
 			auto last = geo[j - 1]->getMortonBits() <<= 1;
 			auto curr = geo[j]->getMortonBits() <<= 1;
 			if ((curr[0] != last[0]))
@@ -93,7 +103,7 @@ int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>>& geo)
 	return geo.size() / 2;
 }
 
-
+//combine [bins] cluster to [limit] cluster
 void BVHBuilder::CombineCluster(std::vector<std::shared_ptr<Container>>& bins, int limit)
 {
 	/*precalculate bestmatch to be used in next iteration*/
