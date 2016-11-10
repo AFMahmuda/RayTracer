@@ -1,7 +1,6 @@
 #pragma once
 #include"Scene.h"
-#include"BVHBuilder.h"
-#include"RayManager.h"
+
 
 #include"FreeImage.h"
 

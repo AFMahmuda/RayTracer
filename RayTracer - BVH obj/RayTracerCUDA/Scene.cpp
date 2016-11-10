@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include"Camera.h"
+#include"ViewPlane.h"
 Scene::Scene()
 {
 	att = Attenuation(new float[3]{ 1,0,0 });

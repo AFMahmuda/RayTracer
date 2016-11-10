@@ -1,0 +1,1 @@
+raytracerobj.exe default.scene 32 0 b

@@ -1,6 +1,5 @@
 #pragma once
 
-
 class Vec3
 {
 
@@ -33,8 +32,8 @@ public:
 	{
 		return v[0] * b.v[0] + v[1] * b.v[1] + v[2] * b.v[2];
 	}
-
 	static Vec3 Cross(const Vec3 & a, const Vec3 & b);
+
 	friend Vec3 operator+(const Vec3& lhs, const Vec3& rhs)
 	{
 		Vec3 res(lhs.v);

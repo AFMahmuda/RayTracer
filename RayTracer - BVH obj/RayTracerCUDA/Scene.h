@@ -17,8 +17,6 @@
 #include"PointLight.h"
 #include"DirectionalLight.h"
 
-#include"Camera.h"
-#include"ViewPlane.h"
 #include"Container.h"
 
 
@@ -57,6 +55,5 @@ private:
 	/*shape factory method*/
 	std::shared_ptr<Triangle> createShape(float* param);
 	Triangle createTriangle(float* param);
-	void applyMaterial(Triangle& shape);
 	/*-----------------------*/
 };

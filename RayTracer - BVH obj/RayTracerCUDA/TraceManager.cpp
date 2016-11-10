@@ -4,6 +4,8 @@
 #include <thread>
 #include <string>
 
+#include"BVHBuilder.h"
+#include"RayManager.h"
 
 void TraceManager::initScene(std::string sceneFile) {
 	scene = Scene(sceneFile);
