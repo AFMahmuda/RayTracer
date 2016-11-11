@@ -6,16 +6,18 @@
 
 #include"BVHBuilder.h"
 #include"RayManager.h"
+#include"Camera.h"
+#include"ViewPlane.h"
 
 void TraceManager::initScene(std::string sceneFile) {
 	scene = Scene(sceneFile);
 
 	//precalculate w and h measurements
 	//w and h total
-	height = ViewPlane::Instance()->pixelH;
-	width = ViewPlane::Instance()->pixelW;
+	width = scene.size[0];
+	height = scene.size[1];
 
-	//search two closest factors 6 = 3 and 2 , 5 = 5 and 1
+	//search two closest factors 6 => 3 & 2 ; 5 => 5 & 1
 	verDiv = (int)sqrtf(tn) - 1;
 	do verDiv++; while (tn % verDiv != 0);
 	horDiv = tn / verDiv;

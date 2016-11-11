@@ -25,6 +25,7 @@ class Scene
 {
 public:
 	int maxDepth = 1;
+	int size[2];//pixel dimension
 
 	std::string outFileName = "default.bmp";
 	std::shared_ptr<Container> bin;
@@ -41,7 +42,6 @@ public:
 
 private:
 
-	int size[2];//pixel dimension
 	std::vector<std::shared_ptr<Vec3>> vertices;
 	std::vector<std::shared_ptr<Material>> material;
 
