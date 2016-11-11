@@ -1,0 +1,11 @@
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 4
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 6
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 8
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 10
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 12
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 14
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 16
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 18
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 20
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 22
+raytracerobj.exe scene_8_suzanne.scene 32 1 b 24
