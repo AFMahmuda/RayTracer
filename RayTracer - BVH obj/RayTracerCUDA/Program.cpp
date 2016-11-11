@@ -1,8 +1,6 @@
-#include <stdio.h>  // defines FILENAME_MAX
 #include <fstream>	//file 
-#include <direct.h> // path
 #include <iostream>
-#include <algorithm>//replace
+#include <algorithm> //replace
 #include <string>
 
 #include"TraceManager.h"
@@ -39,6 +37,6 @@ int main(int argc, char *argv[])
 		cout << filename << " file not found!" << endl;
 	}
 
-	system("pause");
+//	system("pause");
 	return 0;
 }

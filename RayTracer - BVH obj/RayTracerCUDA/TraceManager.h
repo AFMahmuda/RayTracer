@@ -27,7 +27,7 @@ class TraceManager
 	void buildBVH();
 	void trace();
 	static void traceThread(FIBITMAP * image, Scene& scene, int rowStart, int colStart, int rowEnd, int colEnd);
-	void mergeAndSaveImage();
+	void mergeAndSaveImage(std::string time);
 	static RGBQUAD MyColToRGBQUAD(MyColor & col);
 public:
 	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true, int aacThreshold=20);

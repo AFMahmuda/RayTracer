@@ -4,6 +4,8 @@
 #include <thread>
 #include <string>
 
+#include <fstream> //for writing to file
+
 #include"BVHBuilder.h"
 #include"RayManager.h"
 #include"Camera.h"
@@ -78,9 +80,10 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 }
 
 
-void TraceManager::mergeAndSaveImage() {
+void TraceManager::mergeAndSaveImage(std::string time) {
+
 	FreeImage_FlipVertical(image);
-	FreeImage_Save(FIF_BMP, image, outFileName.c_str(), 0);
+	FreeImage_Save(FIF_BMP, image, (time + " " + outFileName).c_str(), 0);
 }
 
 RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
@@ -92,6 +95,8 @@ RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
 	return color;
 }
 
+
+
 TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC, int aacThreshold)
 {
 	tn = threadNumber;
@@ -102,47 +107,75 @@ TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC,
 
 void TraceManager::traceScene(std::string sceneFile)
 {
+	std::ofstream report;
+	std::time_t time = std::time(nullptr);
+	std::string fname = std::ctime(&time);
+	fname = fname;
+	std::replace(fname.begin(), fname.end(), '\n', ' ');
+	std::replace(fname.begin(), fname.end(), ':', ' ');
+	report.open(fname + ".txt");
+
 	std::clock_t start;
 	double duration;
+	report << "Scene file\t: " << sceneFile << std::endl;
 	std::cout << "Scene file\t: " << sceneFile << std::endl;
+	report << "#thread(s)\t: " << tn << std::endl;
 	std::cout << "#thread(s)\t: " << tn << std::endl;
+	report << "Using AAC?\t: " << isAAC << std::endl;
 	std::cout << "Using AAC?\t: " << isAAC << std::endl;
+	if (isAAC) report << "AAC threshold?\t: " << aacThres << std::endl;
 	if (isAAC) std::cout << "AAC threshold?\t: " << aacThres << std::endl;
 	std::string type = (binType == Container::BOX) ? "BOX" : "SPHERE";
+	report << "Bin type\t: " << type << std::endl;
 	std::cout << "Bin type\t: " << type << std::endl;
+	report << "================================" << std::endl;
 	std::cout << "================================" << std::endl;
 
+	report << "parsing file\t: ";
 	std::cout << "parsing file\t: ";
 	start = std::clock();
 	initScene(sceneFile);
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	report << duration << " s" << std::endl;
 	std::cout << duration << " s" << std::endl;
 
+
+	report << "================================" << std::endl;
 	std::cout << "================================" << std::endl;
+	report << "image size\t: " << ViewPlane::Instance()->pixelW << " x " << ViewPlane::Instance()->pixelH << std::endl;
 	std::cout << "image size\t: " << ViewPlane::Instance()->pixelW << " x " << ViewPlane::Instance()->pixelH << std::endl;
+	report << "#object(s)\t: " << scene.geometries.size() << std::endl;
 	std::cout << "#object(s)\t: " << scene.geometries.size() << std::endl;
+	report << "#light(s)\t: " << scene.lights.size() << std::endl;
 	std::cout << "#light(s)\t: " << scene.lights.size() << std::endl;
+	report << "max depth\t: " << scene.maxDepth << std::endl;
 	std::cout << "max depth\t: " << scene.maxDepth << std::endl;
+	report << "================================" << std::endl;
 	std::cout << "================================" << std::endl;
 
+	report << "bulding bvh\t: ";
 	std::cout << "bulding bvh\t: ";
 	start = std::clock();
 	buildBVH();
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	report << duration << " s" << std::endl;
 	std::cout << duration << " s" << std::endl;
 	//	system("pause");
+	report << "tracing scene\t: ";
 	std::cout << "tracing scene\t: ";
 	start = std::clock();
 	FreeImage_Initialise();
 	trace();
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	report << duration << " s" << std::endl;
 	std::cout << duration << " s" << std::endl;
 
-	mergeAndSaveImage();
+	mergeAndSaveImage(fname);
 	FreeImage_DeInitialise();
+	report << "image saved\t: " << outFileName << std::endl;
 	std::cout << "image saved\t: " << outFileName << std::endl;
+	report.close();
 }
-
 TraceManager::~TraceManager()
 {
 }
