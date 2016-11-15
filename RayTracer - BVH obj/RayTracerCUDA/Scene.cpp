@@ -245,6 +245,8 @@ Triangle Scene::createTriangle(float * param)
 	Vec3 p[3];
 	for (size_t i = 0; i < 3; i++)
 	{
+		if ((int)param[i] < 0)
+			param[i] += vertices.size() + 1;
 		p[i] = *vertices[(int)param[i] - 1];
 	}
 	Triangle tri = Triangle(p[0], p[1], p[2]);

@@ -1,0 +1,24 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl body
+Ns 9.803922
+Ka 0.082192 0.082192 0.082192
+Kd 1.000000 1.000000 1.000000
+Ks 0.200000 0.200000 0.200000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd C:\Users\Yahya\Downloads\teapot\default.png
+
+newmtl body_NONE
+Ns 9.803922
+Ka 0.082192 0.082192 0.082192
+Kd 1.000000 1.000000 1.000000
+Ks 0.200000 0.200000 0.200000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd default.png
