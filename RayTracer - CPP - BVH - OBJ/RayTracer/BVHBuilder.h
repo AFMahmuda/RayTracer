@@ -11,7 +11,7 @@
 class BVHBuilder
 {
 private:
-	static void buildTree(std::vector<std::shared_ptr< Container>>& bins, std::vector<std::shared_ptr< Triangle>>& primitives, Container::TYPE _type);
+	static void buildTree(std::vector<std::shared_ptr< Container>>& bins, std::vector<std::shared_ptr< Triangle>>& primitives, Container::TYPE const _type);
 	/*cluster reduction function
 	* n -> number of input clusters
 	* return -> number of max output cluster*/

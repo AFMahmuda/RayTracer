@@ -67,13 +67,15 @@ void BVHBuilder::buildTree(std::vector<std::shared_ptr<Container>>& bins, std::v
 
 	std::thread lBuild(buildTree, std::ref(leftTree), std::ref(left), _type);
 	std::thread rBuild(buildTree, std::ref(rightTree), std::ref(right), _type);
-
 	lBuild.join();
 	rBuild.join();
 
+	//buildTree( leftTree, left, _type);
+	//buildTree( rightTree,right, _type);
+
 	/*combine two vec and create cluster*/
 	std::move(rightTree.begin(), rightTree.end(), std::inserter(bins, bins.end()));
-
+	
 	CombineCluster(bins, f(bins.size()));
 }
 
@@ -106,14 +108,11 @@ int BVHBuilder::getPivot(std::vector<std::shared_ptr<Triangle>>& geo)
 //combine [bins] cluster to [limit] cluster
 void BVHBuilder::CombineCluster(std::vector<std::shared_ptr<Container>>& bins, int limit)
 {
-	/*precalculate bestmatch to be used in next iteration*/
-	std::vector<std::thread> t;
+	/*precalculate bestmatch to be used in iteration*/
 	for (int i = 0; i < bins.size(); i++)
 	{
-		t.push_back(std::thread(ContainerFactory::FindBestMatch, bins[i], bins));
+		ContainerFactory::FindBestMatch(bins[i], bins);
 	}
-	std::for_each(t.begin(), t.end(), std::mem_fn(&std::thread::join));
-	t.clear();
 
 	float bestDist;
 	std::shared_ptr< Container> left;
