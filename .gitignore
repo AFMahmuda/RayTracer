@@ -12,11 +12,11 @@
 
 # Build results
 [Dd]ebugPublic/
-[Rr]eleases/
+[Rr]elease/
+[Dd]ebug
 bld/
 [Oo]bj/
-x64
-[Dd]ebug
+
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -45,7 +45,6 @@ artifacts/
 *_i.h
 *.ilk
 *.meta
-*.obj
 *.pch
 *.pdb
 *.pgc
