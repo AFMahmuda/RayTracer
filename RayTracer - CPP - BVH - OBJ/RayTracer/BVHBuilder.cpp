@@ -65,17 +65,19 @@ void BVHBuilder::buildTree(std::vector<std::shared_ptr<Container>>& bins, std::v
 	std::vector<std::shared_ptr< Container>>& leftTree = bins;
 	std::vector<std::shared_ptr< Container>> rightTree;
 
-	std::thread lBuild(buildTree, std::ref(leftTree), std::ref(left), _type);
+//	std::thread lBuild(buildTree, std::ref(leftTree), std::ref(left), _type);
 	std::thread rBuild(buildTree, std::ref(rightTree), std::ref(right), _type);
-	lBuild.join();
+	buildTree(leftTree, left, _type);
+//	lBuild.join();
 	rBuild.join();
 
 	//buildTree( leftTree, left, _type);
 	//buildTree( rightTree,right, _type);
 
 	/*combine two vec and create cluster*/
+//	std::move(leftTree.begin(), leftTree.end(), std::inserter(bins, bins.end()));
 	std::move(rightTree.begin(), rightTree.end(), std::inserter(bins, bins.end()));
-	
+
 	CombineCluster(bins, f(bins.size()));
 }
 

@@ -47,13 +47,12 @@ void RayManager::traceRayRecur(Ray & ray, std::shared_ptr<Container> bvh)
 	}
 }
 
-MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
+MyColor RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 	if (bounce <= 0 || ray.intersectWith == nullptr)
 	{
 		return MyColor();
 		//return scene.defColor;
 	}
-
 	else
 	{
 		std::vector<std::shared_ptr< Light>> effectiveLights = populateLights(ray, scene.lights, scene.bin);
@@ -66,8 +65,8 @@ MyColor & RayManager::getColor(const Ray & ray, Scene & scene, int bounce) {
 }
 
 MyColor RayManager::getRefl(const Ray & ray, Scene & scene, int bounce) {
-	float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
-	Vec3 normal = ray.intersectWith->getNormal(ray.getHitReal());
+	float cosI = ray.intersectWith->getNormal(ray.getHit()) * ray.direction;
+	Vec3 normal = ray.intersectWith->getNormal(ray.getHit());
 	if (cosI < 0)
 	{
 		normal *= -1.f;
@@ -82,10 +81,10 @@ MyColor RayManager::getRefl(const Ray & ray, Scene & scene, int bounce) {
 MyColor RayManager::getRefr(const Ray & ray, Scene & scene, int bounce) {
 	if (ray.intersectWith->mat.refrVal != 1.0)
 	{
-		float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
+		float cosI = ray.intersectWith->getNormal(ray.getHit()) * ray.direction;
 		Vec3 normal;
 		float n1, n2, n;
-		normal = ray.intersectWith->getNormal(ray.getHitReal());
+		normal = ray.intersectWith->getNormal(ray.getHit());
 		if (cosI > 0)
 		{
 			n1 = ray.intersectWith->mat.refractIndex;
@@ -132,7 +131,7 @@ MyColor RayManager::calcColor(const Ray & ray, std::vector<std::shared_ptr<Light
 {
 	MyColor result = ray.intersectWith->mat.ambient + ray.intersectWith->mat.emmission;
 	Vec3 normal = ray.intersectWith->getNormal(ray.getHitMin());
-	float cosI = ray.intersectWith->getNormal(ray.getHitReal()) * ray.direction;
+	float cosI = ray.intersectWith->getNormal(ray.getHit()) * ray.direction;
 	if (cosI > 0)
 	{
 		normal *= -1.f;

@@ -17,16 +17,16 @@ public:
 	Vec3 start;
 	Vec3 direction;
 	float intersectDist = FLT_MAX;
+	float epsilon;
 	std::shared_ptr< Triangle > intersectWith;
-	Vec3 getHitReal() const { return Vec3(start + Vec3(direction * intersectDist)); }
-	Vec3 getHitPlus() const { return Vec3(start + Vec3(direction * (intersectDist * 1.0001f))); }
-	Vec3 getHitMin() const { return Vec3(start + Vec3(direction * (intersectDist * 0.9999f))); }
-
+	Vec3 getHit() const;
+	Vec3 getHitPlus() const;
+	Vec3 getHitMin() const;
 
 	bool isCloser(float dist);
 
 	Ray();
-	Ray(Vec3 start, Vec3 dir) :start(start), direction(dir) {}
+	Ray(Vec3 start, Vec3 dir);
 	~Ray();
 };
 

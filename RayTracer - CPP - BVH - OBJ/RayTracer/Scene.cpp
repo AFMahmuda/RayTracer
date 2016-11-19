@@ -122,7 +122,8 @@ void Scene::executeCommand(std::string fullcommand)
 		{
 			param.push_back(stof(words[i + 1]));
 		}
-		vertices.push_back(std::make_shared<Vec3>(&param[0], 1));
+		std::shared_ptr<Vec3> newPoint(new Vec3(&param[0], 1));
+		vertices.push_back(newPoint);
 		return;
 	}
 
