@@ -15,7 +15,8 @@ private:
 	/*cluster reduction function
 	* n -> number of input clusters
 	* return -> number of max output cluster*/
-	static	int f(int n) { return (n <= 2) ? 1 : n / 2; }
+	//	static	int f(int n) { return (n <= 2) ? 1 : n / 2; }
+	static	int f(int n) { return (n <= 2) ? 1 : powf(threshold, .5f) / 2.f * powf(n, .5f); }
 	static	int getPivot(std::vector<std::shared_ptr< Triangle>>& geo);
 	static void CombineCluster(std::vector<std::shared_ptr< Container>>& bins, int limit);
 public:
