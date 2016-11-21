@@ -10,7 +10,7 @@ public:
 	Vec3 c;
 	float r;
 
-	SphereContainer(std::shared_ptr< Triangle> item);
+	SphereContainer(std::shared_ptr<Triangle> item);
 	SphereContainer(std::shared_ptr<SphereContainer> a, std::shared_ptr<SphereContainer> b);
 	~SphereContainer();
 
