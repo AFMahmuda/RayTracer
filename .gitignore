@@ -231,3 +231,4 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 /RayTracer - BVH - CUDA/RayTracerOBJ.VC.db
+RayTracer - BVH - CUDA/RayTracerCUDA.VC.db
