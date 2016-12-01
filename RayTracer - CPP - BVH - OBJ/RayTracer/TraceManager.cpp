@@ -163,7 +163,12 @@ void TraceManager::traceScene(std::string sceneFile)
 	report << "sorting objects\t: ";
 	std::cout << "sorting objects\t: ";
 	start = std::clock();
-	RadixSort::radixsort(scene.geometries, scene.geometries.size());
+	RadixSort::radixsort(scene.geometries);
+	for (size_t i = 0; i < scene.geometries.size(); i++)
+	{
+		report << scene.geometries[i]->getMortonBits() << std::endl;
+	}
+
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
