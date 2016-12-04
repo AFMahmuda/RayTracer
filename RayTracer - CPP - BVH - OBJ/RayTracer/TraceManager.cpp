@@ -19,19 +19,30 @@
 void TraceManager::initScene(std::string sceneFile) {
 	scene = Scene(sceneFile);
 
-	//precalculate w and h measurements
-	//w and h total
-	width = scene.size[0];
-	height = scene.size[1];
 
-	//search two closest factors 6 => 3 & 2 ; 5 => 5 & 1
-	verDiv = (int)sqrtf(tn) - 1;
-	do verDiv++; while (tn % verDiv != 0);
-	horDiv = tn / verDiv;
+	try
+	{
+		if (tn % 2 == 1)
+			throw 0;
+		//precalculate w and h measurements
+		width = scene.size[0];
+		height = scene.size[1];
 
-	wPerSeg = width / horDiv; //width per segmen
-	hPerSeg = height / verDiv; //height per segmen
-	outFileName = scene.outFileName;
+		//search two closest factors 6 => 3 & 2 ; 5 => 5 & 1
+		verDiv = (int)sqrtf(tn) - 1;
+		do { verDiv++; if (verDiv > tn) throw 0; } while (tn % verDiv != 0);
+		horDiv = tn / verDiv;
+
+		wPerSeg = width / horDiv; //width per segmen
+		hPerSeg = height / verDiv; //height per segmen
+		outFileName = scene.outFileName;
+	}
+	catch (int e)
+	{
+		std::cout << "exception thrown, please check render thread number and size." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
 }
 
 void TraceManager::buildBVH() {
@@ -40,14 +51,18 @@ void TraceManager::buildBVH() {
 
 void TraceManager::trace() {
 	std::vector<std::thread> threads;
-	int cnt = 0;
 	image = FreeImage_Allocate(width, height, 24);
+
+	//nothing in scene
+	if (scene.bin == nullptr)
+		return;
+
+
 	for (int i = 0; i < verDiv; i++)
 		for (int j = 0; j < horDiv; j++)
 		{
-			int row = i, col = j, n = cnt;
+			int row = i, col = j;
 			threads.push_back(std::thread(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
-			cnt++;
 		}
 	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
@@ -167,7 +182,6 @@ void TraceManager::traceScene(std::string sceneFile)
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
-
 	report << "bulding bvh\t: ";
 	std::cout << "bulding bvh\t: ";
 	start = std::clock();

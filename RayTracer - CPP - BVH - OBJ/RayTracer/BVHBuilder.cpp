@@ -1,10 +1,10 @@
 #include "BVHBuilder.h"
 
-#include <thread>
 
 #include"RadixSort.h"
 
 int BVHBuilder::threshold = 20;
+ctpl::thread_pool BVHBuilder::tPool(std::thread::hardware_concurrency() - 1);
 
 BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 	type = _type;
@@ -14,6 +14,10 @@ BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 
 void BVHBuilder::BuildBVH(Scene & scene) {
 	int n = scene.geometries.size();
+
+	//nothing in scene
+	if (n == 0)
+		return;
 
 	//for (size_t i = 0; i < n; i++)
 	//{
@@ -32,7 +36,8 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 		}
 	}
 	else {//using optimized agglomerative clustering
-		buildTree(temp, scene.geometries, type);
+		std::future<void> buildtree = tPool.push(buildTree, std::ref(temp), std::ref(scene.geometries), type);
+		buildtree.get();
 	}
 
 	//create cluster to root
@@ -42,10 +47,18 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 	scene.bin = temp[0];
 }
 
+/*
+input
+bins,
+p = primitives
+type
 
-void BVHBuilder::buildTree(std::vector<std::shared_ptr<Container>>& bins, std::vector<std::shared_ptr<Triangle>>& primitives, Container::TYPE _type)
+output
+modified bins
+*/
+void BVHBuilder::buildTree(int id, std::vector<std::shared_ptr<Container>>& bins, std::vector<std::shared_ptr<Triangle>>& primitives, Container::TYPE _type)
 {
-	/*create cluster if primitives number is below threshold*/
+	//create clusters if primitives number < threshold
 	if (primitives.size() < threshold)
 	{
 		for (int i = 0; i < primitives.size(); i++)
@@ -56,29 +69,34 @@ void BVHBuilder::buildTree(std::vector<std::shared_ptr<Container>>& bins, std::v
 		return;
 	}
 
-	/*split primitives into two groups besed on pivot*/
+	//split primitives into two groups besed on pivot
 	int pivot = getPivot(primitives);
-	std::vector<std::shared_ptr<Triangle>> left(primitives.begin(), primitives.begin() + pivot);// pivot included in left
-	std::vector<std::shared_ptr<Triangle>> right(primitives.begin() + pivot, primitives.end());
+	std::vector<std::shared_ptr<Triangle>> lPrimitives(primitives.begin(), primitives.begin() + pivot);// pivot included in left
+	std::vector<std::shared_ptr<Triangle>> rPrimitives(primitives.begin() + pivot, primitives.end());
 
-	/*build left and right tree separately*/
-	std::vector<std::shared_ptr< Container>>& leftTree = bins;
-	std::vector<std::shared_ptr< Container>> rightTree;
+	//build left and right tree separately
+	std::vector<std::shared_ptr< Container>>& lTree = bins;
+	std::vector<std::shared_ptr< Container>> rTree;
 
-//	std::thread lBuild(buildTree, std::ref(leftTree), std::ref(left), _type);
-	std::thread rBuild(buildTree, std::ref(rightTree), std::ref(right), _type);
-	buildTree(leftTree, left, _type);
-//	lBuild.join();
-	rBuild.join();
+	//if there's an indle thread in pool, push new thread.
+	std::future<void> lBuild;
+	switch (tPool.n_idle() > 0)
+	{
+	case true:
+		lBuild = tPool.push(buildTree, std::ref(lTree), std::ref(lPrimitives), _type);
+		buildTree(id, rTree, rPrimitives, _type);
+		lBuild.get();
+		break;
+	case false:
+		buildTree(id, lTree, lPrimitives, _type);
+		buildTree(id, rTree, rPrimitives, _type);
+		break;
+	}
 
-	//buildTree( leftTree, left, _type);
-	//buildTree( rightTree,right, _type);
-
-	/*combine two vec and create cluster*/
-//	std::move(leftTree.begin(), leftTree.end(), std::inserter(bins, bins.end()));
-	std::move(rightTree.begin(), rightTree.end(), std::inserter(bins, bins.end()));
-
+	/*combine two vec and than create clusters*/
+	std::move(rTree.begin(), rTree.end(), std::inserter(bins, bins.end()));
 	CombineCluster(bins, f(bins.size()));
+	return;
 }
 
 

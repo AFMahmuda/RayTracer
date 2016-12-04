@@ -2,6 +2,8 @@
 #include<vector>
 #include<memory>
 
+#include "CTPL\ctpl_stl.h"
+
 #include"BoxContainer.h"
 #include"SphereContainer.h"
 #include"ContainerFactory.h"
@@ -10,15 +12,20 @@
 
 class BVHBuilder
 {
-private:
-	static void buildTree(std::vector<std::shared_ptr< Container>>& bins, std::vector<std::shared_ptr< Triangle>>& primitives, Container::TYPE const _type);
+private:	
+	static void buildTree(int id,std::vector<std::shared_ptr< Container>>& bins, std::vector<std::shared_ptr< Triangle>>& primitives, Container::TYPE const _type);
 	/*cluster reduction function
 	* n -> number of input clusters
 	* return -> number of max output cluster*/
 	//	static	int f(int n) { return (n <= 2) ? 1 : n / 2; }
 	static	int f(int n) { return (n <= 2) ? 1 : powf(threshold, .5f) / 2.f * powf(n, .5f); }
+	
 	static	int getPivot(std::vector<std::shared_ptr< Triangle>>& geo);
 	static void CombineCluster(std::vector<std::shared_ptr< Container>>& bins, int limit);
+
+	//for thread pooling
+    static ctpl::thread_pool tPool;
+
 public:
 	bool isAAC;
 	Container::TYPE type;

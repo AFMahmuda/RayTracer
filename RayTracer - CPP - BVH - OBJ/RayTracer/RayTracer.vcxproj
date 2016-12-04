@@ -140,7 +140,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)FreeImage\x64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)CTPL;$(ProjectDir)FreeImage\x64</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
@@ -191,6 +191,7 @@
     <ClInclude Include="RadixSort.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RayManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SphereContainer.h" />
     <ClInclude Include="TraceManager.h" />
