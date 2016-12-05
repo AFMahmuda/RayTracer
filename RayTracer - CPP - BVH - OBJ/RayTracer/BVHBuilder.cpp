@@ -1,6 +1,5 @@
 #include "BVHBuilder.h"
 
-
 #include"RadixSort.h"
 
 int BVHBuilder::threshold = 20;

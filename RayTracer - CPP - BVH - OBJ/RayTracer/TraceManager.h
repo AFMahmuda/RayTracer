@@ -30,7 +30,9 @@ class TraceManager
 	void mergeAndSaveImage(std::string time);
 	static RGBQUAD MyColToRGBQUAD(MyColor & col);
 public:
-	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true, int aacThreshold=20);
+	TraceManager(int threadNumber = 1, Container::TYPE _type = Container::BOX, bool _isAAC = true, int aacThreshold = 20);
+	void testThreshold(std::string sceneFile,float* vals, int num);
+	void testType(std::string sceneFile);
 	void traceScene(std::string sceneFile);
 	~TraceManager();
 };
