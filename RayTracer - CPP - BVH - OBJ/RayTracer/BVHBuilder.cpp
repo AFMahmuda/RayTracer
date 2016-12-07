@@ -9,6 +9,7 @@ BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 	type = _type;
 	isAAC = _isAAC;
 	threshold = _threshold;
+	tPool.resize(std::thread::hardware_concurrency() - 1);
 }
 
 void BVHBuilder::BuildBVH(Scene & scene) {
