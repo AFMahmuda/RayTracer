@@ -1,6 +1,7 @@
 #include "RadixSort.h"
 #include <utility>      // std::move
 #include <iostream>
+#include "ThreadPool.h"
 
 /*count sort of arr[]	*/
 void RadixSort::countSort(int id, std::vector<std::shared_ptr<Triangle>>& arr, int start, int end, int step) {
@@ -31,9 +32,9 @@ void RadixSort::countSort(int id, std::vector<std::shared_ptr<Triangle>>& arr, i
 	}
 
 	output.clear();
-	if (tPool.n_idle() > 0)
+	if (ThreadPool::tp.n_idle() > 0)
 	{
-		auto leftSort = tPool.push(countSort, std::ref(arr), start, mid - 1, step - 1);
+		auto leftSort = ThreadPool::tp.push(countSort, std::ref(arr), start, mid - 1, step - 1);
 		countSort(id, arr, mid, end, step - 1);
 		leftSort.get();
 	}
@@ -51,16 +52,12 @@ RadixSort::RadixSort()
 }
 
 
-ctpl::thread_pool RadixSort::tPool(std::thread::hardware_concurrency() - 1);
-
 /*sorts arr[] of size n using Radix Sort	*/
 void RadixSort::radixsort(std::vector<std::shared_ptr<Triangle>>& arr, int n)
 {
 	if (n > 0)
 	{
-		tPool.resize(std::thread::hardware_concurrency() - 1);
 		countSort(0, arr, 0, n - 1, 29);
-		tPool.stop();
 	}
 }
 

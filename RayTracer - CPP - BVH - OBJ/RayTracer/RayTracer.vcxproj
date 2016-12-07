@@ -171,6 +171,7 @@
     <ClCompile Include="RayManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SphereContainer.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="TraceManager.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vec3.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SphereContainer.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="TraceManager.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec3.h" />

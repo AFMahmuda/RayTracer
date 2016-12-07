@@ -2,7 +2,6 @@
 #include<vector>
 #include<memory>
 
-#include "CTPL\ctpl_stl.h"
 
 #include"BoxContainer.h"
 #include"SphereContainer.h"
@@ -23,8 +22,6 @@ private:
 	static	int getPivot(std::vector<std::shared_ptr< Triangle>>& geo);
 	static void CombineCluster(std::vector<std::shared_ptr< Container>>& bins, int limit);
 
-	//for thread pooling
-    static ctpl::thread_pool tPool;
 
 public:
 	bool isAAC;

@@ -1,15 +1,15 @@
 #include "BVHBuilder.h"
 
 #include"RadixSort.h"
+#include"ThreadPool.h"
 
 int BVHBuilder::threshold = 20;
-ctpl::thread_pool BVHBuilder::tPool(std::thread::hardware_concurrency() - 1);
 
 BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 	type = _type;
 	isAAC = _isAAC;
 	threshold = _threshold;
-	tPool.resize(std::thread::hardware_concurrency() - 1);
+	
 }
 
 void BVHBuilder::BuildBVH(Scene & scene) {
@@ -36,7 +36,7 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 		}
 	}
 	else {//using optimized agglomerative clustering
-		std::future<void> buildtree = tPool.push(buildTree, std::ref(temp), std::ref(scene.geometries), type);
+		std::future<void> buildtree = ThreadPool::tp.push(buildTree, std::ref(temp), std::ref(scene.geometries), type);
 		buildtree.get();
 	}
 
@@ -80,10 +80,10 @@ void BVHBuilder::buildTree(int id, std::vector<std::shared_ptr<Container>>& bins
 
 	//if there's an indle thread in pool, push new thread.
 	std::future<void> lBuild;
-	switch (tPool.n_idle() > 0)
+	switch (ThreadPool::tp.n_idle() > 0)
 	{
 	case true:
-		lBuild = tPool.push(buildTree, std::ref(lTree), std::ref(lPrimitives), _type);
+		lBuild = ThreadPool::tp.push(buildTree, std::ref(lTree), std::ref(lPrimitives), _type);
 		buildTree(id, rTree, rPrimitives, _type);
 		lBuild.get();
 		break;
