@@ -135,12 +135,12 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)FreeImage\x64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)CTPL;$(ProjectDir)FreeImage\x64</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
@@ -171,6 +171,7 @@
     <ClCompile Include="RayManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SphereContainer.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="TraceManager.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vec3.cpp" />
@@ -191,8 +192,10 @@
     <ClInclude Include="RadixSort.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RayManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SphereContainer.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="TraceManager.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec3.h" />
