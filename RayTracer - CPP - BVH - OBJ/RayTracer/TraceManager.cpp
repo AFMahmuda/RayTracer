@@ -7,7 +7,7 @@
 #include <chrono>
 #include <sstream>
 
-
+#include <future>
 #include <fstream> //for writing to file
 
 #include"BVHBuilder.h"
@@ -15,6 +15,8 @@
 #include"Camera.h"
 #include"ViewPlane.h"
 #include "RadixSort.h"
+#include "ThreadPool.h"
+
 
 void TraceManager::initScene(std::string sceneFile) {
 	scene = Scene(sceneFile);
@@ -46,29 +48,31 @@ void TraceManager::initScene(std::string sceneFile) {
 }
 
 void TraceManager::buildBVH() {
-	BVHBuilder(binType, isAAC, aacThres).BuildBVH(scene);
+	scene.bin = BVHBuilder(binType, isAAC, aacThres).BuildBVH(scene.geometries);
 }
 
 void TraceManager::trace() {
-	std::vector<std::thread> threads;
 	image = FreeImage_Allocate(width, height, 24);
 
 	//nothing in scene
 	if (scene.bin == nullptr)
 		return;
 
-
+	std::vector<std::future<void>> traceT;
 	for (int i = 0; i < verDiv; i++)
 		for (int j = 0; j < horDiv; j++)
 		{
 			int row = i, col = j;
-			threads.push_back(std::thread(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
+			traceT.push_back(ThreadPool::tp.push(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
 		}
-	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
+	for (size_t i = 0; i < tn; i++)
+	{
+		traceT[i].get();
+	}
 }
 
-void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
+void TraceManager::traceThread(int id, FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
 {
 	RayManager& rayManager = RayManager();
 	Ray* ray;
@@ -84,7 +88,7 @@ void TraceManager::traceThread(FIBITMAP * image, Scene &scene, int rowStart, int
 			ray->start = Camera::Instance()->pos;
 			ray->direction = Vec3(ray->start, pixPosition).normalize();
 
-			rayManager.traceRayIter(*ray, scene.bin);
+			rayManager.traceRay(*ray, scene.bin);
 
 			if (ray->intersectWith == nullptr) {
 				color = MyColToRGBQUAD(MyColor(.2, .2, .2));
@@ -176,10 +180,11 @@ void TraceManager::traceScene(std::string sceneFile)
 	report << "sorting objects\t: ";
 	std::cout << "sorting objects\t: ";
 	start = std::clock();
-	RadixSort::radixsort(scene.geometries);
+	RadixSort().radixsort(scene.geometries);
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
+
 	report << "bulding bvh\t: ";
 	std::cout << "bulding bvh\t: ";
 	start = std::clock();

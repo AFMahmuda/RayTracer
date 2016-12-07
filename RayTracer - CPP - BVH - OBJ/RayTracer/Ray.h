@@ -24,7 +24,7 @@ public:
 	Vec3 getHitMin() const;
 
 	bool isCloser(float dist);
-
+	int hitCount[2];
 	Ray();
 	Ray(Vec3 start, Vec3 dir);
 	~Ray();

@@ -1,5 +1,4 @@
 #include "RadixSort.h"
-#include <utility>      // std::move
 #include <iostream>
 #include "ThreadPool.h"
 
@@ -21,10 +20,8 @@ void RadixSort::countSort(int id, std::vector<std::shared_ptr<Triangle>>& arr, i
 	int mid = bin[0] + start;
 	for (int i = end; i >= start; i--)
 	{
-		//std::cout << step << " " << start << " " << end << " " << (end - start) << " " << i << " " << bin[arr[i]->getMortonBits()[step]] << " " << bin[arr[i]->getMortonBits()[step]] - 1;
 		output[bin[arr[i]->getMortonBits()[step]] - 1] = arr[i];
 		bin[arr[i]->getMortonBits()[step]]--;
-		//std::cout << " done" << "\n";
 	}
 	for (int i = start; i <= end; i++)
 	{
@@ -43,7 +40,6 @@ void RadixSort::countSort(int id, std::vector<std::shared_ptr<Triangle>>& arr, i
 		countSort(id, arr, start, mid - 1, step - 1);
 		countSort(id, arr, mid, end, step - 1);
 	}
-
 }
 
 RadixSort::RadixSort()
@@ -51,10 +47,10 @@ RadixSort::RadixSort()
 
 }
 
-
 /*sorts arr[] of size n using Radix Sort	*/
-void RadixSort::radixsort(std::vector<std::shared_ptr<Triangle>>& arr, int n)
+void RadixSort::radixsort(std::vector<std::shared_ptr<Triangle>>& arr)
 {
+	int n = arr.size();
 	if (n > 0)
 	{
 		countSort(0, arr, 0, n - 1, 29);

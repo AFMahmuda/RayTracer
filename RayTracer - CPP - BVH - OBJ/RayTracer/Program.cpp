@@ -5,8 +5,14 @@
 #include <thread>
 #include"TraceManager.h"
 #include"Container.h"
+
 using namespace std;
 
+
+
+void ahe() {
+
+}
 int main(int argc, char *argv[])
 {
 	//scene file name, default = "default.scene"	
@@ -36,7 +42,6 @@ int main(int argc, char *argv[])
 	{
 		cout << filename << " file not found!" << endl;
 	}
-
 	//	system("pause");
 	return 0;
 }

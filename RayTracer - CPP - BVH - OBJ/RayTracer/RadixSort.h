@@ -4,7 +4,7 @@
 #include"Triangle.h"
 
 
-//http://www.sanfoundry.com/cpp-program-implement-radix-sort/
+//based on http://www.sanfoundry.com/cpp-program-implement-radix-sort/
 class RadixSort
 {
 private:
@@ -14,7 +14,7 @@ private:
 public:
 	RadixSort();
 	/*sorts arr[] of size n using Radix Sort*/
-	static void radixsort(std::vector<std::shared_ptr< Triangle>>& arr, int n);
+	void radixsort(std::vector<std::shared_ptr< Triangle>>& arr);
 	~RadixSort();
 };
 

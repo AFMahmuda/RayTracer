@@ -9,15 +9,15 @@ BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 	type = _type;
 	isAAC = _isAAC;
 	threshold = _threshold;
-	
+
 }
 
-void BVHBuilder::BuildBVH(Scene & scene) {
-	int n = scene.geometries.size();
+std::shared_ptr<Container> BVHBuilder::BuildBVH(std::vector<std::shared_ptr<Triangle>>& primitives) {
+	int n = primitives.size();
 
 	//nothing in scene
 	if (n == 0)
-		return;
+		return nullptr;
 
 	//for (size_t i = 0; i < n; i++)
 	//{
@@ -32,19 +32,19 @@ void BVHBuilder::BuildBVH(Scene & scene) {
 		temp.reserve(n);
 		for (int i = 0; i < n; i++)
 		{
-			temp.push_back((ContainerFactory().CreateContainer(scene.geometries[i], type)));
+			temp.push_back((ContainerFactory().CreateContainer(primitives[i], type)));
 		}
 	}
 	else {//using optimized agglomerative clustering
-		std::future<void> buildtree = ThreadPool::tp.push(buildTree, std::ref(temp), std::ref(scene.geometries), type);
+		std::future<void> buildtree = ThreadPool::tp.push(buildTree, std::ref(temp), std::ref(primitives), type);
 		buildtree.get();
 	}
 
 	//create cluster to root
 	CombineCluster(temp, 1);
 
-	//scene only contains root of cluster tree
-	scene.bin = temp[0];
+	//only need root of cluster tree
+	return temp[0];
 }
 
 /*
