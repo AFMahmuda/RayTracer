@@ -36,11 +36,15 @@ std::shared_ptr<Container> BVHBuilder::BuildBVH(std::vector<std::shared_ptr<Tria
 		}
 	}
 	else {//using optimized agglomerative clustering
-		std::future<void> buildtree = ThreadPool::tp.push(buildTree, std::ref(temp), std::ref(primitives), type);
-		buildtree.get();
+		if (ThreadPool::tp.n_idle() > 0) {
+			std::future<void> buildtree = ThreadPool::tp.push(buildTree, std::ref(temp), std::ref(primitives), type);
+			buildtree.get();
+		}
+		else
+			buildTree(0, temp, primitives, type);
 	}
 
-	//create cluster to root
+	//create complete tree
 	CombineCluster(temp, 1);
 
 	//only need root of cluster tree

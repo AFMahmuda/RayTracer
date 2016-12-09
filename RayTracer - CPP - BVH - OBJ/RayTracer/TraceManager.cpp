@@ -58,18 +58,23 @@ void TraceManager::trace() {
 	if (scene.bin == nullptr)
 		return;
 
-	std::vector<std::future<void>> traceT;
-	for (int i = 0; i < verDiv; i++)
-		for (int j = 0; j < horDiv; j++)
-		{
-			int row = i, col = j;
-			traceT.push_back(ThreadPool::tp.push(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
-		}
+	if (ThreadPool::tp.size() > 0) {
+		std::vector<std::future<void>> traceT;
+		for (int i = 0; i < verDiv; i++)
+			for (int j = 0; j < horDiv; j++)
+			{
+				int row = i, col = j;
+				if (ThreadPool::tp.size() >0)
+					traceT.push_back(ThreadPool::tp.push(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
+			}
 
-	for (size_t i = 0; i < tn; i++)
-	{
-		traceT[i].get();
+		for (size_t i = 0; i < tn; i++)
+		{
+			traceT[i].get();
+		}
 	}
+	else
+		traceThread(0, image, scene, 0, 0, height, width);
 }
 
 void TraceManager::traceThread(int id, FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)

@@ -4,15 +4,11 @@
 #include <string>
 #include <thread>
 #include"TraceManager.h"
+#include "ThreadPool.h"
 #include"Container.h"
 
 using namespace std;
 
-
-
-void ahe() {
-
-}
 int main(int argc, char *argv[])
 {
 	//scene file name, default = "default.scene"	
@@ -27,6 +23,10 @@ int main(int argc, char *argv[])
 
 	//aac treshold, def=20;
 	int thres = (argc >= 5) ? (atoi(argv[4])) : 20;
+
+
+	//thread number for aac and 
+	(argc >= 6) ? ThreadPool::setMaxThread((atoi(argv[5]) - 1)) : ThreadPool::setMaxThread(std::thread::hardware_concurrency() - 1);
 
 	//thread number for tracing
 	int traceTN = 8 * std::thread::hardware_concurrency();
