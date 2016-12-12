@@ -17,7 +17,7 @@ public:
 	Vec3 start;
 	Vec3 direction;
 	float intersectDist = FLT_MAX;
-	float epsilon;
+	float epsilon = 0.0001f;
 	std::shared_ptr< Triangle > intersectWith;
 	Vec3 getHit() const;
 	Vec3 getHitPlus() const;

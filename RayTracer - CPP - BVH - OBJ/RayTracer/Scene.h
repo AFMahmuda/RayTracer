@@ -49,7 +49,7 @@ private:
 
 	std::vector<std::string> splitString(std::string fullcommand, char delimiter);
 	void parseFile(std::string filename);
-	std::string CleanCommand(std::string command);
+	std::string cleanCommand(std::string command);
 	void executeCommand(std::string fullcommand);
 
 	/*shape factory method*/

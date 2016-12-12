@@ -8,11 +8,11 @@
 bool ViewPlane::flag = false;
 ViewPlane * ViewPlane::instance = nullptr;
 
-void ViewPlane::Init(int width, int height)
+void ViewPlane::init(int width, int height)
 {
 	pixelH = height;
 	pixelW = width;
-	worldH = 2.f * tanf((Camera::Instance()->fov / 2.f) * (float)M_PI / 180.f);
+	worldH = 2.f * tanf((Camera::getInstance()->fov / 2.f) * (float)M_PI / 180.f);
 	worldW = worldH * (pixelW / (float)pixelH);
 
 	precalculate();
@@ -22,19 +22,19 @@ void ViewPlane::Init(int width, int height)
 void ViewPlane::precalculate()
 {
 	setUpperleft();
-	unitRight = ((Camera::Instance()->U * (worldW / (float)pixelW)) * -1.f);
-	unitDown = ((Camera::Instance()->V * (worldH / (float)pixelH)) * -1.f);
+	unitRight = ((Camera::getInstance()->u * (worldW / (float)pixelW)) * -1.f);
+	unitDown = ((Camera::getInstance()->v * (worldH / (float)pixelH)) * -1.f);
 }
 
 void ViewPlane::setUpperleft()
 {
-	Vec3 c = Camera::Instance()->pos;
-	c = c + (Camera::Instance()->W);
+	Vec3 c = Camera::getInstance()->pos;
+	c = c + (Camera::getInstance()->w);
 	pos = c;
 	upperLeft =
 		c
-		+ (Camera::Instance()->U * (worldW * .5f))
-		+ (Camera::Instance()->V * (worldH * .5f));
+		+ (Camera::getInstance()->u * (worldW * .5f))
+		+ (Camera::getInstance()->v * (worldH * .5f));
 	upperLeft[3] = 1;
 }
 

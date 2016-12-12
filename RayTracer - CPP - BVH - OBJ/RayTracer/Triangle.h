@@ -27,7 +27,7 @@ private:
 
 	float invDenom;
 	void preCalculate();
-	bool IsInsideTriangle(Vec3 point);
+	bool isInsideTriangle(Vec3 point);
 public:
 	Vec3 pos;
 	Vec3 a;

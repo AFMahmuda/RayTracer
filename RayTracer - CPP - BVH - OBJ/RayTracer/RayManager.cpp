@@ -12,11 +12,10 @@ void RayManager::traceRay(Ray & ray, std::shared_ptr<Container> bvh)
 	while (bins.size() > 0)
 	{
 		std::shared_ptr<Container> currBin = bins.back();
-		bins.pop_back();
-
+		bins.pop_back(); 
+		ray.hitCount[0]++;
 		if (currBin->isIntersecting(ray))
 		{
-			ray.hitCount[0]++;
 			if (currBin->geo != nullptr)
 			{
 				ray.hitCount[1]++;

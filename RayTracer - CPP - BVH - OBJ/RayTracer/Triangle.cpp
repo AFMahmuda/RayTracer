@@ -43,7 +43,7 @@ bool Triangle::isIntersecting(Ray & ray)
 	*/
 	if (distanceToPlane > 0)
 		if (ray.isCloser(distanceToPlane))
-			if (IsInsideTriangle(ray.start + (ray.direction * distanceToPlane)))
+			if (isInsideTriangle(ray.start + (ray.direction * distanceToPlane)))
 			{
 				ray.intersectDist = (ray.direction * distanceToPlane).magnitude();
 				return true;
@@ -51,7 +51,7 @@ bool Triangle::isIntersecting(Ray & ray)
 	return false;
 }
 
-bool Triangle::IsInsideTriangle(Vec3 point) {
+bool Triangle::isInsideTriangle(Vec3 point) {
 	Vec3 ap(point - a);
 
 	d_ab_ap = ab * ap;

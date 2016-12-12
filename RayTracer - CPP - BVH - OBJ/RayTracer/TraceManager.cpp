@@ -48,7 +48,7 @@ void TraceManager::initScene(std::string sceneFile) {
 }
 
 void TraceManager::buildBVH() {
-	scene.bin = BVHBuilder(binType, isAAC, aacThres).BuildBVH(scene.geometries);
+	scene.bin = BVHBuilder(binType, isAAC, aacThres).buildBVH(scene.geometries);
 }
 
 void TraceManager::trace() {
@@ -57,53 +57,66 @@ void TraceManager::trace() {
 	//nothing in scene
 	if (scene.bin == nullptr)
 		return;
-
+	float binCounter = 0, triCounter = 0;
 	if (ThreadPool::tp.size() > 0) {
 		std::vector<std::future<void>> traceT;
+		float *bCount = new float[tn];
+		float *tCount = new float[tn];
+		int c = 0;
 		for (int i = 0; i < verDiv; i++)
 			for (int j = 0; j < horDiv; j++)
 			{
 				int row = i, col = j;
-				if (ThreadPool::tp.size() >0)
-					traceT.push_back(ThreadPool::tp.push(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg));
+				bCount[c] = tCount[c] = 0;
+				traceT.push_back(ThreadPool::tp.push(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg, std::ref(bCount[c]), std::ref(tCount[c])));
+				c++;
 			}
+
 
 		for (size_t i = 0; i < tn; i++)
 		{
 			traceT[i].get();
+			binCounter += bCount[i];
+			triCounter += tCount[i];
+
 		}
+		binCounter /= (width * height);
+		triCounter /= (width * height);
 	}
 	else
-		traceThread(0, image, scene, 0, 0, height, width);
+		traceThread(0, image, scene, 0, 0, height, width, binCounter, triCounter);
+	std::cout << "avg bin&tri check\t: " << binCounter << "\t" << triCounter << " ";
+	report << "avg bin&tri check\t: " << binCounter << "\t" << triCounter << " ";
 }
 
-void TraceManager::traceThread(int id, FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd)
+void TraceManager::traceThread(int id, FIBITMAP * image, Scene &scene, int rowStart, int colStart, int rowEnd, int colEnd, float& binCounter, float& triCounter)
 {
-	RayManager& rayManager = RayManager();
-	Ray* ray;
-	Vec3 pixPosition;
-	RGBQUAD color;
 	for (int currRow = rowStart; currRow < rowEnd; currRow++)
 	{
 		for (int currCol = colStart; currCol < colEnd; currCol++)
 		{
-			ray = new Ray();
-			ray->type = Ray::RAY;
-			pixPosition = ViewPlane::Instance()->getNewLocation(currCol, currRow);
-			ray->start = Camera::Instance()->pos;
-			ray->direction = Vec3(ray->start, pixPosition).normalize();
 
-			rayManager.traceRay(*ray, scene.bin);
 
-			if (ray->intersectWith == nullptr) {
-				color = MyColToRGBQUAD(MyColor(.2, .2, .2));
+			Vec3 pixPosition;
+			pixPosition = ViewPlane::getInstance()->getNewLocation(currCol, currRow);
+			Ray ray = Ray();
+			ray.start = Camera::getInstance()->pos;
+			ray.direction = Vec3(ray.start, pixPosition).normalize();
+			ray.type = Ray::RAY;
+			RayManager::traceRay(ray, scene.bin);
+			RGBQUAD color;
+
+			if (ray.intersectWith == nullptr) {
+				color = myColToRGBQUAD(MyColor(.2, .2, .2));
 			}
 			else {
-				MyColor& col = RayManager().getColor(*ray, scene, scene.maxDepth);
-				color = MyColToRGBQUAD(col);
+				MyColor& col = RayManager::getColor(ray, scene, scene.maxDepth);
+				color = myColToRGBQUAD(col);
+
 			}
+			binCounter += ray.hitCount[0];
+			triCounter += ray.hitCount[1];
 			FreeImage_SetPixelColor(image, currCol, currRow, &color);
-			delete(ray);
 		}
 	}
 }
@@ -115,7 +128,7 @@ void TraceManager::mergeAndSaveImage(std::string time) {
 	FreeImage_Save(FIF_BMP, image, (time + " " + outFileName).c_str(), 0);
 }
 
-RGBQUAD TraceManager::MyColToRGBQUAD(MyColor & col)
+RGBQUAD TraceManager::myColToRGBQUAD(MyColor & col)
 {
 	RGBQUAD color;
 	color.rgbRed = col.r * 255;
@@ -134,10 +147,8 @@ TraceManager::TraceManager(int threadNumber, Container::TYPE _type, bool _isAAC,
 
 void TraceManager::traceScene(std::string sceneFile)
 {
-	std::ofstream report;
 	auto t = std::time(nullptr);
 	auto tm = *std::localtime(&t);
-
 	std::ostringstream oss;
 	oss << std::put_time(&tm, "%Y%m%d-%H %M %S");
 	auto fname = oss.str();
@@ -147,8 +158,8 @@ void TraceManager::traceScene(std::string sceneFile)
 	double duration;
 	report << "Scene file\t: " << sceneFile << std::endl;
 	std::cout << "Scene file\t: " << sceneFile << std::endl;
-	report << "#thread(s)\t: " << tn << std::endl;
-	std::cout << "#thread(s)\t: " << tn << std::endl;
+	report << "#scene div(s)\t: " << tn << std::endl;
+	std::cout << "#scene div(s)\t: " << tn << std::endl;
 	report << "Using AAC?\t: " << isAAC << std::endl;
 	std::cout << "Using AAC?\t: " << isAAC << std::endl;
 	if (isAAC) report << "AAC threshold\t: " << aacThres << std::endl;
@@ -170,8 +181,8 @@ void TraceManager::traceScene(std::string sceneFile)
 
 	report << "================================" << std::endl;
 	std::cout << "================================" << std::endl;
-	report << "image size\t: " << ViewPlane::Instance()->pixelW << " x " << ViewPlane::Instance()->pixelH << std::endl;
-	std::cout << "image size\t: " << ViewPlane::Instance()->pixelW << " x " << ViewPlane::Instance()->pixelH << std::endl;
+	report << "image size\t: " << ViewPlane::getInstance()->pixelW << " x " << ViewPlane::getInstance()->pixelH << std::endl;
+	std::cout << "image size\t: " << ViewPlane::getInstance()->pixelW << " x " << ViewPlane::getInstance()->pixelH << std::endl;
 	report << "#object(s)\t: " << scene.geometries.size() << std::endl;
 	std::cout << "#object(s)\t: " << scene.geometries.size() << std::endl;
 	report << "#light(s)\t: " << scene.lights.size() << std::endl;
@@ -206,6 +217,7 @@ void TraceManager::traceScene(std::string sceneFile)
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
+
 
 	mergeAndSaveImage(fname);
 	FreeImage_DeInitialise();

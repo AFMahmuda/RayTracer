@@ -2,16 +2,11 @@
 #include "Vec3.h"
 #include "Camera.h"
 
-
-
 class ViewPlane
 {
-
-
-
 public:
 
-	static ViewPlane* Instance()
+	static ViewPlane* getInstance()
 	{
 		if (flag == false)
 		{
@@ -20,14 +15,12 @@ public:
 		}
 		return instance;
 	}
-
 	float worldH = 1;
 	float worldW = 1;
 	int pixelH = 1;
 	int pixelW = 1;
 
-	void Init(int width, int height);
-
+	void init(int width, int height);
 	Vec3 getNewLocation(int col, int row);
 private:
 	static bool flag;
@@ -44,7 +37,6 @@ private:
 
 	ViewPlane(); // Prevent construction
 	ViewPlane(const ViewPlane&); // Prevent construction by copying
-//	ViewPlane& operator=(const ViewPlane&); // Prevent assignment
 	~ViewPlane(); // Prevent unwanted destruction
 };
 

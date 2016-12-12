@@ -16,11 +16,13 @@ bool Ray::isCloser(float dist)
 
 Ray::Ray()
 {
-	epsilon = 0.f;
+	hitCount[0] = 0;
+	hitCount[1] = 0;
 }
 
 Ray::Ray(Vec3 start, Vec3 dir) : start(start), direction(dir) {
-	epsilon = 0.0001f;
+	hitCount[0] = 0;
+	hitCount[1] = 0;
 }
 
 

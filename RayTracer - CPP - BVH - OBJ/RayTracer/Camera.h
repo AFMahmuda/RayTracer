@@ -8,7 +8,7 @@ private:
 
 public:
 
-	static Camera* Instance()
+	static Camera* getInstance()
 	{
 		if (flag == false)
 		{
@@ -18,9 +18,9 @@ public:
 		return instance;
 	}
 
-	Vec3 U;
-	Vec3 V;
-	Vec3 W;
+	Vec3 u;
+	Vec3 v;
+	Vec3 w;
 
 	float fov;
 
@@ -28,16 +28,15 @@ public:
 	Vec3 pos;
 	Vec3 lookAt;
 
-	void Init(float * vals);
-	void Init(Vec3& pos, Vec3& lookAt, Vec3& up, float fov);
+	void init(float * vals);
+	void init(Vec3& pos, Vec3& lookAt, Vec3& up, float fov);
 
-	Vec3& CameraViewPosition();
+	Vec3& cameraViewPosition();
 
 protected:
 
 	Camera(); // Prevent construction
 	Camera(const Camera&); // Prevent construction by copying
-//	Camera& operator=(const Camera&); // Prevent assignment
 	~Camera(); // Prevent unwanted destruction
 };
 

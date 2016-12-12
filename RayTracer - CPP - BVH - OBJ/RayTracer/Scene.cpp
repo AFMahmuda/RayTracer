@@ -30,7 +30,7 @@ void Scene::parseFile(std::string filename)
 	else std::cout << "Unable to open file";
 }
 
-std::string Scene::CleanCommand(std::string command)
+std::string Scene::cleanCommand(std::string command)
 {
 	command = std::regex_replace(command, std::regex("\t| + "), " "); //replace tab and multiple spaces w/ space
 	command = std::regex_replace(command, std::regex("^ +| +$"), ""); //replce leading and trailing space with nothing
@@ -57,7 +57,7 @@ void Scene::executeCommand(std::string fullcommand)
 	if (fullcommand.find('#') != std::string::npos)
 		return;
 
-	fullcommand = CleanCommand(fullcommand);
+	fullcommand = cleanCommand(fullcommand);
 
 	std::vector<std::string> words = splitString(fullcommand, ' ');
 	std::string command = words[0];
@@ -177,8 +177,8 @@ void Scene::executeCommand(std::string fullcommand)
 		{
 			param.push_back(stof(words[i + 1]));
 		}
-		Camera::Instance()->Init(&param[0]);
-		ViewPlane::Instance()->Init(size[0], size[1]);
+		Camera::getInstance()->init(&param[0]);
+		ViewPlane::getInstance()->init(size[0], size[1]);
 
 	}
 	else if (command.compare("maxdepth") == 0)
