@@ -4,6 +4,9 @@
 #include"ThreadPool.h"
 
 int BVHBuilder::threshold = 20;
+float BVHBuilder::e = .1;
+
+
 
 BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 	type = _type;
@@ -21,22 +24,21 @@ std::shared_ptr<Container> BVHBuilder::buildBVH(std::vector<std::shared_ptr<Tria
 	std::vector<std::shared_ptr< Container>> temp;
 	if (!isAAC)//not optimized agglomerative clustering
 	{
-		ContainerFactory cf;
-		temp.reserve(n);
-		for (int i = 0; i < n; i++)
-			temp.push_back(cf.CreateContainer(primitives[i], type));
+		buildTree_LORD(0, temp, primitives, type);
 	}
 	else {//using optimized agglomerative clustering
 		if (ThreadPool::tp.n_idle() > 0) {
-			std::future<void> buildtree = ThreadPool::tp.push(buildTree, std::ref(temp), std::ref(primitives), type);
+			std::future<void> buildtree = ThreadPool::tp.push(buildTree_AAC, std::ref(temp), std::ref(primitives), type);
 			buildtree.get();
 		}
 		else
-			buildTree(0, temp, primitives, type);
+			buildTree_AAC(0, temp, primitives, type);
+
+		//create complete tree
+		combineCluster(temp, 1);
 	}
 
-	//create complete tree
-	combineCluster(temp, 1);
+
 
 	//only need root of cluster tree
 	return temp[0];
@@ -51,7 +53,7 @@ type
 output
 modified bins
 */
-void BVHBuilder::buildTree(int id, std::vector<std::shared_ptr<Container>>& bins, std::vector<std::shared_ptr<Triangle>>& primitives, Container::TYPE _type)
+void BVHBuilder::buildTree_AAC(int id, std::vector<std::shared_ptr<Container>>& bins, std::vector<std::shared_ptr<Triangle>>& primitives, Container::TYPE _type)
 {
 	//create clusters if primitives number < threshold
 	if (primitives.size() <= threshold)
@@ -79,13 +81,13 @@ void BVHBuilder::buildTree(int id, std::vector<std::shared_ptr<Container>>& bins
 	switch (ThreadPool::tp.n_idle() > 0)
 	{
 	case true:
-		lBuild = ThreadPool::tp.push(buildTree, std::ref(lTree), std::ref(lPrimitives), _type);
-		buildTree(id, rTree, rPrimitives, _type);
+		lBuild = ThreadPool::tp.push(buildTree_AAC, std::ref(lTree), std::ref(lPrimitives), _type);
+		buildTree_AAC(id, rTree, rPrimitives, _type);
 		lBuild.get();
 		break;
 	case false:
-		buildTree(id, lTree, lPrimitives, _type);
-		buildTree(id, rTree, rPrimitives, _type);
+		buildTree_AAC(id, lTree, lPrimitives, _type);
+		buildTree_AAC(id, rTree, rPrimitives, _type);
 		break;
 	}
 
@@ -95,7 +97,57 @@ void BVHBuilder::buildTree(int id, std::vector<std::shared_ptr<Container>>& bins
 	return;
 }
 
+void BVHBuilder::buildTree_LORD(int id, std::vector<std::shared_ptr<Container>>& bins, std::vector<std::shared_ptr<Triangle>>& primitives, Container::TYPE const _type)
+{
+	ContainerFactory cf;
+	for (int i = 0; i < primitives.size(); i++)
+		bins.push_back(cf.CreateContainer(primitives[i], _type));
 
+	auto A = bins[0];
+	cf.findBestMatch(A, bins);
+	auto B = A->closest;
+	while (bins.size() > 1)
+	{
+		//		printf("%d\n", bins.size());
+		cf.findBestMatch(B, bins);
+		auto C = B->closest;
+
+		if (C == A) {
+			auto temp(cf.combineContainer(A, B));
+			bins.push_back(temp);
+			auto indexL = std::find(bins.begin(), bins.end(), A);
+			A->calculatedPair.clear();
+			A->calculatedPairArea.clear();
+			std::swap(*indexL, bins.back()); bins.pop_back();
+			auto indexR = std::find(bins.begin(), bins.end(), B);
+			B->calculatedPair.clear();
+			B->calculatedPairArea.clear();
+			std::swap(*indexR, bins.back()); bins.pop_back();
+
+			A = temp;
+			cf.findBestMatch(A, bins);
+			B = temp->closest;
+		}
+		else
+		{
+			A = B;
+			B = C;
+		}
+	}
+
+
+}
+
+
+
+
+/*cluster reduction function
+* n -> number of input clusters
+* return -> number of max output cluster*/
+//	static	int f(int n) { return (n <= 2) ? 1 : n / 2; }
+int BVHBuilder::f(int n) {
+	return (n <= 2) ? 1 : powf(threshold, .5f + e) / 2.f * powf(n, .5f - e);
+}
 /*list partition function,
 * pivot is the frst bit 'flip'
 * ex : [0] 00000111
@@ -134,7 +186,7 @@ void BVHBuilder::combineCluster(std::vector<std::shared_ptr<Container>>& bins, i
 	float bestDist;
 	std::shared_ptr< Container> left;
 	std::shared_ptr< Container> right;
-	
+
 	while (bins.size() > limit)
 	{
 		bestDist = INFINITY;
