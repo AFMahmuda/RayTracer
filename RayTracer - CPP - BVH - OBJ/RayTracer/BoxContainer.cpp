@@ -5,14 +5,9 @@ BoxContainer::BoxContainer(std::shared_ptr<Triangle> item)
 	isLeaf = true;
 	type = BOX;
 	geo = item;
-
-
-	{
-		Triangle* tri = static_cast<Triangle*>(item.get());
-
-		Vec3 temp[3]{ tri->a,tri->b,tri->c };
-		setMinMax(temp, 3);
-	}
+	Triangle* tri = static_cast<Triangle*>(item.get());
+	Vec3 temp[3]{ tri->a,tri->b,tri->c };
+	setMinMax(temp, 3);
 }
 
 void BoxContainer::setMinMax(Vec3 * points, int n)
@@ -33,8 +28,7 @@ BoxContainer::BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<Box
 	type = TYPE::BOX;
 	lChild = (a);
 	rChild = (b);
-
-
+	
 	for (int i = 0; i < 3; i++)
 	{
 		min[i] = std::min(a->min[i], b->min[i]);
@@ -49,7 +43,6 @@ BoxContainer::BoxContainer(std::shared_ptr<BoxContainer>& a, std::shared_ptr<Box
 BoxContainer::BoxContainer()
 {
 }
-
 
 BoxContainer::~BoxContainer()
 {

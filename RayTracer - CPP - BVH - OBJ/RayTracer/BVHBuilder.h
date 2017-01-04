@@ -11,7 +11,6 @@ class BVHBuilder
 {
 private:
 	static void buildTree_AAC(int id, std::vector<std::shared_ptr< Container>>& bins, std::vector<std::shared_ptr< Triangle>>& primitives, Container::TYPE const _type);
-	static void buildTree_LORD(int id, std::vector<std::shared_ptr< Container>>& bins, std::vector<std::shared_ptr< Triangle>>& primitives, Container::TYPE const _type);
 	/*cluster reduction function
 	* n -> number of input clusters
 	* return -> number of max output cluster*/

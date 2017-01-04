@@ -4,13 +4,15 @@ ContainerFactory::ContainerFactory()
 {
 }
 
-
 ContainerFactory::~ContainerFactory()
 {
 }
 
 std::shared_ptr<Container> ContainerFactory::CreateContainer(std::shared_ptr<Triangle> &geo, Container::TYPE type) {
+	if (type == Container::TYPE::BOX)
 		return std::make_shared<BoxContainer>(BoxContainer(geo));
+	if (type == Container::TYPE::SPHERE)
+		return std::make_shared<SphereContainer>(SphereContainer(geo));
 }
 
 std::shared_ptr<Container> ContainerFactory::combineContainer(std::shared_ptr<Container> &a, std::shared_ptr<Container> &b)
@@ -26,7 +28,7 @@ std::shared_ptr<Container> ContainerFactory::combineContainer(std::shared_ptr<Co
 
 void ContainerFactory::findBestMatch(std::shared_ptr<Container>& bin, std::vector<std::shared_ptr<Container>>& others)
 {
-	
+
 	float bestDist = INFINITY;
 	std::shared_ptr< Container> bestmatch = nullptr;
 	for (int i = 0; i < others.size(); i++)
@@ -42,7 +44,6 @@ void ContainerFactory::findBestMatch(std::shared_ptr<Container>& bin, std::vecto
 		{
 			if ((bin)->calculatedPairArea[index] < bestDist)
 			{
-
 				bestDist = (bin)->calculatedPairArea[index];
 				bestmatch = others[i];
 			}

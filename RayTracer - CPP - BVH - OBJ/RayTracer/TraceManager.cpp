@@ -78,10 +78,11 @@ void TraceManager::trace() {
 			traceT[i].get();
 			binCounter += bCount[i];
 			triCounter += tCount[i];
-
 		}
 		binCounter /= (width * height);
 		triCounter /= (width * height);
+		delete bCount;
+		delete tCount;
 	}
 	else
 		traceThread(0, image, scene, 0, 0, height, width, binCounter, triCounter);
@@ -95,10 +96,7 @@ void TraceManager::traceThread(int id, FIBITMAP * image, Scene &scene, int rowSt
 	{
 		for (int currCol = colStart; currCol < colEnd; currCol++)
 		{
-
-
-			Vec3 pixPosition;
-			pixPosition = ViewPlane::getInstance()->getNewLocation(currCol, currRow);
+			Vec3 pixPosition = ViewPlane::getInstance()->getNewLocation(currCol, currRow);
 			Ray ray = Ray();
 			ray.start = Camera::getInstance()->pos;
 			ray.direction = Vec3(ray.start, pixPosition).normalize();

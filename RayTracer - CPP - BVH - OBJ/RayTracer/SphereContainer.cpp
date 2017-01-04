@@ -10,31 +10,22 @@ SphereContainer::SphereContainer(std::shared_ptr<Triangle> item) {
 	type = SPHERE;
 	geo = item;
 
-	{
-		Triangle& tri = *item;
-		Vec3 ab(tri.a, tri.b);
-		Vec3 bc(tri.b, tri.c);
-		Vec3 ac(tri.a, tri.c);
+	Triangle& tri = *item;
+	Vec3 vecs[3] = { tri.a,tri.b,tri.c };
+	c = vecs[0];
+	r = 0.0001f;
 
-		float d = 2 * ((ab * ab) * (ac * ac) - (ab * ac) * (ab * ac));
-		Vec3 reference = tri.a;
-		float s = ((ab * ab) * (ac * ac) - (ac * ac) * (ab * ac)) / d;
-		float t = ((ac * ac) * (ab * ab) - (ab * ab) * (ab * ac)) / d;
-		if (s <= 0)
-		{
-			c = (tri.a + tri.c) * .5f;
+	Vec3 pos, move;
+	float len;
+
+	for (int j = 0; j < 3; j++) {
+		pos = vecs[j];
+		move = pos - c;
+		len = move.magnitude();
+		if (len > r) {
+			r = (r + len) / 2.0f;
+			c = c + ((len - r) / len * move);
 		}
-		else if (t <= 0)
-		{
-			c = (tri.a + tri.b) * .5f;
-		}
-		else if (s + t > 1)
-		{
-			c = (tri.b + tri.c) * .5f;
-			reference = tri.b;
-		}
-		else c = tri.a + (tri.b - tri.a) * s + (tri.c - tri.a) * t;
-		r = sqrtf(Vec3(reference, tri.c) * Vec3(reference, tri.c));
 	}
 }
 
@@ -48,33 +39,33 @@ SphereContainer::SphereContainer(std::shared_ptr<SphereContainer> a, std::shared
 	Vec3 aToB(a->c, b->c);
 	float aToBLength = aToB.magnitude();
 
-	if (aToB.magnitude() == 0)
-	{
+	if (aToB.magnitude() == 0)	{ //same center diff r
 		r = std::max(a->r, b->r);
-		c = a->c + Vec3(0, 0, 0, 1);
+		c = a->c;
 	}
 
-	else if (aToBLength + a->r + b->r < a->r * 2.f ||
-		aToB.magnitude() + a->r + b->r < b->r * 2.f)
+	else if ( //one sphere inside the other sphere
+		aToBLength + a->r + b->r < a->r * 2.f ||
+		aToBLength + a->r + b->r < b->r * 2.f )
 	{
 		r = std::max(a->r, b->r);
-		c = (a->r > b->r) ? a->c + Vec3(0, 0, 0, 1) : b->c + Vec3(0, 0, 0, 1);
+		c = (a->r > b->r) ? a->c  : b->c ;
 	}
 
-	else
-	{
-		r = (a->r + b->r + aToB.magnitude()) * .5f;
+	else {
+		r = (a->r + b->r + aToBLength) * .5f;
 
 		aToB = aToB.normalize();
 		aToB = aToB * (r - a->r);
-		c = (a->c) + Vec3(aToB[0], aToB[1], aToB[2], 1);
+		c = (a->c) + aToB;
 	}
 
-	area = 4.f * (float)M_PI * (float)std::powf(r, 2);
+	area = 4.f * (float)M_PI * (float)std::powf(r, 2.f);
 }
 
 SphereContainer::~SphereContainer()
 {
+
 }
 
 bool SphereContainer::isIntersecting(Ray& ray)
