@@ -4,7 +4,8 @@
 
 Vec3 Ray::getHit() const { return start + direction * intersectDist; }
 
-Vec3 Ray::getHitPlus() const { return start + direction * (intersectDist + epsilon); }
+//Vec3 Ray::getHitPlus() const { return start + direction * (intersectDist + epsilon); }
+Vec3 Ray::getHitPlus() const { return start + direction * (intersectDist * 1.00001f); }
 
 Vec3 Ray::getHitMin() const { return start + direction * (intersectDist - epsilon); }
 

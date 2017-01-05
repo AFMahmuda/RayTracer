@@ -79,13 +79,14 @@ void TraceManager::trace() {
 			binCounter += bCount[i];
 			triCounter += tCount[i];
 		}
-		binCounter /= (width * height);
-		triCounter /= (width * height);
+		
 		delete bCount;
 		delete tCount;
 	}
 	else
 		traceThread(0, image, scene, 0, 0, height, width, binCounter, triCounter);
+	binCounter /= (width * height);
+	triCounter /= (width * height);
 	std::cout << "avg bin&tri check\t: " << binCounter << "\t" << triCounter << " ";
 	report << "avg bin&tri check\t: " << binCounter << "\t" << triCounter << " ";
 }

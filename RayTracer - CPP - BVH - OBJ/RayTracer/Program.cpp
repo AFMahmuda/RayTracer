@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
 	string filename = (argc >= 2) ? argv[1] : "scene_default.scene";
 	std::replace(filename.begin(), filename.end(), '\\', '/');
 
-
 	bool isAAC = true;
 
 	//bin type (b = box / s = sphere ), default = box;
@@ -26,7 +25,7 @@ int main(int argc, char *argv[])
 
 	//thread number for aac and 
 	(argc >= 5) ? ThreadPool::setMaxThread((atoi(argv[4]) - 1)) : ThreadPool::setMaxThread(std::thread::hardware_concurrency() - 1);
-
+	
 	//thread number for tracing
 	int traceTN = 8 * std::thread::hardware_concurrency();
 
@@ -34,6 +33,7 @@ int main(int argc, char *argv[])
 	if (myfile.is_open())
 	{
 		myfile.close();
+
 		TraceManager tracer(traceTN, binType, isAAC, thres);
 		tracer.traceScene(filename);
 	}
