@@ -14,20 +14,11 @@ BVHBuilder::BVHBuilder(Container::TYPE _type, bool _isAAC, int _threshold) {
 }
 
 std::shared_ptr<Container> BVHBuilder::buildBVH(std::vector<std::shared_ptr<Triangle>>& primitives) {
-	int n = primitives.size();
-
 	//nothing in scene
-	if (n == 0)
-		return nullptr;
+	if (primitives.size() == 0) return nullptr;
 
 	std::vector<std::shared_ptr< Container>> binList;
-
-	if (ThreadPool::tp.n_idle() > 0) {
-		std::future<void> buildtree = ThreadPool::tp.push(buildTree_AAC, std::ref(binList), std::ref(primitives), type);
-		buildtree.get();
-	}
-	else
-		buildTree_AAC(0, binList, primitives, type);
+	buildTree_AAC(0, binList, primitives, type);
 
 	//create complete tree
 	combineCluster(binList, 1);

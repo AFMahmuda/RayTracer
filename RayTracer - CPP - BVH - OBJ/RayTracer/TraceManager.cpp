@@ -63,7 +63,7 @@ void TraceManager::trace() {
 		float *bCount = new float[tn];
 		float *tCount = new float[tn];
 		int c = 0;
-		for (int i = 0; i < verDiv; i++)
+		for (int i = 0; i < verDiv; i++) {
 			for (int j = 0; j < horDiv; j++)
 			{
 				int row = i, col = j;
@@ -71,6 +71,7 @@ void TraceManager::trace() {
 				traceT.push_back(ThreadPool::tp.push(traceThread, image, std::ref(scene), row * hPerSeg, col * wPerSeg, (row + 1) * hPerSeg, (col + 1) * wPerSeg, std::ref(bCount[c]), std::ref(tCount[c])));
 				c++;
 			}
+		}
 
 
 		for (size_t i = 0; i < tn; i++)
@@ -79,7 +80,7 @@ void TraceManager::trace() {
 			binCounter += bCount[i];
 			triCounter += tCount[i];
 		}
-		
+
 		delete bCount;
 		delete tCount;
 	}
@@ -159,10 +160,8 @@ void TraceManager::traceScene(std::string sceneFile)
 	std::cout << "Scene file\t: " << sceneFile << std::endl;
 	report << "#scene div(s)\t: " << tn << std::endl;
 	std::cout << "#scene div(s)\t: " << tn << std::endl;
-	report << "Using AAC?\t: " << isAAC << std::endl;
-	std::cout << "Using AAC?\t: " << isAAC << std::endl;
-	if (isAAC) report << "AAC threshold\t: " << aacThres << std::endl;
-	if (isAAC) std::cout << "AAC threshold\t: " << aacThres << std::endl;
+	report << "AAC threshold\t: " << aacThres << std::endl;
+	std::cout << "AAC threshold\t: " << aacThres << std::endl;
 	std::string type = (binType == Container::BOX) ? "BOX" : "SPHERE";
 	report << "Bin type\t: " << type << std::endl;
 	std::cout << "Bin type\t: " << type << std::endl;
@@ -172,7 +171,9 @@ void TraceManager::traceScene(std::string sceneFile)
 	report << "parsing file\t: ";
 	std::cout << "parsing file\t: ";
 	start = std::clock();
+
 	initScene(sceneFile);
+
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
@@ -203,7 +204,9 @@ void TraceManager::traceScene(std::string sceneFile)
 	report << "bulding bvh\t: ";
 	std::cout << "bulding bvh\t: ";
 	start = std::clock();
+
 	buildBVH();
+
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
@@ -211,8 +214,10 @@ void TraceManager::traceScene(std::string sceneFile)
 	report << "tracing scene\t: ";
 	std::cout << "tracing scene\t: ";
 	start = std::clock();
+
 	FreeImage_Initialise();
 	trace();
+
 	duration = (std::clock() - start) / (double)CLOCKS_PER_SEC * 1000;
 	report << duration << " ms" << std::endl;
 	std::cout << duration << " ms" << std::endl;
