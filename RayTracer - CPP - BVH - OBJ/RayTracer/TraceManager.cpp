@@ -105,15 +105,16 @@ void TraceManager::traceThread(int id, FIBITMAP * image, Scene &scene, int rowSt
 			ray.type = Ray::RAY;
 			RayManager::traceRay(ray, scene.bin);
 			RGBQUAD color;
-
+			MyColor& col = MyColor(0, 0, 0);
 			if (ray.intersectWith == nullptr) {
-				color = myColToRGBQUAD(MyColor(.2, .2, .2));
+				col = MyColor(.1, .1, .1);
+				col += sqrtf(ray.hitCount[0]) * MyColor(.025, .025, .025);
 			}
 			else {
-				MyColor& col = RayManager::getColor(ray, scene, scene.maxDepth);
-				color = myColToRGBQUAD(col);
-
+				col = RayManager::getColor(ray, scene, scene.maxDepth);
+				col += sqrtf(ray.hitCount[0]) * MyColor(.0125, .0125, .0125);
 			}
+			color = myColToRGBQUAD(col);
 			binCounter += ray.hitCount[0];
 			triCounter += ray.hitCount[1];
 			FreeImage_SetPixelColor(image, currCol, currRow, &color);
